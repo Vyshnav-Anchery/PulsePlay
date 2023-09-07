@@ -33,8 +33,4 @@ class NowplayingController extends ChangeNotifier {
       log(e.toString());
     }
   }
-
-  positionStream() {
-    audioPlayer.positionStream;
-  }
 }

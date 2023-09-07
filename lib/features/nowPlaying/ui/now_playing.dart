@@ -19,9 +19,11 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> {
   late NowplayingController provider;
+  late AudioPlayer audioPlayer;
   @override
   void initState() {
     provider = Provider.of<NowplayingController>(context, listen: false);
+    audioPlayer = AudioPlayer();
     log(widget.songModel.uri!);
     provider.playSong(uri: widget.songModel.uri!);
     super.initState();
@@ -30,6 +32,7 @@ class _NowPlayingState extends State<NowPlaying> {
   @override
   void dispose() {
     provider.dispose();
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -87,12 +90,11 @@ class _NowPlayingState extends State<NowPlaying> {
                     stream: provider.audioPlayer.positionStream,
                     builder: (context, stream) {
                       return ProgressBar(
-                          progress: stream.data ?? Duration.zero,
-                          total: provider.audioPlayer.duration?? Duration.zero,
-                          timeLabelTextStyle: Constants.musicListTextStyle,
-                          
-                          );
-
+                        progress: stream.data ?? Duration.zero,
+                        total:  Duration(milliseconds: widget.songModel.duration!),
+                        timeLabelTextStyle: Constants.musicListTextStyle,
+                        onSeek: provider.audioPlayer.seek,
+                      );
                     }),
                 Consumer<NowplayingController>(
                     builder: (context, provider, child) {
