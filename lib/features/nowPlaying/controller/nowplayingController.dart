@@ -10,8 +10,6 @@ class NowplayingController extends ChangeNotifier {
 
   NowplayingController() {}
 
-  
-
   playSong({required String uri, required}) {
     try {
       audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri)));
@@ -35,5 +33,8 @@ class NowplayingController extends ChangeNotifier {
       log(e.toString());
     }
   }
-  
+
+  positionStream() {
+    audioPlayer.positionStream;
+  }
 }
