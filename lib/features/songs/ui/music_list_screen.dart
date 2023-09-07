@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/provider/provider.dart';
+import '../../nowPlaying/controller/nowplayingController.dart';
 
 class MusicScreen extends StatefulWidget {
   MusicScreen({super.key});
@@ -19,11 +20,9 @@ class MusicScreen extends StatefulWidget {
 
 class _MusicScreenState extends State<MusicScreen> {
   final audioquery = OnAudioQuery();
-  
 
   @override
   void initState() {
-    
     checkpermission();
     super.initState();
   }

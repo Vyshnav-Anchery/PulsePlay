@@ -2,28 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NowplayingController extends ChangeNotifier {
   final audioPlayer = AudioPlayer();
   bool _isPlaying = true;
   bool get isPlaying => _isPlaying;
 
-  late SharedPreferences _prefs;
-  NowplayingController() {
-    _loadSongStatus();
-  }
+  NowplayingController() {}
 
-  _loadSongStatus() async {
-    _prefs = await SharedPreferences.getInstance();
-    _isPlaying = _prefs.getBool('isPlaying') ?? true;
-    notifyListeners();
-  }
-
-  toggleSongStaus() async {
-    _isPlaying = !_isPlaying;
-    await _prefs.setBool('isPlaying', _isPlaying);
-  }
+  
 
   playSong({required String uri, required}) {
     try {
@@ -48,4 +35,5 @@ class NowplayingController extends ChangeNotifier {
       log(e.toString());
     }
   }
+  
 }

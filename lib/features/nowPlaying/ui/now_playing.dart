@@ -49,16 +49,18 @@ class _NowPlayingState extends State<NowPlaying> {
             Center(
               child: Consumer<NowplayingController>(
                   builder: (context, provider, child) {
-                bool isPlaying = provider.isPlaying;
+                bool isPlaying = provider.audioPlayer.playing;
                 return Column(
                   children: [
-                    Card(
-                      child: QueryArtworkWidget(
-                        id: widget.songModel.id,
-                        type: ArtworkType.AUDIO,
-                        artworkBorder: BorderRadius.circular(10),
-                        artworkFit: BoxFit.contain,
-                      ),
+                    QueryArtworkWidget(
+                      artworkQuality: FilterQuality.high,
+                      size: MediaQuery.sizeOf(context).width.toInt(),
+                      artworkHeight: 350,
+                      artworkWidth: 350,
+                      id: widget.songModel.id,
+                      type: ArtworkType.AUDIO,
+                      artworkBorder: BorderRadius.circular(10),
+                      artworkFit: BoxFit.contain,
                     ),
                     const SizedBox(height: 30),
                     Text(
@@ -109,12 +111,12 @@ class _NowPlayingState extends State<NowPlaying> {
                           },
                           icon: isPlaying
                               ? const Icon(
-                                  Icons.play_arrow_rounded,
+                                  Icons.pause,
                                   color: Colors.white,
                                   size: 70,
                                 )
                               : const Icon(
-                                  Icons.pause,
+                                  Icons.play_arrow_rounded,
                                   color: Colors.white,
                                   size: 70,
                                 ),
@@ -137,28 +139,4 @@ class _NowPlayingState extends State<NowPlaying> {
       ),
     );
   }
-
-  // playSong(String uri) {
-  //   try {
-  //     audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri)));
-  //     audioPlayer.play();
-  //     isPlaying = false;
-  //   } on Exception {
-  //     log("error playing");
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
-
-  // pauseSong(String? uri) {
-  //   try {
-  //     audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-  //     audioPlayer.pause();
-  //     isPlaying = false;
-  //   } on Exception {
-  //     log("error playing");
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
 }
