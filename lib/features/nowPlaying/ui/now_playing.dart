@@ -1,17 +1,16 @@
 import 'dart:developer';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-
 import '../controller/nowplayingController.dart';
 
 class NowPlaying extends StatefulWidget {
-  final SongModel songModel;
-  const NowPlaying({super.key, required this.songModel});
+  final List<SongModel> songModel;
+  final int index;
+  const NowPlaying({super.key, required this.songModel,required this.index});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -24,16 +23,8 @@ class _NowPlayingState extends State<NowPlaying> {
   void initState() {
     provider = Provider.of<NowplayingController>(context, listen: false);
     audioPlayer = AudioPlayer();
-    log(widget.songModel.uri!);
-    provider.playSong(uri: widget.songModel.uri!);
+    provider.playSong(songmodel: widget.songModel,index: widget.index);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    provider.dispose();
-    audioPlayer.dispose();
-    super.dispose();
   }
 
   @override
@@ -63,14 +54,14 @@ class _NowPlayingState extends State<NowPlaying> {
                   size: MediaQuery.sizeOf(context).width.toInt(),
                   artworkHeight: 350,
                   artworkWidth: 350,
-                  id: widget.songModel.id,
+                  id: widget.songModel[widget.index].id,
                   type: ArtworkType.AUDIO,
                   artworkBorder: BorderRadius.circular(10),
                   artworkFit: BoxFit.contain,
                 ),
                 const SizedBox(height: 30),
                 Text(
-                  widget.songModel.title,
+                  widget.songModel[widget.index].title,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
                   style: const TextStyle(
@@ -80,7 +71,7 @@ class _NowPlayingState extends State<NowPlaying> {
                 ),
                 // SizedBox(height: 10),
                 Text(
-                  widget.songModel.artist!,
+                  widget.songModel[widget.index].artist!,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
                   style: const TextStyle(fontSize: 20, color: Colors.white),
@@ -91,7 +82,8 @@ class _NowPlayingState extends State<NowPlaying> {
                     builder: (context, stream) {
                       return ProgressBar(
                         progress: stream.data ?? Duration.zero,
-                        total:  Duration(milliseconds: widget.songModel.duration!),
+                        total:
+                            Duration(milliseconds: widget.songModel[widget.index].duration!),
                         timeLabelTextStyle: Constants.musicListTextStyle,
                         onSeek: provider.audioPlayer.seek,
                       );
@@ -99,40 +91,63 @@ class _NowPlayingState extends State<NowPlaying> {
                 Consumer<NowplayingController>(
                     builder: (context, provider, child) {
                   bool isPlaying = provider.audioPlayer.playing;
-
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  return Column(
                     children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.skip_previous_rounded,
-                            color: Colors.white,
-                            size: 50,
-                          )),
-                      IconButton(
-                        onPressed: () {
-                          provider.toggleSong(uri: widget.songModel.uri!);
-                        },
-                        icon: isPlaying
-                            ? const Icon(
-                                Icons.pause,
-                                color: Colors.white,
-                                size: 70,
-                              )
-                            : const Icon(
-                                Icons.play_arrow_rounded,
-                                color: Colors.white,
-                                size: 70,
-                              ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.skip_previous_rounded,
+                                color: Constants.bottomBarIconColor,
+                                size: 50,
+                              )),
+                          IconButton(
+                            onPressed: () {
+                              provider.toggleSong(uri: widget.songModel[widget.index].uri!);
+                            },
+                            icon: isPlaying
+                                ? Icon(
+                                    Icons.pause,
+                                    color: Constants.bottomBarIconColor,
+                                    size: 70,
+                                  )
+                                : Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: Constants.bottomBarIconColor,
+                                    size: 70,
+                                  ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                provider.playNextSong(index:widget.index );
+                                log("next");
+                              },
+                              icon: Icon(
+                                Icons.skip_next_rounded,
+                                color: Constants.bottomBarIconColor,
+                                size: 50,
+                              )),
+                        ],
                       ),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.skip_next_rounded,
-                            color: Colors.white,
-                            size: 50,
-                          )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.favorite,
+                              color: Constants.bottomBarIconColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.playlist_add,
+                                color: Constants.bottomBarIconColor),
+                          ),
+                        ],
+                      )
                     ],
                   );
                 })

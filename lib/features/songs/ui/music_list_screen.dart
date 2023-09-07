@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,9 +9,9 @@ import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/provider/provider.dart';
 import '../../nowPlaying/controller/nowplayingController.dart';
+import '../controller/song_list_controller.dart';
 
 class MusicScreen extends StatefulWidget {
   MusicScreen({super.key});
@@ -19,11 +21,11 @@ class MusicScreen extends StatefulWidget {
 }
 
 class _MusicScreenState extends State<MusicScreen> {
-  final audioquery = OnAudioQuery();
-
+  late SongListController songListController;
   @override
   void initState() {
     checkpermission();
+    songListController = SongListController();
     super.initState();
   }
 
@@ -49,8 +51,9 @@ class _MusicScreenState extends State<MusicScreen> {
             itemBuilder: (context) {
               return [
                 PopupMenuItem(
-                    child:
-                        TextButton(onPressed: () {}, child: const Text("sort")))
+                  child:
+                      TextButton(onPressed: () {}, child: const Text("sort")),
+                ),
               ];
             },
             color: Colors.white,
@@ -58,41 +61,34 @@ class _MusicScreenState extends State<MusicScreen> {
         ],
       ),
       body: FutureBuilder<List<SongModel>>(
-          future: audioquery.querySongs(
-              sortType: null,
-              orderType: OrderType.ASC_OR_SMALLER,
-              uriType: UriType.EXTERNAL,
-              ignoreCase: true),
-          builder: (context, item) {
-            if (item.data == null) {
+          future: songListController.searchSongs(),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (item.data!.isEmpty) {
+            } else if (snapshot.data!.isEmpty) {
               return const Center(
                 child: Text("no music found"),
               );
             } else {
               return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: Colors.transparent,
-                  );
-                },
-                itemCount: item.data!.length,
+                separatorBuilder: (context, index) =>
+                    const Divider(color: Colors.transparent),
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  int id = item.data![index].id;
+                  int id = snapshot.data![index].id;
                   return ListTile(
                     leading:
                         QueryArtworkWidget(id: id, type: ArtworkType.AUDIO),
                     title: Text(
-                      item.data![index].title,
+                      snapshot.data![index].title,
                       style: Constants.musicListTextStyle,
                       maxLines: 1,
                       overflow: TextOverflow.fade,
                     ),
                     subtitle: Text(
-                      item.data![index].artist.toString(),
+                      snapshot.data![index].artist.toString(),
                       style: Constants.musicListTextStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -115,7 +111,7 @@ class _MusicScreenState extends State<MusicScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                NowPlaying(songModel: item.data![index]),
+                                NowPlaying(songModel: snapshot.data!,index: index,),
                           ));
                     },
                   );
@@ -127,8 +123,8 @@ class _MusicScreenState extends State<MusicScreen> {
   }
 
   void checkpermission() async {
-    Permission.storage.request();
-    Permission.audio;
-    Permission.microphone;
+    await Permission.storage.request();
+    await Permission.audio.request();
+    await Permission.microphone.request();
   }
 }

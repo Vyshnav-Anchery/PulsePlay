@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class Constants {
@@ -30,6 +32,11 @@ class Constants {
   static Color cardBg = const Color.fromRGBO(30, 30, 30, 1);
   static Color appbarBg = const Color.fromRGBO(9, 13, 49, 1);
   static Color appBg = const Color.fromRGBO(9, 13, 49, 1);
+  static LinearGradient linearBg = LinearGradient(
+    colors: [Colors.red, Colors.yellow],
+    stops: [0.0, 1.0],
+  );
   static Color bottomBarIconColor = const Color.fromRGBO(149, 202, 207, 1);
+  static Color bottomBarColor = Color.fromARGB(255, 31, 31, 32);
   static String logo = "assets/images/logo.png";
 }
