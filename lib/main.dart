@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/utils/provider/provider.dart';
 import 'package:music_player/utils/routing/routing.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,8 @@ void main() async {
   FlutterNativeSplash.remove();
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<MusicAppProvider>(
-        create: (context) => MusicAppProvider(),
+      ChangeNotifierProvider<BottomNavController>(
+        create: (context) => BottomNavController(),
       ),
       ChangeNotifierProvider<NowplayingController>(
         create: (context) => NowplayingController(),
@@ -37,10 +38,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pulse Play',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        home: HomeScreen(),
+        theme: Constants.appTheme,
+        home: const HomeScreen(),
       ),
     );
   }

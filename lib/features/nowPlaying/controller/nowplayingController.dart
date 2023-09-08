@@ -38,20 +38,7 @@ class NowplayingController extends ChangeNotifier {
 
   toggleSong({required String uri}) async {
     try {
-      // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri)));
-      if (audioPlayer.playing) {
-        // audioPlayer.positionStream.listen((pos) {
-        //   position = pos;
-        // });
-        // log("message $position");
-        // await _prefs.setInt('pausedPosition', position.inSeconds);
-        await audioPlayer.pause();
-      } else {
-        pausedPosition = _prefs.getInt('pausedPosition');
-        log("$pausedPosition paused");
-        // audioPlayer.seek(Duration(seconds: pausedPosition!));
-        audioPlayer.play();
-      }
+      audioPlayer.playing ? await audioPlayer.pause() : audioPlayer.play();
       notifyListeners();
     } on Exception {
       log("error playing");

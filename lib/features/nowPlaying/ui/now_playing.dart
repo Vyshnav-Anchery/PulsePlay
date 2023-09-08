@@ -10,7 +10,7 @@ import '../controller/nowplayingController.dart';
 class NowPlaying extends StatefulWidget {
   final List<SongModel> songModel;
   final int index;
-  const NowPlaying({super.key, required this.songModel,required this.index});
+  const NowPlaying({super.key, required this.songModel, required this.index});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -23,15 +23,16 @@ class _NowPlayingState extends State<NowPlaying> {
   void initState() {
     provider = Provider.of<NowplayingController>(context, listen: false);
     audioPlayer = AudioPlayer();
-    provider.playSong(songmodel: widget.songModel,index: widget.index);
+    provider.playSong(songmodel: widget.songModel, index: widget.index);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.appBg,
+      // backgroundColor: Constants.appBg,
       body: Container(
+        decoration: BoxDecoration(gradient: Constants.linearGradient),
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -50,6 +51,15 @@ class _NowPlayingState extends State<NowPlaying> {
                 child: Column(
               children: [
                 QueryArtworkWidget(
+                  nullArtworkWidget: const SizedBox(
+                    width: 350,
+                    height: 350,
+                    child: Card(
+                        child: Icon(
+                      Icons.music_note_rounded,
+                      size: 150,
+                    )),
+                  ),
                   artworkQuality: FilterQuality.high,
                   size: MediaQuery.sizeOf(context).width.toInt(),
                   artworkHeight: 350,
@@ -82,8 +92,9 @@ class _NowPlayingState extends State<NowPlaying> {
                     builder: (context, stream) {
                       return ProgressBar(
                         progress: stream.data ?? Duration.zero,
-                        total:
-                            Duration(milliseconds: widget.songModel[widget.index].duration!),
+                        total: Duration(
+                            milliseconds:
+                                widget.songModel[widget.index].duration!),
                         timeLabelTextStyle: Constants.musicListTextStyle,
                         onSeek: provider.audioPlayer.seek,
                       );
@@ -105,7 +116,8 @@ class _NowPlayingState extends State<NowPlaying> {
                               )),
                           IconButton(
                             onPressed: () {
-                              provider.toggleSong(uri: widget.songModel[widget.index].uri!);
+                              provider.toggleSong(
+                                  uri: widget.songModel[widget.index].uri!);
                             },
                             icon: isPlaying
                                 ? Icon(
@@ -121,7 +133,7 @@ class _NowPlayingState extends State<NowPlaying> {
                           ),
                           IconButton(
                               onPressed: () {
-                                provider.playNextSong(index:widget.index );
+                                provider.playNextSong(index: widget.index);
                                 log("next");
                               },
                               icon: Icon(

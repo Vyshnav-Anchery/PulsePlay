@@ -4,38 +4,23 @@ import 'package:music_player/utils/constants/constants.dart';
 import '../../../utils/provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
-  final MusicAppProvider provider;
+  final BottomNavController provider;
 
-   const BottomNavBar({super.key,required this.provider});
+  const BottomNavBar({super.key, required this.provider});
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      enableFeedback: false,
-      backgroundColor: Constants.bottomBarColor,
-      unselectedItemColor: Constants.bottomBarIconColor,
-      type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: false,
-      currentIndex: provider.bottomNavIndex,
-      onTap: (value) => provider.bottomNavBarIndex(value),
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.music_note),
-          label: "Songs",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.playlist_play),
-          label: "Playlist",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.album),
-          label: "Albums",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: "User",
-        ),
+    return NavigationBar(
+      destinations: const [
+        NavigationDestination(icon: Icon(Icons.music_note), label: "Songs"),
+        NavigationDestination(icon: Icon(Icons.playlist_play), label: "Playlist"),
+        NavigationDestination(icon: Icon(Icons.album), label: "Albums"),
+        NavigationDestination(icon: Icon(Icons.person), label: "User"),
       ],
+      selectedIndex: provider.bottomNavIndex,
+      onDestinationSelected: (value) {
+        provider.bottomNavBarIndex(value);
+      },
     );
   }
 }
