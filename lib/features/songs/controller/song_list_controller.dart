@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+// import 'package:flutter/material.dart';
+// import 'package:just_audio/just_audio.dart';
+// import 'package:on_audio_query/on_audio_query.dart';
 
-class SongListController extends ChangeNotifier {
-  final OnAudioQuery audioquery = OnAudioQuery();
-  searchSongs() {
-    return audioquery.querySongs(
-        sortType: null,
-        orderType: OrderType.ASC_OR_SMALLER,
-        uriType: UriType.EXTERNAL,
-        ignoreCase: true);
-  }
-}
+// class SongListController extends ChangeNotifier {
+//   final OnAudioQuery audioquery = OnAudioQuery();
+//    AudioPlayer audioPlayer=AudioPlayer();
+ 
+// }

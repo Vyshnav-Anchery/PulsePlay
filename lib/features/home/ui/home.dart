@@ -30,44 +30,56 @@ class _HomeScreenState extends State<HomeScreen> {
   final screens = [
     MusicScreen(),
     const PlaylistScreen(),
-    const AlbumScreen(),
+    AlbumScreen(),
     const UserScreen()
+  ];
+  final titles = [
+    "Songs",
+    "Playlist",
+    "Albums",
+    "User Details",
   ];
   @override
   Widget build(BuildContext context) {
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //       onPressed: () {},
-        //       icon: const Icon(
-        //         Icons.search,
-        //         color: Colors.white,
-        //       )),
-        //   // backgroundColor: Colors.transparent,
-        //   centerTitle: true,
-        //   title: Text(
-        //     "Songs",
-        //     style: Constants.musicListTextStyle,
-        //   ),
-        //   actions: [
-        //     PopupMenuButton(
-        //       itemBuilder: (context) {
-        //         return [
-        //           PopupMenuItem(
-        //             child:
-        //                 TextButton(onPressed: () {}, child: const Text("sort")),
-        //           ),
-        //         ];
-        //       },
-        //       color: Colors.white,
-        //     )
-        //   ],
-        // ),
+        appBar: provider.bottomNavIndex == 3
+            ? AppBar(
+                backgroundColor: Constants.appBg,
+                centerTitle: true,
+                title: Text(titles[provider.bottomNavIndex],style: Constants.musicListTitleStyle,),
+              )
+            : AppBar(
+                backgroundColor: Constants.appBg,
+                leading: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    )),
+                // backgroundColor: Colors.transparent,
+                centerTitle: true,
+                title: Text(
+                  titles[provider.bottomNavIndex],
+                  style: Constants.musicListTextStyle,
+                ),
+                actions: [
+                  PopupMenuButton(
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem(
+                          child: TextButton(
+                              onPressed: () {}, child: const Text("sort")),
+                        ),
+                      ];
+                    },
+                    color: Colors.white,
+                  )
+                ],
+              ),
         body: Container(
-          decoration: BoxDecoration(gradient: Constants.linearGradient),
-          child: screens[provider.bottomNavIndex]),
-        // bottomNavigationBar: BottomNavBar(provider: provider),
+            decoration: BoxDecoration(gradient: Constants.linearGradient),
+            child: screens[provider.bottomNavIndex]),
         bottomNavigationBar: Container(child: BottomNavBar(provider: provider)),
       );
     });

@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/utils/constants/constants.dart';
+import 'package:music_player/utils/db%20Initialisation/playlistdb_init.dart';
 import 'package:music_player/utils/provider/provider.dart';
-import 'package:music_player/utils/routing/routing.dart';
 import 'package:provider/provider.dart';
 
-import 'features/nowPlaying/controller/nowplayingController.dart';
+import 'features/nowPlaying/controller/musicplayer_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  PlaylistDbInit playlistDbInit = PlaylistDbInit();
   WidgetsFlutterBinding.ensureInitialized();
+  playlistDbInit.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Future.delayed(const Duration(seconds: 3));
   FlutterNativeSplash.remove();
@@ -20,8 +22,8 @@ void main() async {
       ChangeNotifierProvider<BottomNavController>(
         create: (context) => BottomNavController(),
       ),
-      ChangeNotifierProvider<NowplayingController>(
-        create: (context) => NowplayingController(),
+      ChangeNotifierProvider<MusicPlayerController>(
+        create: (context) => MusicPlayerController(),
       )
     ],
     child: const MyApp(),

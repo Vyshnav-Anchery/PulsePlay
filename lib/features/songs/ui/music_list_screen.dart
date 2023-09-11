@@ -11,7 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/provider/provider.dart';
-import '../../nowPlaying/controller/nowplayingController.dart';
+import '../../nowPlaying/controller/musicplayer_controller.dart';
 import '../controller/song_list_controller.dart';
 
 class MusicScreen extends StatefulWidget {
@@ -22,115 +22,99 @@ class MusicScreen extends StatefulWidget {
 }
 
 class _MusicScreenState extends State<MusicScreen> {
-  late SongListController songListController;
+  late MusicPlayerController songListController;
   @override
   void initState() {
     checkpermission();
-    songListController = SongListController();
+    songListController = MusicPlayerController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // backgroundColor: Constants.appBg,
+      margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(gradient: Constants.linearGradient),
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(10)),
-                color: Colors.transparent),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.search,
-                      color: Constants.bottomBarIconColor,
-                    )),
-                Text(
-                  "Songs",
-                  style: Constants.musicListTitleStyle,
-                ),
-                PopupMenuButton(
-                  color: Constants.bottomBarIconColor,
-                  itemBuilder: (context) {
-                    return [];
-                  },
-                )
-              ],
-            ),
-          ),
-          FutureBuilder<List<SongModel>>(
-              future: songListController.searchSongs(),
-              builder: (context, snapshot) {
-                if (snapshot.data == null) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text("no music found"),
-                  );
-                } else {
-                  return SizedBox(
-                    height: MediaQuery.sizeOf(context).height - 162,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const Divider(color: Colors.transparent),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        int id = snapshot.data![index].id;
-                        return ListTile(
-                          leading: QueryArtworkWidget(
-                              id: id, type: ArtworkType.AUDIO),
-                          title: Text(
-                            snapshot.data![index].title,
-                            style: Constants.musicListTextStyle,
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
+      child: FutureBuilder<List<SongModel>>(
+          future: songListController.searchSongs(),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text("no music found"),
+              );
+            } else {
+              MusicPlayerController.allSongs = [...snapshot.data!];
+              return SizedBox(
+                height: MediaQuery.sizeOf(context).height - 168,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Colors.transparent),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    int id = snapshot.data![index].id;
+                    return ListTile(
+                      selected: songListController.audioPlayer.playing,
+                      leading: QueryArtworkWidget(
+                          nullArtworkWidget: const SizedBox(
+                            height: 52,
+                            width: 52,
+                            child: Card(
+                                child: Center(
+                              child: Icon(
+                                Icons.music_note_rounded,
+                                size: 30,
+                              ),
+                            )),
                           ),
-                          subtitle: Text(
-                            snapshot.data![index].artist.toString(),
-                            style: Constants.musicListTextStyle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: PopupMenuButton(
-                            color: Constants.bottomBarIconColor,
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  child: TextButton(
-                                      onPressed: () {},
-                                      child: const Text("Add to favorites")),
-                                ),
-                              ];
-                            },
-                          ),
-                          onTap: () {
-                            // playSong(item.data![index].uri);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NowPlaying(
-                                    songModel: snapshot.data!,
-                                    index: index,
-                                  ),
-                                ));
-                          },
-                        );
+                          id: id,
+                          type: ArtworkType.AUDIO),
+                      title: Text(
+                        snapshot.data![index].title,
+                        style: Constants.musicListTextStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                      ),
+                      subtitle: Text(
+                        snapshot.data![index].artist! == "<unknown>"
+                            ? "Unknown Artist"
+                            : snapshot.data![index].artist!,
+                        style: Constants.musicListTextStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: PopupMenuButton(
+                        color: Constants.bottomBarIconColor,
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: const Text("Add to favorites")),
+                            ),
+                          ];
+                        },
+                      ),
+                      onTap: () async{
+                        // playSong(item.data![index].uri);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NowPlaying(
+                                songModel: snapshot.data!,
+                                index: index,
+                              ),
+                            ));
                       },
-                    ),
-                  );
-                }
-              }),
-        ],
-      ),
+                    );
+                  },
+                ),
+              );
+            }
+          }),
     );
   }
 
