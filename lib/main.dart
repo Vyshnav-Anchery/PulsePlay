@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/utils/constants/constants.dart';
-import 'package:music_player/utils/db%20Initialisation/playlistdb_init.dart';
 import 'package:music_player/utils/provider/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,9 +10,7 @@ import 'features/nowPlaying/controller/musicplayer_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  PlaylistDbInit playlistDbInit = PlaylistDbInit();
   WidgetsFlutterBinding.ensureInitialized();
-  playlistDbInit.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Future.delayed(const Duration(seconds: 3));
   FlutterNativeSplash.remove();

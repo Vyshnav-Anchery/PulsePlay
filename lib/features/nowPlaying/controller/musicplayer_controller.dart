@@ -90,10 +90,11 @@ class MusicPlayerController extends ChangeNotifier {
 
   searchSongs() {
     return audioquery.querySongs(
-        sortType: null,
-        orderType: OrderType.ASC_OR_SMALLER,
-        uriType: UriType.EXTERNAL,
-        ignoreCase: true);
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
   }
 
   void shuffleAll() async {
@@ -150,5 +151,30 @@ class MusicPlayerController extends ChangeNotifier {
         ? audioPlayer.setShuffleModeEnabled(false)
         : audioPlayer.setShuffleModeEnabled(true);
     notifyListeners();
+  }
+
+  createNewPlaylist({required playlistname}) {
+    audioquery.createPlaylist(playlistname);
+    notifyListeners();
+  }
+
+  loadPlaylistSongs(PlaylistModel playlistId) async {
+    var path = playlistId.getMap.entries;
+    // path.entries;
+    return await audioquery.queryAudiosFrom(AudiosFromType.PLAYLIST, path);
+  }
+
+  Future<List<SongModel>> getPlaylistSongs(
+    int playlistId, {
+    SongSortType? sortType,
+    OrderType? orderType,
+    String? path,
+  }) async {
+    return audioquery.queryAudiosFrom(
+      AudiosFromType.PLAYLIST,
+      playlistId,
+      sortType: sortType ?? SongSortType.DATE_ADDED,
+      orderType: orderType ?? OrderType.DESC_OR_GREATER,
+    );
   }
 }

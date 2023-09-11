@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/album/ui/album_screen.dart';
+import 'package:music_player/features/home/widgets/PlaylistCreate_Button.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
-import 'package:music_player/features/playlist/ui/playlist_screen.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:music_player/features/user/ui/user_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/constants/constants.dart';
 import '../../../utils/provider/provider.dart';
+import '../../playlists_list/ui/playlist_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final screens = [
     MusicScreen(),
-    const PlaylistScreen(),
+    AllPlaylistScreen(),
     AlbumScreen(),
     const UserScreen()
   ];
@@ -43,11 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
+        floatingActionButton:
+            provider.bottomNavIndex == 1 ? PlaylistCreateButton() : Container(),
         appBar: provider.bottomNavIndex == 3
             ? AppBar(
                 backgroundColor: Constants.appBg,
                 centerTitle: true,
-                title: Text(titles[provider.bottomNavIndex],style: Constants.musicListTitleStyle,),
+                title: Text(
+                  titles[provider.bottomNavIndex],
+                  style: Constants.musicListTitleStyle,
+                ),
               )
             : AppBar(
                 backgroundColor: Constants.appBg,
@@ -57,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.search,
                       color: Colors.white,
                     )),
-                // backgroundColor: Colors.transparent,
                 centerTitle: true,
                 title: Text(
                   titles[provider.bottomNavIndex],

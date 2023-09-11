@@ -98,7 +98,7 @@ class _MusicScreenState extends State<MusicScreen> {
                           ];
                         },
                       ),
-                      onTap: () async{
+                      onTap: () async {
                         // playSong(item.data![index].uri);
                         Navigator.push(
                             context,
