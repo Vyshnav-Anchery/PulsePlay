@@ -14,7 +14,7 @@ class Constants {
             const MaterialStatePropertyAll(TextStyle(color: Colors.white))),
     useMaterial3: true,
   );
-  static LinearGradient linearGradient =  LinearGradient(
+  static LinearGradient linearGradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -64,4 +64,8 @@ class Constants {
   // static Color bottomBarColor = const Color.fromARGB(255, 31, 31, 32);
   static Color bottomBarColor = Colors.black;
   static String logo = "assets/images/logo.png";
+
+  // Hive
+
+  static String boxName = "playlists";
 }

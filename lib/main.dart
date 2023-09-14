@@ -1,19 +1,34 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/utils/provider/provider.dart';
 import 'package:provider/provider.dart';
 
+import 'database/playlistdatabase.dart';
 import 'features/nowPlaying/controller/musicplayer_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(PlaylistDatabaseAdapter());
+
+  await Hive.openBox<PlaylistDatabase>(Constants.boxName);
+
+  playlistBox = Hive.box<PlaylistDatabase>(Constants.boxName);
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await Future.delayed(const Duration(seconds: 3));
+
   FlutterNativeSplash.remove();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<BottomNavController>(

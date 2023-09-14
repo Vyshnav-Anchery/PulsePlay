@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player/features/nowPlaying/ui/now_playing.dart';
+import 'package:music_player/features/songs/widgets/playlistbottomsheet.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../utils/provider/provider.dart';
 import '../../nowPlaying/controller/musicplayer_controller.dart';
 import '../controller/song_list_controller.dart';
+import '../widgets/popupmenuitems.dart';
 
 class MusicScreen extends StatefulWidget {
   MusicScreen({super.key});
@@ -86,18 +88,8 @@ class _MusicScreenState extends State<MusicScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      trailing: PopupMenuButton(
-                        color: Constants.bottomBarIconColor,
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                              child: TextButton(
-                                  onPressed: () {},
-                                  child: const Text("Add to favorites")),
-                            ),
-                          ];
-                        },
-                      ),
+                      trailing:
+                          MusicLIstPopUpMenu(uri: snapshot.data![index].uri!),
                       onTap: () async {
                         // playSong(item.data![index].uri);
                         Navigator.push(

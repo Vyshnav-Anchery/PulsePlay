@@ -1,36 +1,125 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
-import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/constants/constants.dart';
+import '../../nowPlaying/controller/musicplayer_controller.dart';
+import '../../nowPlaying/ui/now_playing.dart';
+
 class PlaylistScreen extends StatelessWidget {
-  PlaylistModel playlistModel;
-  int index;
-  PlaylistScreen({super.key, required this.playlistModel, required this.index});
+  final String playlistName;
+  final Map<String, List<String>> playlist;
+  const PlaylistScreen(
+      {super.key, required this.playlistName, required this.playlist});
 
   @override
   Widget build(BuildContext context) {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
-    return Container(
-      decoration: BoxDecoration(gradient: Constants.linearGradient),
-      child: FutureBuilder<List<SongModel>>(
-        future: provider.getPlaylistSongs(playlistModel.id),
-        builder: (context, snapshot) {
-          return ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Center(
-                child: Text(
-                  snapshot.data![index].title,
-                  style: Constants.musicListTextStyle,
-                ),
+    List<String> songlist = playlist[playlistName]!.toSet().toList();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(playlistName),
+      ),
+      body: Container(
+        decoration: BoxDecoration(gradient: Constants.linearGradient),
+        child: FutureBuilder<List<SongModel>>(
+          future: provider.playlistToSongModel(songlist),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
+            } else if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text("no music found"),
+              );
+            } else {
+              MusicPlayerController.allSongs = [...snapshot.data!];
+              return ListView.separated(
+                  itemCount: snapshot.data!.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Colors.transparent),
+                  itemBuilder: (context, index) {
+                    int id = snapshot.data![index].id;
+                    return ListTile(
+                      leading: QueryArtworkWidget(
+                          nullArtworkWidget: const SizedBox(
+                            height: 52,
+                            width: 52,
+                            child: Card(
+                                child: Center(
+                              child: Icon(
+                                Icons.music_note_rounded,
+                                size: 30,
+                              ),
+                            )),
+                          ),
+                          id: id,
+                          type: ArtworkType.AUDIO),
+                      title: Text(
+                        snapshot.data![index].title,
+                        style: Constants.musicListTextStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                      ),
+                      subtitle: Text(
+                        snapshot.data![index].artist! == "<unknown>"
+                            ? "Unknown Artist"
+                            : snapshot.data![index].artist!,
+                        style: Constants.musicListTextStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: PopupMenuButton(
+                        color: Constants.bottomBarIconColor,
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: const Text("remove from playlist")),
+                            ),
+                          ];
+                        },
+                      ),
+                      onTap: () async {
+                        // playSong(item.data![index].uri);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NowPlaying(
+                                songModel: snapshot.data!,
+                                index: index,
+                              ),
+                            ));
+                      },
+                    );
+                  });
+            }
+          },
+        ),
       ),
     );
   }
 }
+// ListView.builder(
+//           itemCount: playlist[playlistName]?.length,
+//           itemBuilder: (BuildContext context, int index) {
+//             List<String>? list = playlist[playlistName];
+//             if (list == null) {
+//               return Container();
+//             } else if (list.isEmpty) {
+//               return const Center(
+//                 child: Text("empty playlist"),
+//               );
+//             } else {
+//               return ListTile(
+//                 title: Text(
+//                   list[index], // Use the index to access the item in the list
+//                   style: Constants.musicListTextStyle,
+//                 ),
+//               );
+//             }
+//           },
+//         )
