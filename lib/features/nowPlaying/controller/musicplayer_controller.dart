@@ -11,34 +11,20 @@ import '../../../database/playlistdatabase.dart';
 class MusicPlayerController extends ChangeNotifier {
   final OnAudioQuery audioquery = OnAudioQuery();
   final AudioPlayer audioPlayer = AudioPlayer();
-  Duration position = Duration.zero;
-  int? pausedPosition;
-  late List<SongModel> _songmodel;
-  Completer<void> refreshCompleter = Completer<void>();
 
   late ConcatenatingAudioSource currentQueue;
+
   // currently playing song
   var currentlyPlaying;
-  int currentlyPlayingIndex = 0;
-  int? _index;
-  bool refresh = true;
-  static List<SongModel> allSongs = [];
-  List<SongModel> currentPlaylist = [];
-  int get index => _index!;
-  MusicPlayerController() {
-    loadDuration();
-  }
 
-  loadDuration() async {
-    _index = audioPlayer.currentIndex;
-  }
+  int currentlyPlayingIndex = 0;
+
+  static List<SongModel> allSongs = [];
+
+  List<SongModel> currentPlaylist = [];
 
   playSong({required List<SongModel> songmodel, required index}) {
-    // var uri = songmodel[index].uri;
-    _songmodel = songmodel;
-    _index = index;
     try {
-      // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
       audioPlayer.setAudioSource(createPlaylist(songmodel),
           initialIndex: index);
       playSongg(songmodel[index], index);
@@ -61,34 +47,14 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   playNextSong({required index}) {
-    // increaseIndex();
-    // int ind = _index!;
-    // var uri = _songmodel[ind].uri;
-    // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    // audioPlayer.play();
     audioPlayer.seekToNext();
 
     notifyListeners();
   }
 
   playPrevSong({required index}) {
-    // decreaseIndex();
-    // int ind = _index!;
-    // var uri = _songmodel[ind].uri;
-    // audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-    // audioPlayer.play();
     audioPlayer.seekToPrevious();
     notifyListeners();
-  }
-
-  increaseIndex() {
-    _index = _index! + 1;
-  }
-
-  decreaseIndex() {
-    if (_index! > 0) {
-      _index = _index! - 1;
-    }
   }
 
   searchSongs() {
@@ -197,30 +163,26 @@ class MusicPlayerController extends ChangeNotifier {
       playlistDatabase.songUris[playlistName]!.contains(songUri)
           ? log("already in playlist")
           : playlistDatabase.songUris[playlistName]!.add(songUri);
-    } else {
-      // If the playlist doesn't exist, create a new one with the song
-      playlistDatabase.songUris[playlistName] = [songUri];
+    } else {}
+    playlistDatabase.save();
+  }
+
+  addtoFavorite(String songUri) {
+    PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites');
+    if (playlistDatabase == null) {
+      playlistBox.put(
+          'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
+      playlistDatabase = playlistBox.get('Favorites')!;
     }
-    playlistDatabase.save(); // Save the changes to Hive
-  }
+    if (playlistDatabase.songUris.containsKey('Favorites')) {
+      // If the playlist exists, add the song to it
+      playlistDatabase.songUris['Favorites']!.contains(songUri)
+          ? log("already in playlist")
+          : playlistDatabase.songUris['Favorites']!.add(songUri);
+    } else {
+      playlistDatabase.songUris['Favorites'] = [songUri];
+    }
 
-  loadPlaylistSongs(PlaylistModel playlistId) async {
-    var path = playlistId.getMap.entries;
-    // path.entries;
-    return await audioquery.queryAudiosFrom(AudiosFromType.PLAYLIST, path);
-  }
-
-  Future<List<SongModel>> getPlaylistSongs(
-    int playlistId, {
-    SongSortType? sortType,
-    OrderType? orderType,
-    String? path,
-  }) async {
-    return audioquery.queryAudiosFrom(
-      AudiosFromType.PLAYLIST,
-      playlistId,
-      sortType: sortType ?? SongSortType.DATE_ADDED,
-      orderType: orderType ?? OrderType.DESC_OR_GREATER,
-    );
+    playlistDatabase!.save();
   }
 }

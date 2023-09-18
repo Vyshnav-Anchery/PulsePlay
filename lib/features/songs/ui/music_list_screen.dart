@@ -89,7 +89,7 @@ class _MusicScreenState extends State<MusicScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing:
-                          MusicLIstPopUpMenu(uri: snapshot.data![index].uri!),
+                          MusicLIstPopUpMenu(uri: snapshot.data![index].uri!,controller: songListController),
                       onTap: () async {
                         // playSong(item.data![index].uri);
                         Navigator.push(

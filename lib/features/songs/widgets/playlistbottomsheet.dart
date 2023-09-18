@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
 
 import '../../../utils/box/playlistbox.dart';
+import '../../../utils/constants/constants.dart';
 
 class PlaylistBottomSheet extends StatelessWidget {
   final String songUri;
@@ -13,9 +14,8 @@ class PlaylistBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MusicPlayerController musicPlayerController = MusicPlayerController();
-
-    return SizedBox(
-      height: 400,
+    return Container(
+      decoration: Constants.bottomSheetDecoration,
       child: ListenableBuilder(
         listenable: playlistBox.listenable(),
         builder: (context, child) {
@@ -25,7 +25,8 @@ class PlaylistBottomSheet extends StatelessWidget {
             return ListView.builder(
               itemCount: playlistBox.length,
               itemBuilder: (context, index) {
-                var playlist = playlistBox.getAt(0);
+                var playlistKey = playlistBox.keyAt(index);
+                var playlist = playlistBox.get(playlistKey);
                 if (playlist == null) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -39,15 +40,12 @@ class PlaylistBottomSheet extends StatelessWidget {
                     ],
                   );
                 } else {
-                  var playlistKey = playlistBox.keyAt(index);
                   return ListTile(
-                    title: Text(
-                      playlistKey.toString(),
-                      // style: Constants.musicListTextStyle
-                    ),
+                    title: Text(playlistKey.toString(),
+                        style: Constants.musicListTextStyle),
                     subtitle: Text(
-                      playlist.songUris.length.toString(),
-                      // style: Constants.musicListTextStyle,
+                      "${playlist.songUris[playlistKey]!.length.toString()} Songs",
+                      style: Constants.musicListTextStyle,
                     ),
                     onTap: () {
                       final playlistdb = playlistBox.get(playlistKey);

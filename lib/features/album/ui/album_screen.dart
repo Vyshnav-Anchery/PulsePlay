@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:music_player/features/songs/controller/song_list_controller.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -19,13 +16,12 @@ class AlbumScreen extends StatelessWidget {
           future: songListController.searchSongs(),
           builder: (context, snapshot) {
             return Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               height: MediaQuery.sizeOf(context).height - 162,
               child: GridView.builder(
                 itemCount: 100,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
                 itemBuilder: (context, index) {
                   if (snapshot.data == null) {
                     return const Center(
@@ -52,8 +48,7 @@ class AlbumScreen extends StatelessWidget {
                                 ),
                               ),
                               artworkQuality: FilterQuality.high,
-                              size:
-                                  MediaQuery.sizeOf(context).width.toInt(),
+                              size: MediaQuery.sizeOf(context).width.toInt(),
                               artworkHeight: 150,
                               artworkWidth: 150,
                               artworkBorder: BorderRadius.circular(20),

@@ -18,7 +18,12 @@ class AllPlaylistScreen extends StatelessWidget {
         listenable: playlistBox.listenable(),
         builder: (context, child) {
           if (playlistBox.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Text(
+                "No playlist found",
+                style: Constants.musicListTextStyle,
+              ),
+            );
           } else {
             return ListView.separated(
               itemCount: playlistBox.length,
