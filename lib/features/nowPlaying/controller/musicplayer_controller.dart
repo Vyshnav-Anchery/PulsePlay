@@ -92,13 +92,13 @@ class MusicPlayerController extends ChangeNotifier {
     return ConcatenatingAudioSource(children: sources);
   }
 
-  ConcatenatingAudioSource concatPlaylistSongs(List<String> songUri) {
-    List<AudioSource> sources = [];
-    for (var song in songUri) {
-      sources.add(AudioSource.uri(Uri.parse(song)));
-    }
-    return ConcatenatingAudioSource(children: sources);
-  }
+  // ConcatenatingAudioSource concatPlaylistSongs(List<String> songUri) {
+  //   List<AudioSource> sources = [];
+  //   for (var song in songUri) {
+  //     sources.add(AudioSource.uri(Uri.parse(song)));
+  //   }
+  //   return ConcatenatingAudioSource(children: sources);
+  // }
 
   Future<List<SongModel>> playlistToSongModel(List<String> songUri) async {
     List<SongModel> songModel = [];
@@ -108,7 +108,7 @@ class MusicPlayerController extends ChangeNotifier {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
-    List<String> songUrisorted = songUri.toSet().toList();
+    List<String> songUrisorted = songUri.toList();
     for (SongModel song in allSongs) {
       // Check if the song's URI exists in the songUri list
       if (songUrisorted.contains(song.uri)) {
@@ -173,8 +173,7 @@ class MusicPlayerController extends ChangeNotifier {
       playlistBox.put(
           'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
       playlistDatabase = playlistBox.get('Favorites')!;
-    }
-    if (playlistDatabase.songUris.containsKey('Favorites')) {
+    } else if (playlistDatabase.songUris.containsKey('Favorites')) {
       // If the playlist exists, add the song to it
       playlistDatabase.songUris['Favorites']!.contains(songUri)
           ? log("already in playlist")
@@ -182,7 +181,13 @@ class MusicPlayerController extends ChangeNotifier {
     } else {
       playlistDatabase.songUris['Favorites'] = [songUri];
     }
+    playlistDatabase.save();
+  }
 
-    playlistDatabase!.save();
+  removeFromPlaylist(String songUri, String playlistName) {
+    PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
+    playlistDatabase!.songUris[playlistName]!.remove(songUri);
+    playlistDatabase.save();
+    notifyListeners();
   }
 }

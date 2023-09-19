@@ -77,14 +77,18 @@ class PlaylistScreen extends StatelessWidget {
                           return [
                             PopupMenuItem(
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    provider.removeFromPlaylist(
+                                        snapshot.data![index].uri!,
+                                        playlistName);
+                                    Navigator.pop(context);
+                                  },
                                   child: const Text("remove from playlist")),
                             ),
                           ];
                         },
                       ),
-                      onTap: () async {
-                        // playSong(item.data![index].uri);
+                      onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -103,23 +107,3 @@ class PlaylistScreen extends StatelessWidget {
     );
   }
 }
-// ListView.builder(
-//           itemCount: playlist[playlistName]?.length,
-//           itemBuilder: (BuildContext context, int index) {
-//             List<String>? list = playlist[playlistName];
-//             if (list == null) {
-//               return Container();
-//             } else if (list.isEmpty) {
-//               return const Center(
-//                 child: Text("empty playlist"),
-//               );
-//             } else {
-//               return ListTile(
-//                 title: Text(
-//                   list[index], // Use the index to access the item in the list
-//                   style: Constants.musicListTextStyle,
-//                 ),
-//               );
-//             }
-//           },
-//         )

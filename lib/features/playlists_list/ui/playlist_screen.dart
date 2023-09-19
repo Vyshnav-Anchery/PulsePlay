@@ -61,6 +61,21 @@ class AllPlaylistScreen extends StatelessWidget {
                             playlist: playlist.songUris,
                           ),
                         )),
+                    trailing: PopupMenuButton(
+                      color: Constants.bottomBarIconColor,
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: TextButton(
+                                onPressed: () {
+                                  playlistBox.delete(playlistKey);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("delete playlist")),
+                          ),
+                        ];
+                      },
+                    ),
                   );
                 }
               },
