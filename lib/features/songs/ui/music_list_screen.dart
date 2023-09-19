@@ -11,6 +11,8 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+import '../../../database/playlistdatabase.dart';
+import '../../../utils/box/playlistbox.dart';
 import '../../../utils/provider/provider.dart';
 import '../../nowPlaying/controller/musicplayer_controller.dart';
 import '../controller/song_list_controller.dart';
@@ -29,6 +31,10 @@ class _MusicScreenState extends State<MusicScreen> {
   void initState() {
     checkpermission();
     songListController = MusicPlayerController();
+    if (!playlistBox.containsKey('Favorites')) {
+      playlistBox.put(
+          'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
+    }
     super.initState();
   }
 
@@ -88,10 +94,10 @@ class _MusicScreenState extends State<MusicScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      trailing:
-                          MusicLIstPopUpMenu(uri: snapshot.data![index].uri!,controller: songListController),
-                      onTap: () async {
-                        // playSong(item.data![index].uri);
+                      trailing: MusicLIstPopUpMenu(
+                          uri: snapshot.data![index].uri!,
+                          controller: songListController),
+                      onTap: ()  {
                         Navigator.push(
                             context,
                             MaterialPageRoute(

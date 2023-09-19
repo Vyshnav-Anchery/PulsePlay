@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
+import 'package:music_player/features/nowPlaying/ui/widgets/sleeptimeralert.dart';
 import 'package:music_player/features/songs/widgets/playlistbottomsheet.dart';
 
 import '../../../utils/constants/constants.dart';
@@ -36,6 +37,17 @@ class MusicLIstPopUpMenu extends StatelessWidget {
                   );
                 },
                 child: const Text("Add to playlist")),
+          ),
+          PopupMenuItem(
+            child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) => SleepTimerAlert(),
+                  );
+                },
+                child: const Text("Set sleep timer")),
           ),
         ];
       },

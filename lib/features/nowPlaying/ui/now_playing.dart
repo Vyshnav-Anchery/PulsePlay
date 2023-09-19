@@ -69,7 +69,7 @@ class _NowPlayingState extends State<NowPlaying> {
                             fontSize: 30,
                             color: Colors.white),
                       ),
-                      // SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
                         widget.songModel[widget.index].artist! == "<unknown>"
                             ? "Unknown Artist"
@@ -81,6 +81,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       ),
                       const SizedBox(height: 20),
                       PlayingProgressBar(provider: provider),
+                      const SizedBox(height: 20),
                       SongControllwidgets(
                         index: widget.index,
                         songModel: widget.songModel,

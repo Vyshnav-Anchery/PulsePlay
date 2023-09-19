@@ -10,9 +10,14 @@ import '../../../database/playlistdatabase.dart';
 
 class MusicPlayerController extends ChangeNotifier {
   final OnAudioQuery audioquery = OnAudioQuery();
+
   final AudioPlayer audioPlayer = AudioPlayer();
 
+  bool? isFav;
+
   late ConcatenatingAudioSource currentQueue;
+
+  Timer? sleepTimer;
 
   // currently playing song
   var currentlyPlaying;
@@ -92,14 +97,6 @@ class MusicPlayerController extends ChangeNotifier {
     return ConcatenatingAudioSource(children: sources);
   }
 
-  // ConcatenatingAudioSource concatPlaylistSongs(List<String> songUri) {
-  //   List<AudioSource> sources = [];
-  //   for (var song in songUri) {
-  //     sources.add(AudioSource.uri(Uri.parse(song)));
-  //   }
-  //   return ConcatenatingAudioSource(children: sources);
-  // }
-
   Future<List<SongModel>> playlistToSongModel(List<String> songUri) async {
     List<SongModel> songModel = [];
     List<SongModel> allSongs = await audioquery.querySongs(
@@ -150,6 +147,35 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  startSleepTimer(Duration duration) {
+    // Stop any existing timer
+    if (sleepTimer != null) {
+      sleepTimer!.cancel();
+    }
+    log(duration.toString());
+    // Start a new timer
+    sleepTimer = Timer(duration, () {
+      audioPlayer.stop();
+      notifyListeners();
+    });
+  }
+
+  int _sleepTime = 0;
+
+  int get sleepTime => _sleepTime;
+
+  void setSleepTime(int value) {
+    _sleepTime = value;
+    notifyListeners();
+  }
+
+  cancelSleepTimer() {
+    if (sleepTimer != null) {
+      sleepTimer!.cancel();
+      sleepTimer = null;
+    }
+  }
+
   createNewPlaylist({required String playlistname}) {
     playlistBox.put(
         playlistname, PlaylistDatabase(songUris: {playlistname: []}));
@@ -168,20 +194,35 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   addtoFavorite(String songUri) {
-    PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites');
-    if (playlistDatabase == null) {
-      playlistBox.put(
-          'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
-      playlistDatabase = playlistBox.get('Favorites')!;
-    } else if (playlistDatabase.songUris.containsKey('Favorites')) {
+    PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
+    if (playlistDatabase.songUris.containsKey('Favorites')) {
       // If the playlist exists, add the song to it
-      playlistDatabase.songUris['Favorites']!.contains(songUri)
-          ? log("already in playlist")
-          : playlistDatabase.songUris['Favorites']!.add(songUri);
+      if (playlistDatabase.songUris['Favorites']!.contains(songUri)) {
+        log("already in playlist");
+      } else {
+        playlistDatabase.songUris['Favorites']!.add(songUri);
+      }
     } else {
       playlistDatabase.songUris['Favorites'] = [songUri];
     }
     playlistDatabase.save();
+    notifyListeners();
+  }
+
+  removeFromFavorite(String songUri) {
+    PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
+    if (playlistDatabase.songUris.containsKey('Favorites')) {
+      // If the playlist exists, add the song to it
+      if (playlistDatabase.songUris['Favorites']!.contains(songUri)) {
+        playlistDatabase.songUris['Favorites']!.remove(songUri);
+      } else {
+        log("already removed");
+      }
+    } else {
+      playlistDatabase.songUris['Favorites'] = [songUri];
+    }
+    playlistDatabase.save();
+    notifyListeners();
   }
 
   removeFromPlaylist(String songUri, String playlistName) {
