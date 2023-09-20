@@ -8,7 +8,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/provider/provider.dart';
+import '../../nowPlaying/controller/musicplayer_controller.dart';
 import '../../playlists_list/ui/playlist_screen.dart';
+import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,36 +46,43 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
         floatingActionButton:
-            provider.bottomNavIndex == 1 ? PlaylistCreateButton() : Container(),
+            provider.bottomNavIndex == 1 ? const PlaylistCreateButton() : Container(),
         appBar: provider.bottomNavIndex == 0
             ? AppBar(
                 backgroundColor: Constants.appBg,
                 leading: IconButton(
-                    onPressed: () {
-                      // showSearch(context: context, delegate: Searchde);
-                    },
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    )),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate:
+                          SongSearchDelegate(),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                ),
                 centerTitle: true,
+                title: Text(
+                  titles[provider.bottomNavIndex],
+                  style: Constants.musicListTitleStyle,
+                ),
                 actions: [
                   PopupMenuButton(
                     itemBuilder: (context) {
                       return [
                         PopupMenuItem(
                           child: TextButton(
-                              onPressed: () {}, child: const Text("sort")),
+                            onPressed: () {},
+                            child: const Text("sort"),
+                          ),
                         ),
                       ];
                     },
                     color: Colors.white,
                   )
                 ],
-                title: Text(
-                  titles[provider.bottomNavIndex],
-                  style: Constants.musicListTitleStyle,
-                ),
               )
             : AppBar(
                 backgroundColor: Constants.appBg,
@@ -86,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Container(
             decoration: BoxDecoration(gradient: Constants.linearGradient),
             child: screens[provider.bottomNavIndex]),
-        bottomNavigationBar: Container(child: BottomNavBar(provider: provider)),
+        bottomNavigationBar: BottomNavBar(provider: provider),
       );
     });
   }
