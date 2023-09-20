@@ -47,6 +47,7 @@ dependencies:
   rxdart: ^0.27.7
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
+  just_audio_background: ^0.0.1-beta.10
 
 dev_dependencies:
   flutter_test:

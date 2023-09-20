@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:music_player/features/nowPlaying/ui/widgets/sleeptimeralert.dart';
+import 'package:music_player/features/nowPlaying/ui/widgets/sleep_timer_alert.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../../database/playlistdatabase.dart';
 import '../../../../utils/box/playlistbox.dart';
 import '../../../../utils/constants/constants.dart';
-import '../../../songs/widgets/playlistbottomsheet.dart';
+import '../../../songs/widgets/playlist_bottomsheet.dart';
 import '../../controller/musicplayer_controller.dart';
 
 class SongControllwidgets extends StatelessWidget {

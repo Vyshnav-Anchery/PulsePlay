@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/features/playlist/ui/playlist_screen.dart';
+import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:music_player/utils/constants/constants.dart';
 

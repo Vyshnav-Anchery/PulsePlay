@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
-import 'package:music_player/features/nowPlaying/ui/widgets/sleeptimeralert.dart';
-import 'package:music_player/features/songs/widgets/playlistbottomsheet.dart';
-
+import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
 import '../../../utils/constants/constants.dart';
+import '../../nowPlaying/ui/widgets/sleep_timer_alert.dart';
 
 class MusicLIstPopUpMenu extends StatelessWidget {
   final String uri;

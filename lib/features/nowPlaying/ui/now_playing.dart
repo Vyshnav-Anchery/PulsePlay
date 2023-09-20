@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:music_player/features/nowPlaying/ui/widgets/songcover.dart';
+import 'package:music_player/features/nowPlaying/ui/widgets/song_controll_buttons.dart';
+import 'package:music_player/features/nowPlaying/ui/widgets/song_cover.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../controller/musicplayer_controller.dart';
 import 'widgets/progressbar.dart';
-import 'widgets/songcontrollbuttons.dart';
 
 class NowPlaying extends StatefulWidget {
   final List<SongModel> songModel;

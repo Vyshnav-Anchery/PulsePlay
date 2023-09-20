@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/album/ui/album_screen.dart';
-import 'package:music_player/features/home/widgets/PlaylistCreate_Button.dart';
+import 'package:music_player/features/home/widgets/playlist_create_Button.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:music_player/features/user/ui/user_screen.dart';
@@ -8,8 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/provider/provider.dart';
-import '../../nowPlaying/controller/musicplayer_controller.dart';
-import '../../playlists_list/ui/playlist_screen.dart';
+import '../../all playlists/ui/playlist_screen.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,8 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
-        floatingActionButton:
-            provider.bottomNavIndex == 1 ? const PlaylistCreateButton() : Container(),
+        floatingActionButton: provider.bottomNavIndex == 1
+            ? const PlaylistCreateButton()
+            : provider.bottomNavIndex == 0
+                ? FloatingActionButton(
+                    onPressed: () {},
+                  )
+                : Container(),
         appBar: provider.bottomNavIndex == 0
             ? AppBar(
                 backgroundColor: Constants.appBg,
@@ -54,8 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     showSearch(
                       context: context,
-                      delegate:
-                          SongSearchDelegate(),
+                      delegate: SongSearchDelegate(),
                     );
                   },
                   icon: const Icon(
