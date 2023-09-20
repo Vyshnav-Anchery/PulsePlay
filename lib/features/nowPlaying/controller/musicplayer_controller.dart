@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -91,7 +92,12 @@ class MusicPlayerController extends ChangeNotifier {
     currentPlaylist = [...songs];
     List<AudioSource> sources = [];
     for (var song in songs) {
-      sources.add(AudioSource.uri(Uri.parse(song.uri!)));
+      sources.add(AudioSource.uri(Uri.parse(song.uri!),
+          tag: MediaItem(
+              id: song.id.toString(),
+              title: song.title,
+              artist: song.artist,
+              artUri: Uri.parse(song.uri!))));
     }
     currentQueue = ConcatenatingAudioSource(children: sources);
     return ConcatenatingAudioSource(children: sources);

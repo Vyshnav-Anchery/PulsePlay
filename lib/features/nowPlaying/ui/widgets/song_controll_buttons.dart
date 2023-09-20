@@ -23,8 +23,8 @@ class SongControllwidgets extends StatelessWidget {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
     PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites')!;
-    bool isFav =
-        playlistDatabase.songUris['Favorites']!.contains(songModel[index].uri);
+    bool isFav = playlistDatabase.songUris['Favorites']!
+        .contains(provider.currentlyPlaying!.uri);
 
     bool isPlaying = provider.audioPlayer.playing;
     return Column(
@@ -93,17 +93,17 @@ class SongControllwidgets extends StatelessWidget {
           children: [
             IconButton(
                 onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const SleepTimerAlert(),
-                  ),
+                      context: context,
+                      builder: (context) => const SleepTimerAlert(),
+                    ),
                 icon: const Icon(
                   Icons.nightlight_outlined,
                   color: Colors.white,
                 )),
             IconButton(
               onPressed: () => isFav
-                    ? provider.removeFromFavorite(songModel[index].uri!)
-                    : provider.addtoFavorite(songModel[index].uri!),
+                  ? provider.removeFromFavorite(provider.currentlyPlaying!.uri!)
+                  : provider.addtoFavorite(provider.currentlyPlaying!.uri!),
               icon: Icon(
                 isFav ? Icons.favorite : Icons.favorite_border,
                 color: Constants.bottomBarIconColor,
@@ -111,9 +111,10 @@ class SongControllwidgets extends StatelessWidget {
             ),
             IconButton(
               onPressed: () => showModalBottomSheet(
-                  context: context,
-                  builder: (context) => PlaylistBottomSheet(songUri: songModel[index].uri!),
-                ),
+                context: context,
+                builder: (context) =>
+                    PlaylistBottomSheet(songUri: songModel[index].uri!),
+              ),
               icon:
                   Icon(Icons.playlist_add, color: Constants.bottomBarIconColor),
             ),

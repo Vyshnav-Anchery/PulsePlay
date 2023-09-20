@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/song_controll_buttons.dart';
@@ -25,6 +27,7 @@ class _NowPlayingState extends State<NowPlaying> {
     provider = Provider.of<MusicPlayerController>(context, listen: false);
     audioPlayer = AudioPlayer();
     provider.playSong(songmodel: widget.songModel, index: widget.index);
+    log(provider.currentlyPlaying!.uri!);
     super.initState();
   }
 

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -28,6 +29,12 @@ void main() async {
   await Future.delayed(const Duration(seconds: 3));
 
   FlutterNativeSplash.remove();
+
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
 
   runApp(MultiProvider(
     providers: [
