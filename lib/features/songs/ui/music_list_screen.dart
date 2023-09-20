@@ -1,21 +1,12 @@
-// ignore_for_file: unused_import
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:music_player/features/nowPlaying/ui/now_playing.dart';
-import 'package:music_player/features/songs/widgets/playlistbottomsheet.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import '../../../database/playlistdatabase.dart';
 import '../../../utils/box/playlistbox.dart';
-import '../../../utils/provider/provider.dart';
 import '../../nowPlaying/controller/musicplayer_controller.dart';
-import '../controller/song_list_controller.dart';
 import '../widgets/popupmenuitems.dart';
 
 class MusicScreen extends StatefulWidget {
@@ -27,15 +18,24 @@ class MusicScreen extends StatefulWidget {
 
 class _MusicScreenState extends State<MusicScreen> {
   late MusicPlayerController songListController;
+  late TextEditingController searchController;
   @override
   void initState() {
     checkpermission();
-    songListController = MusicPlayerController();
+    searchController = TextEditingController();
+    songListController =
+        Provider.of<MusicPlayerController>(context, listen: false);
     if (!playlistBox.containsKey('Favorites')) {
       playlistBox.put(
           'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,7 +97,7 @@ class _MusicScreenState extends State<MusicScreen> {
                       trailing: MusicLIstPopUpMenu(
                           uri: snapshot.data![index].uri!,
                           controller: songListController),
-                      onTap: ()  {
+                      onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -20,7 +20,7 @@ class MusicPlayerController extends ChangeNotifier {
   Timer? sleepTimer;
 
   // currently playing song
-  var currentlyPlaying;
+  SongModel? currentlyPlaying;
 
   int currentlyPlayingIndex = 0;
 

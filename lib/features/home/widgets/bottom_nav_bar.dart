@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/utils/constants/constants.dart';
 import '../../../utils/provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {

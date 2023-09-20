@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final screens = [
     MusicScreen(),
-    AllPlaylistScreen(),
+    const AllPlaylistScreen(),
     AlbumScreen(),
     const UserScreen()
   ];
@@ -45,28 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         floatingActionButton:
             provider.bottomNavIndex == 1 ? PlaylistCreateButton() : Container(),
-        appBar: provider.bottomNavIndex == 3
+        appBar: provider.bottomNavIndex == 0
             ? AppBar(
                 backgroundColor: Constants.appBg,
-                centerTitle: true,
-                title: Text(
-                  titles[provider.bottomNavIndex],
-                  style: Constants.musicListTitleStyle,
-                ),
-              )
-            : AppBar(
-                backgroundColor: Constants.appBg,
                 leading: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // showSearch(context: context, delegate: Searchde);
+                    },
                     icon: const Icon(
                       Icons.search,
                       color: Colors.white,
                     )),
                 centerTitle: true,
-                title: Text(
-                  titles[provider.bottomNavIndex],
-                  style: Constants.musicListTextStyle,
-                ),
                 actions: [
                   PopupMenuButton(
                     itemBuilder: (context) {
@@ -80,6 +70,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                   )
                 ],
+                title: Text(
+                  titles[provider.bottomNavIndex],
+                  style: Constants.musicListTitleStyle,
+                ),
+              )
+            : AppBar(
+                backgroundColor: Constants.appBg,
+                centerTitle: true,
+                title: Text(
+                  titles[provider.bottomNavIndex],
+                  style: Constants.musicListTextStyle,
+                ),
               ),
         body: Container(
             decoration: BoxDecoration(gradient: Constants.linearGradient),

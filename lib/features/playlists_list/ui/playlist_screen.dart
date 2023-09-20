@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
 import 'package:music_player/features/playlist/ui/playlist_screen.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:music_player/utils/constants/constants.dart';
-import 'package:provider/provider.dart';
 
 class AllPlaylistScreen extends StatelessWidget {
   const AllPlaylistScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final MusicPlayerController provider =
-        Provider.of<MusicPlayerController>(context);
     return Container(
       decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: ListenableBuilder(
@@ -61,21 +57,9 @@ class AllPlaylistScreen extends StatelessWidget {
                             playlist: playlist.songUris,
                           ),
                         )),
-                    trailing: PopupMenuButton(
-                      color: Constants.bottomBarIconColor,
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () {
-                                  playlistBox.delete(playlistKey);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("delete playlist")),
-                          ),
-                        ];
-                      },
-                    ),
+                    trailing: IconButton(
+                        onPressed: () => playlistBox.delete(playlistKey),
+                        icon: const Icon(Icons.delete)),
                   );
                 }
               },

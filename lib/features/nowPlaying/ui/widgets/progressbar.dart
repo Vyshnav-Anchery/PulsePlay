@@ -20,7 +20,7 @@ class PlayingProgressBar extends StatelessWidget {
             progress: stream.data ?? Duration.zero,
             total: Duration(
                 milliseconds:
-                    provider.currentlyPlaying.duration!),
+                    provider.currentlyPlaying!.duration!),
             timeLabelTextStyle: Constants.musicListTextStyle,
             onSeek: provider.audioPlayer.seek,
           );

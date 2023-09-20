@@ -61,7 +61,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       MusicCover(provider: provider),
                       const SizedBox(height: 30),
                       Text(
-                        provider.currentlyPlaying.title,
+                        provider.currentlyPlaying!.title,
                         overflow: TextOverflow.fade,
                         maxLines: 1,
                         style: const TextStyle(
@@ -73,7 +73,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       Text(
                         widget.songModel[widget.index].artist! == "<unknown>"
                             ? "Unknown Artist"
-                            : provider.currentlyPlaying.artist!,
+                            : provider.currentlyPlaying!.artist!,
                         overflow: TextOverflow.fade,
                         maxLines: 1,
                         style:

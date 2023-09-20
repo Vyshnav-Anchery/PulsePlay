@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static BoxDecoration bottomSheetDecoration = const BoxDecoration(
+  static BoxDecoration bottomSheetDecoration =  const BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.bottomRight,
           colors: [
             // Color.fromARGB(255, 58, 56, 56),
-            Color.fromARGB(255, 13, 17, 58),
-            Colors.black,
+            Color.fromARGB(255, 7, 10, 39),
+            Color.fromARGB(217, 7, 10, 39),
+            // Color.fromARGB(198, 0, 0, 0),
+            // Color.fromARGB(255, 30, 30, 30)
           ]),
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),
