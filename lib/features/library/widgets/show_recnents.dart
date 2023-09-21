@@ -74,9 +74,7 @@ class RecentlyPlayedSongs extends StatelessWidget {
                           PopupMenuItem(
                             child: TextButton(
                                 onPressed: () {
-                                  provider.removeFromPlaylist(
-                                      snapshot.data![index].uri!, 'Favorites');
-                                  Navigator.pop(context);
+                                 
                                 },
                                 child: const Text("remove from playlist")),
                           ),

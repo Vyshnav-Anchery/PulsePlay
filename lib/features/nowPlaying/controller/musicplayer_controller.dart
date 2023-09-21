@@ -20,6 +20,8 @@ class MusicPlayerController extends ChangeNotifier {
 
   bool isPlaylistExpanded = true;
 
+  bool isRecentlyPlayedExpanded = false;
+
   // currently playing song
   SongModel? currentlyPlaying;
 
@@ -185,8 +187,12 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   createNewPlaylist({required String playlistname}) {
-    playlistBox.put(
-        playlistname, PlaylistDatabase(songUris: {playlistname: []}));
+    if (!playlistBox.containsKey(playlistname)) {
+      playlistBox.put(
+          playlistname, PlaylistDatabase(songUris: {playlistname: []}));
+    } else {
+      log('playlist already exists');
+    }
     notifyListeners();
   }
 
@@ -257,8 +263,15 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleLibrary() {
-    isPlaylistExpanded = !isPlaylistExpanded;
+  toggleLibrary() {
+    isPlaylistExpanded = true;
+    isRecentlyPlayedExpanded = false;
+    notifyListeners();
+  }
+
+  toggleRecentlyPlayed() {
+    isRecentlyPlayedExpanded = true;
+    isPlaylistExpanded = false;
     notifyListeners();
   }
 }

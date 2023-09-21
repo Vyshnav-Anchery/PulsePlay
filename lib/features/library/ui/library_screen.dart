@@ -47,12 +47,12 @@ class LibraryScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  musicPlayerController.toggleLibrary();
+                  musicPlayerController.toggleRecentlyPlayed();
                 },
                 child: SizedBox(
                   height: MediaQuery.sizeOf(context).height * (1 / 10),
                   width: MediaQuery.sizeOf(context).width * (1 / 2.1),
-                  child:  Card(
+                  child: Card(
                     color: !musicPlayerController.isPlaylistExpanded
                         ? Colors.blueGrey
                         : null,
@@ -71,7 +71,10 @@ class LibraryScreen extends StatelessWidget {
           ),
           musicPlayerController.isPlaylistExpanded
               ? const Expanded(child: ShowPlaylists())
-              : const Expanded(child: RecentlyPlayedSongs())
+              : Container(),
+          musicPlayerController.isRecentlyPlayedExpanded
+              ? const Expanded(child: RecentlyPlayedSongs())
+              : Container()
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
 
 class PlaylistCreateButton extends StatelessWidget {
@@ -19,6 +20,10 @@ class PlaylistCreateButton extends StatelessWidget {
             return AlertDialog(
               title: const Text("Create Playlist"),
               content: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'a-zA-z'))
+                ],
+                keyboardType: TextInputType.text,
                 controller: playlistEditingController,
                 decoration: const InputDecoration(
                     label: Text("Playlist Name"), border: OutlineInputBorder()),
@@ -28,6 +33,7 @@ class PlaylistCreateButton extends StatelessWidget {
                     onPressed: () {
                       provider.createNewPlaylist(
                           playlistname: playlistEditingController.text);
+                      playlistEditingController.clear();
                       Navigator.pop(context);
                     },
                     child: const Text("Create")),

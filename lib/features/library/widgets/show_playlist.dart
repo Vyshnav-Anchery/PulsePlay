@@ -13,14 +13,12 @@ class ShowPlaylists extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      // decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: ListenableBuilder(
         listenable: playlistBox.listenable(),
         builder: (context, child) {
           final filteredPlaylists = playlistBox.values
               .skip(2)
               .toList(); // Skip the first two playlists
-
           if (filteredPlaylists.isEmpty) {
             return Center(
               child: Text(
@@ -45,7 +43,7 @@ class ShowPlaylists extends StatelessWidget {
                       height: 52,
                       width: 52,
                       child: Card(
-                        color: Color.fromARGB(209, 228, 227, 227),
+                          color: Color.fromARGB(209, 228, 227, 227),
                           child:
                               Center(child: Icon(Icons.play_lesson_outlined))),
                     ),
