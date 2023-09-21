@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/nowPlaying/ui/now_playing.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../database/playlistdatabase.dart';
 import '../../../utils/box/playlistbox.dart';
+import '../../../utils/widgets/song_listtile.dart';
 import '../../nowPlaying/controller/musicplayer_controller.dart';
-import '../widgets/popupmenu_items.dart';
 
 class MusicScreen extends StatefulWidget {
-  MusicScreen({super.key});
+  const MusicScreen({super.key});
 
   @override
   State<MusicScreen> createState() => _MusicScreenState();
@@ -29,6 +28,10 @@ class _MusicScreenState extends State<MusicScreen> {
       playlistBox.put(
           'Favorites', PlaylistDatabase(songUris: {'Favorites': []}));
     }
+    if (!playlistBox.containsKey('RecentlyPlayed')) {
+      playlistBox.put(
+          'RecentlyPlayed', PlaylistDatabase(songUris: {'RecentlyPlayed': []}));
+    }
     super.initState();
   }
 
@@ -41,7 +44,7 @@ class _MusicScreenState extends State<MusicScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: FutureBuilder<List<SongModel>>(
           future: songListController.searchSongs(),
@@ -63,51 +66,14 @@ class _MusicScreenState extends State<MusicScreen> {
                       const Divider(color: Colors.transparent),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    int id = snapshot.data![index].id;
-                    return ListTile(
-                      selected: songListController.audioPlayer.playing,
-                      leading: QueryArtworkWidget(
-                          nullArtworkWidget: const SizedBox(
-                            height: 52,
-                            width: 52,
-                            child: Card(
-                                child: Center(
-                              child: Icon(
-                                Icons.music_note_rounded,
-                                size: 30,
-                              ),
-                            )),
-                          ),
-                          id: id,
-                          type: ArtworkType.AUDIO),
-                      title: Text(
-                        snapshot.data![index].title,
-                        style: Constants.musicListTextStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                      ),
-                      subtitle: Text(
-                        snapshot.data![index].artist! == "<unknown>"
-                            ? "Unknown Artist"
-                            : snapshot.data![index].artist!,
-                        style: Constants.musicListTextStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: MusicLIstPopUpMenu(
-                          uri: snapshot.data![index].uri!,
-                          controller: songListController),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NowPlaying(
-                                songModel: snapshot.data!,
-                                index: index,
-                              ),
-                            ));
-                      },
-                    );
+                    return SongListTile(
+                        artist: snapshot.data![index].artist!,
+                        index: index,
+                        songmodel: snapshot.data!,
+                        title: snapshot.data![index].title,
+                        uri: snapshot.data![index].uri!,
+                        songListController: songListController,
+                        id: snapshot.data![index].id);
                   },
                 ),
               );

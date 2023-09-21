@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 import '../../../database/playlistdatabase.dart';
 
 class MusicPlayerController extends ChangeNotifier {
@@ -19,6 +17,8 @@ class MusicPlayerController extends ChangeNotifier {
   late ConcatenatingAudioSource currentQueue;
 
   Timer? sleepTimer;
+
+  bool isPlaylistExpanded = true;
 
   // currently playing song
   SongModel? currentlyPlaying;
@@ -97,7 +97,8 @@ class MusicPlayerController extends ChangeNotifier {
               id: song.id.toString(),
               title: song.title,
               artist: song.artist,
-              artUri: Uri.parse(song.uri!))));
+              artUri: Uri.parse(
+                  'https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'))));
     }
     currentQueue = ConcatenatingAudioSource(children: sources);
     return ConcatenatingAudioSource(children: sources);
@@ -123,7 +124,8 @@ class MusicPlayerController extends ChangeNotifier {
 
   showPlaylistSongs(List<String> songUri) async {}
 
-  playSongg(song, index) {
+  playSongg(SongModel song, index) {
+    addtoRecents(song.uri!);
     currentlyPlayingIndex = index;
     currentlyPlaying = song;
     audioPlayer.play();
@@ -215,6 +217,23 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  addtoRecents(String songUri) {
+    PlaylistDatabase playlistDatabase = playlistBox.get('RecentlyPlayed')!;
+    if (playlistDatabase.songUris.containsKey('RecentlyPlayed')) {
+      // If the playlist exists, add the song to it
+      if (playlistDatabase.songUris['RecentlyPlayed']!.contains(songUri)) {
+        log("already in recents");
+        final existingIndex =
+            playlistDatabase.songUris['RecentlyPlayed']!.indexOf(songUri);
+        playlistDatabase.songUris['RecentlyPlayed']!.removeAt(existingIndex);
+      }
+      playlistDatabase.songUris['RecentlyPlayed']!.insert(0, songUri);
+    } else {
+      playlistDatabase.songUris['RecentlyPlayed'] = [songUri];
+    }
+    playlistDatabase.save();
+  }
+
   removeFromFavorite(String songUri) {
     PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
     if (playlistDatabase.songUris.containsKey('Favorites')) {
@@ -235,6 +254,11 @@ class MusicPlayerController extends ChangeNotifier {
     PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
     playlistDatabase!.songUris[playlistName]!.remove(songUri);
     playlistDatabase.save();
+    notifyListeners();
+  }
+
+  void toggleLibrary() {
+    isPlaylistExpanded = !isPlaylistExpanded;
     notifyListeners();
   }
 }

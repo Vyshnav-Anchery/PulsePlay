@@ -11,9 +11,9 @@ class BottomNavBar extends StatelessWidget {
     return NavigationBar(
       destinations: const [
         NavigationDestination(icon: Icon(Icons.music_note), label: "Songs"),
+        NavigationDestination(icon: Icon(Icons.favorite), label: "Favorites"),
         NavigationDestination(
             icon: Icon(Icons.playlist_play), label: "Playlist"),
-        NavigationDestination(icon: Icon(Icons.album), label: "Albums"),
         NavigationDestination(icon: Icon(Icons.person), label: "User"),
       ],
       selectedIndex: provider.bottomNavIndex,

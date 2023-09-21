@@ -11,16 +11,19 @@ class SleepTimerAlert extends StatelessWidget {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
     return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      contentPadding: const EdgeInsets.only(bottom: 0, top: 10),
       alignment: Alignment.center,
-      title: Text("Select time"),
+      title: const Text("Set time"),
       content: SizedBox(
-        height: 100,
+        height: 70,
         child: SizedBox(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("${provider.sleepTime} min"),
               Slider(
+                inactiveColor: const Color.fromARGB(120, 26, 34, 126),
                 value: provider.sleepTime.toDouble(),
                 min: 0,
                 max: 60,
@@ -38,7 +41,7 @@ class SleepTimerAlert extends StatelessWidget {
               provider.startSleepTimer(Duration(minutes: provider.sleepTime));
               Navigator.pop(context);
             },
-            child: Text("Start"))
+            child: const Text("Start"))
       ],
     );
   }
