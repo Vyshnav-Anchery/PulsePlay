@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-import '../../features/nowPlaying/controller/musicplayer_controller.dart';
+import '../../controller/musicplayer_controller.dart';
 import '../../features/nowPlaying/ui/now_playing.dart';
 import 'popupmenu_items.dart';
 import '../constants/constants.dart';

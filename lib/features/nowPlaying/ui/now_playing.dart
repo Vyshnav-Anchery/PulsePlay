@@ -7,13 +7,13 @@ import 'package:music_player/features/nowPlaying/ui/widgets/song_cover.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import '../controller/musicplayer_controller.dart';
+import '../../../controller/musicplayer_controller.dart';
 import 'widgets/progressbar.dart';
 
 class NowPlaying extends StatefulWidget {
-  final List<SongModel> songModel;
-  final int index;
-  const NowPlaying({super.key, required this.songModel, required this.index});
+  final List<SongModel>? songModel;
+  final int? index;
+  const NowPlaying({super.key, this.songModel, this.index});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -26,13 +26,18 @@ class _NowPlayingState extends State<NowPlaying> {
   void initState() {
     provider = Provider.of<MusicPlayerController>(context, listen: false);
     audioPlayer = AudioPlayer();
-    provider.playSong(songmodel: widget.songModel, index: widget.index);
-    log(provider.currentlyPlaying!.uri!);
+    if (!(widget.songModel == null)) {
+      provider.playSong(songmodel: widget.songModel!, index: widget.index);
+    } else {
+      log("message");
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var songList = widget.songModel ?? provider.currentPlaylist;
+    var songInd = widget.index ?? provider.currentlyPlayingIndex;
     provider.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         if (index != provider.currentlyPlayingIndex) {
@@ -74,7 +79,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        widget.songModel[widget.index].artist! == "<unknown>"
+                        songList[songInd].artist! == "<unknown>"
                             ? "Unknown Artist"
                             : provider.currentlyPlaying!.artist!,
                         overflow: TextOverflow.fade,
@@ -86,8 +91,8 @@ class _NowPlayingState extends State<NowPlaying> {
                       PlayingProgressBar(provider: provider),
                       const SizedBox(height: 20),
                       SongControllwidgets(
-                        index: widget.index,
-                        songModel: widget.songModel,
+                        index: songInd,
+                        songModel: songList,
                       )
                     ],
                   )),

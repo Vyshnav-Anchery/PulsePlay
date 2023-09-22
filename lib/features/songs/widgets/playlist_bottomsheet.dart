@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
+import 'package:music_player/controller/musicplayer_controller.dart';
 
 import '../../../utils/box/playlistbox.dart';
 import '../../../utils/constants/constants.dart';

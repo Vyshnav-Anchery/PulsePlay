@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/library/widgets/show_playlist.dart';
 import 'package:music_player/features/library/widgets/show_recnents.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
+import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/constants/constants.dart';

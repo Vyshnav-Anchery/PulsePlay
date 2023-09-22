@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../utils/provider/provider.dart';
+import '../../../controller/bottom_nav_controller.dart';
 
 class BottomNavBar extends StatelessWidget {
   final BottomNavController provider;
@@ -14,7 +14,7 @@ class BottomNavBar extends StatelessWidget {
         NavigationDestination(icon: Icon(Icons.favorite), label: "Favorites"),
         NavigationDestination(
             icon: Icon(Icons.playlist_play), label: "Playlist"),
-        NavigationDestination(icon: Icon(Icons.person), label: "User"),
+        // NavigationDestination(icon: Icon(Icons.person), label: "User"),
       ],
       selectedIndex: provider.bottomNavIndex,
       onDestinationSelected: (value) {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/features/login/ui/login.dart';
+import 'package:music_player/features/signup_screen/ui/signup.dart';
 import 'package:music_player/utils/constants/routingConstants.dart';
 
 import '../../../utils/constants/constants.dart';
@@ -37,24 +40,31 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: 30),
                       ElevatedButton(
                           style: Constants.welcomeButtonStyle,
-                          onPressed: () {
-                            GoRouter.of(context)
-                                .pushNamed(RoutingConstants.loginName);
-                          },
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              )),
                           child: Constants.loginText),
                       const SizedBox(height: 10),
                       ElevatedButton(
                           style: Constants.welcomeButtonStyle,
                           onPressed: () {
-                            GoRouter.of(context)
-                                .pushNamed(RoutingConstants.signUpName);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ));
                           },
                           child: Constants.signupText),
                       Constants.or,
                       TextButton(
                           onPressed: () {
-                            GoRouter.of(context)
-                                .pushNamed(RoutingConstants.homeName);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ));
                           },
                           child: Constants.withoutLogin),
                       const SizedBox(height: 50)

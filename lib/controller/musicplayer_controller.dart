@@ -5,7 +5,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../../../database/playlistdatabase.dart';
+import '../database/playlistdatabase.dart';
+import '../utils/constants/constants.dart';
 
 class MusicPlayerController extends ChangeNotifier {
   final OnAudioQuery audioquery = OnAudioQuery();
@@ -99,8 +100,7 @@ class MusicPlayerController extends ChangeNotifier {
               id: song.id.toString(),
               title: song.title,
               artist: song.artist,
-              artUri: Uri.parse(
-                  'https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'))));
+              artUri: Uri.parse(song.uri!))));
     }
     currentQueue = ConcatenatingAudioSource(children: sources);
     return ConcatenatingAudioSource(children: sources);
@@ -123,8 +123,6 @@ class MusicPlayerController extends ChangeNotifier {
     }
     return songModel;
   }
-
-  showPlaylistSongs(List<String> songUri) async {}
 
   playSongg(SongModel song, index) {
     addtoRecents(song.uri!);
@@ -208,49 +206,57 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   addtoFavorite(String songUri) {
-    PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
-    if (playlistDatabase.songUris.containsKey('Favorites')) {
+    PlaylistDatabase playlistDatabase =
+        playlistBox.get(Constants.FAVORITESKEY)!;
+    if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
       // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris['Favorites']!.contains(songUri)) {
+      if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
+          .contains(songUri)) {
         log("already in playlist");
       } else {
-        playlistDatabase.songUris['Favorites']!.add(songUri);
+        playlistDatabase.songUris[Constants.FAVORITESKEY]!.add(songUri);
       }
     } else {
-      playlistDatabase.songUris['Favorites'] = [songUri];
+      playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
     }
     playlistDatabase.save();
     notifyListeners();
   }
 
   addtoRecents(String songUri) {
-    PlaylistDatabase playlistDatabase = playlistBox.get('RecentlyPlayed')!;
-    if (playlistDatabase.songUris.containsKey('RecentlyPlayed')) {
+    PlaylistDatabase playlistDatabase =
+        playlistBox.get(Constants.RECENTPLAYEDKEY)!;
+    if (playlistDatabase.songUris.containsKey(Constants.RECENTPLAYEDKEY)) {
       // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris['RecentlyPlayed']!.contains(songUri)) {
+      if (playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
+          .contains(songUri)) {
         log("already in recents");
-        final existingIndex =
-            playlistDatabase.songUris['RecentlyPlayed']!.indexOf(songUri);
-        playlistDatabase.songUris['RecentlyPlayed']!.removeAt(existingIndex);
+        final existingIndex = playlistDatabase
+            .songUris[Constants.RECENTPLAYEDKEY]!
+            .indexOf(songUri);
+        playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
+            .removeAt(existingIndex);
       }
-      playlistDatabase.songUris['RecentlyPlayed']!.insert(0, songUri);
+      playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!.insert(0, songUri);
     } else {
-      playlistDatabase.songUris['RecentlyPlayed'] = [songUri];
+      playlistDatabase.songUris[Constants.RECENTPLAYEDKEY] = [songUri];
     }
     playlistDatabase.save();
   }
 
   removeFromFavorite(String songUri) {
-    PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
-    if (playlistDatabase.songUris.containsKey('Favorites')) {
+    PlaylistDatabase playlistDatabase =
+        playlistBox.get(Constants.FAVORITESKEY)!;
+    if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
       // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris['Favorites']!.contains(songUri)) {
-        playlistDatabase.songUris['Favorites']!.remove(songUri);
+      if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
+          .contains(songUri)) {
+        playlistDatabase.songUris[Constants.FAVORITESKEY]!.remove(songUri);
       } else {
         log("already removed");
       }
     } else {
-      playlistDatabase.songUris['Favorites'] = [songUri];
+      playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
     }
     playlistDatabase.save();
     notifyListeners();

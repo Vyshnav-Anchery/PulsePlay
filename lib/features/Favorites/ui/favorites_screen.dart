@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-
 import '../../../database/playlistdatabase.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../utils/widgets/listtile_song_image.dart';
-import '../../nowPlaying/controller/musicplayer_controller.dart';
+import '../../../utils/common widgets/listtile_song_image.dart';
+import '../../../controller/musicplayer_controller.dart';
 import '../../nowPlaying/ui/now_playing.dart';
 
 class FavoriteScreen extends StatelessWidget {
@@ -14,8 +13,9 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlaylistDatabase playlistDatabase = playlistBox.get('Favorites')!;
-    List<String> favorites = playlistDatabase.songUris['Favorites']!;
+    PlaylistDatabase playlistDatabase =
+        playlistBox.get(Constants.FAVORITESKEY)!;
+    List<String> favorites = playlistDatabase.songUris[Constants.FAVORITESKEY]!;
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
     return Container(
@@ -63,7 +63,8 @@ class FavoriteScreen extends StatelessWidget {
                             child: TextButton(
                                 onPressed: () {
                                   provider.removeFromPlaylist(
-                                      snapshot.data![index].uri!, 'Favorites');
+                                      snapshot.data![index].uri!,
+                                      Constants.FAVORITESKEY);
                                   Navigator.pop(context);
                                 },
                                 child: const Text("remove from playlist")),
@@ -89,5 +90,3 @@ class FavoriteScreen extends StatelessWidget {
     );
   }
 }
-
-

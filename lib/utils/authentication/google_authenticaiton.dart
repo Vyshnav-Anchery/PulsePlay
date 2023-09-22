@@ -1,7 +1,8 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:music_player/features/home/ui/home.dart';
 
 class Authentication {
   static verifyPhone(String phoneNumber) async {
@@ -40,35 +41,44 @@ class Authentication {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  static createAccountWithEmail(
-      {required String emailAddress, required String password}) async {
+  static createAccountWithEmail({
+    required String emailAddress,
+    required String password,
+    required String userName,
+  }) async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        log('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
   static signInUsingEmail(
-      {required String emailAddress, required String password}) async {
+      {required String emailAddress,
+      required String password,
+      required BuildContext context}) async {
     try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
+      var user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: emailAddress, password: password)
+          .whenComplete(() => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              )));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        log('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        log('Wrong password provided for that user.');
       }
     }
   }

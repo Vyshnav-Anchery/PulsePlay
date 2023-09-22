@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static BoxDecoration bottomSheetDecoration =  const BoxDecoration(
+  static BoxDecoration bottomSheetDecoration = const BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.bottomRight,
@@ -102,4 +102,8 @@ class Constants {
   // Hive
 
   static String boxName = "playlists";
+
+  static String RECENTPLAYEDKEY = 'RecentlyPlayed';
+
+  static String FAVORITESKEY = 'Favorites';
 }

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/Favorites/ui/favorites_screen.dart';
-import 'package:music_player/features/home/widgets/mini_player.dart';
 import 'package:music_player/features/home/widgets/playlist_create_Button.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
-import 'package:music_player/features/user/ui/user_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../utils/provider/provider.dart';
+import '../../../controller/bottom_nav_controller.dart';
 import '../../library/ui/library_screen.dart';
-import '../../library/widgets/show_playlist.dart';
+import '../../welcome/ui/welcome.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final screens = [
-    MusicScreen(),
+    const MusicScreen(),
     const FavoriteScreen(),
     const LibraryScreen(),
-    const UserScreen()
+    // const UserScreen()
   ];
   final titles = [
     "Songs",
@@ -44,13 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    AuthenticationController authenticationController =
+        Provider.of<AuthenticationController>(context);
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
         floatingActionButton: provider.bottomNavIndex == 2
             ? const PlaylistCreateButton()
-            : provider.bottomNavIndex == 0
-                ? MiniPlayer()
-                : Container(),
+            : Container(),
         appBar: provider.bottomNavIndex == 0
             ? AppBar(
                 backgroundColor: Constants.appBg,
@@ -72,28 +71,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Constants.musicListTitleStyle,
                 ),
                 actions: [
-                  PopupMenuButton(
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text("sort"),
-                          ),
-                        ),
-                      ];
-                    },
-                    color: Colors.white,
-                  )
+                  IconButton(
+                      onPressed: () {
+                        authenticationController.logout();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WelcomeScreen()));
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ))
                 ],
               )
             : AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: Constants.appBg,
                 centerTitle: true,
                 title: Text(
                   titles[provider.bottomNavIndex],
                   style: Constants.musicListTextStyle,
                 ),
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        authenticationController.logout();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WelcomeScreen()));
+                      },
+                      icon: const Icon(Icons.logout, color: Colors.white))
+                ],
               ),
         body: Container(
             decoration: BoxDecoration(gradient: Constants.linearGradient),

@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 class LoginFormField extends StatelessWidget {
-  TextEditingController controller;
-  String hint;
-  bool? pass;
+  final TextEditingController controller;
+  final String hint;
+  final bool? pass;
+  final String? Function(String?)? validator;
 
-  LoginFormField({super.key, required this.controller,required this.hint,this.pass});
+  const LoginFormField(
+      {super.key,
+      required this.controller,
+      required this.hint,
+      this.pass,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +21,12 @@ class LoginFormField extends StatelessWidget {
         color: Colors.white,
       ),
       child: TextFormField(
+        validator: validator,
         controller: controller,
-        obscureText: pass??false,
+        obscureText: pass ?? false,
         decoration: InputDecoration(
           hintText: hint,
-          labelStyle: TextStyle(color: Colors.red),
+          labelStyle: const TextStyle(color: Colors.red),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
       ),

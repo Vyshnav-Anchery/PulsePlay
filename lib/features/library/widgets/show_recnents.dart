@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../database/playlistdatabase.dart';
 import '../../../utils/box/playlistbox.dart';
 import '../../../utils/constants/constants.dart';
-import '../../nowPlaying/controller/musicplayer_controller.dart';
+import '../../../controller/musicplayer_controller.dart';
 import '../../nowPlaying/ui/now_playing.dart';
 
 class RecentlyPlayedSongs extends StatelessWidget {

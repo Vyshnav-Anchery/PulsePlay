@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../../controller/musicplayer_controller.dart';
+import '../../../../controller/musicplayer_controller.dart';
 
 class MusicCover extends StatelessWidget {
   const MusicCover({

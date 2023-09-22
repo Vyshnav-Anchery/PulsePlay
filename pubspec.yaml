@@ -48,6 +48,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   just_audio_background: ^0.0.1-beta.10
+  miniplayer: ^1.0.1
 
 dev_dependencies:
   flutter_test:

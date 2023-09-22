@@ -7,7 +7,7 @@ import '../../../../database/playlistdatabase.dart';
 import '../../../../utils/box/playlistbox.dart';
 import '../../../../utils/constants/constants.dart';
 import '../../../songs/widgets/playlist_bottomsheet.dart';
-import '../../controller/musicplayer_controller.dart';
+import '../../../../controller/musicplayer_controller.dart';
 
 class SongControllwidgets extends StatelessWidget {
   final int index;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
+import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
 import '../constants/constants.dart';
 import '../../features/nowPlaying/ui/widgets/sleep_timer_alert.dart';

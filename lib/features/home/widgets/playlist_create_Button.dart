@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:music_player/features/nowPlaying/controller/musicplayer_controller.dart';
+import 'package:music_player/controller/musicplayer_controller.dart';
 
 class PlaylistCreateButton extends StatelessWidget {
   const PlaylistCreateButton({

@@ -3,7 +3,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/constants/constants.dart';
-import '../../nowPlaying/controller/musicplayer_controller.dart';
+import '../../../controller/musicplayer_controller.dart';
 import '../../nowPlaying/ui/now_playing.dart';
 
 class PlaylistScreen extends StatelessWidget {
