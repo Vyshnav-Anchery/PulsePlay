@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/features/login/ui/login.dart';
 import 'package:music_player/features/signup_screen/ui/signup.dart';
-import 'package:music_player/utils/constants/routingConstants.dart';
-
 import '../../../utils/constants/constants.dart';
 
 class WelcomeScreen extends StatelessWidget {

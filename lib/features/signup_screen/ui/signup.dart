@@ -49,7 +49,7 @@ class SignUpScreen extends StatelessWidget {
                         Constants.signUpHeading,
                         const SizedBox(height: 30),
                         LoginFormField(
-                            validator: (value) {},
+                            // validator: (value) {},
                             controller: unameSignUpController,
                             hint: "User Name"),
                         const SizedBox(height: 10),
@@ -109,7 +109,8 @@ class SignUpScreen extends StatelessWidget {
                                 authenticationController.emailSignUp(
                                     emailSignUpController.text,
                                     passwordSignUpController.text,
-                                    unameSignUpController.text);
+                                    unameSignUpController.text,
+                                    context);
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -120,7 +121,14 @@ class SignUpScreen extends StatelessWidget {
                             child: Constants.signupText),
                         Constants.or,
                         TextButton(
-                            onPressed: () {}, child: Constants.withoutLogin),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ));
+                            },
+                            child: Constants.withoutLogin),
                         const SizedBox(height: 50)
                       ],
                     ),

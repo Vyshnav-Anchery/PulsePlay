@@ -5,8 +5,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/features/home/ui/home.dart';
-import 'package:music_player/features/login/ui/login.dart';
-import 'package:music_player/features/signup_screen/ui/signup.dart';
 import 'package:music_player/features/welcome/ui/welcome.dart';
 import 'package:music_player/utils/box/playlistbox.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -14,7 +12,6 @@ import 'package:music_player/controller/bottom_nav_controller.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'controller/authentication_controller.dart';
 import 'database/playlistdatabase.dart';
 import 'controller/musicplayer_controller.dart';

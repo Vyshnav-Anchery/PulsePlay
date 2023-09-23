@@ -5,16 +5,15 @@ import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import '../utils/authentication/google_authenticaiton.dart';
 
 class AuthenticationController extends ChangeNotifier {
-  emailSignUp(String emailAddress, String password, String userName) {
+  emailSignUp(String emailAddress, String password, String userName, BuildContext context) {
     Authentication.createAccountWithEmail(
-        emailAddress: emailAddress, password: password, userName: userName);
+        emailAddress: emailAddress, password: password, userName: userName,context: context);
     prefs.setString(emailAddress, userName);
   }
 
   emailLogin(String emailAddress, String password, BuildContext context) {
     Authentication.signInUsingEmail(
         emailAddress: emailAddress, password: password, context: context);
-    notifyListeners();
   }
 
   logout() {

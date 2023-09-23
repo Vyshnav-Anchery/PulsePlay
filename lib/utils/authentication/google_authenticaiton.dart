@@ -41,16 +41,22 @@ class Authentication {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  static createAccountWithEmail({
-    required String emailAddress,
-    required String password,
-    required String userName,
-  }) async {
+  static createAccountWithEmail(
+      {required String emailAddress,
+      required String password,
+      required String userName,
+      required BuildContext context}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: emailAddress,
+            password: password,
+          )
+          .whenComplete(() => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              )));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
@@ -67,7 +73,7 @@ class Authentication {
       required String password,
       required BuildContext context}) async {
     try {
-      var user = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password)
           .whenComplete(() => Navigator.pushReplacement(
               context,

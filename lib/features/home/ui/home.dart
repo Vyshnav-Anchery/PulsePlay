@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/Favorites/ui/favorites_screen.dart';
-import 'package:music_player/features/home/widgets/playlist_create_Button.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -47,9 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthenticationController>(context);
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
-        floatingActionButton: provider.bottomNavIndex == 2
-            ? const PlaylistCreateButton()
-            : Container(),
         appBar: provider.bottomNavIndex == 0
             ? AppBar(
                 backgroundColor: Constants.appBg,

@@ -36,7 +36,7 @@ class _MusicScreenState extends State<MusicScreen> {
           PlaylistDatabase(songUris: {Constants.RECENTPLAYEDKEY: []}));
     }
     log(FirebaseAuth.instance.currentUser!.email!);
-    log(prefs.getString(FirebaseAuth.instance.currentUser!.email!)!);
+    // log(prefs.getString(FirebaseAuth.instance.currentUser!.email! ?? "lol")!);
     super.initState();
   }
 

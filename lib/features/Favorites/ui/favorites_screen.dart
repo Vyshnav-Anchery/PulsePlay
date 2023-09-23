@@ -28,8 +28,8 @@ class FavoriteScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text("no music found"),
+            return  Center(
+              child: Text("no songs in favorites",style: Constants.musicListTextStyle,),
             );
           } else {
             MusicPlayerController.allSongs = [...snapshot.data!];

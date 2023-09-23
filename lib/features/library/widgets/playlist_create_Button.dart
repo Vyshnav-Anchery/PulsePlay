@@ -12,16 +12,16 @@ class PlaylistCreateButton extends StatelessWidget {
     final TextEditingController playlistEditingController =
         TextEditingController();
     final MusicPlayerController provider = MusicPlayerController();
-    return FloatingActionButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               title: const Text("Create Playlist"),
               content: TextField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'a-zA-z'))
+                inputFormatters: const [
+                  // FilteringTextInputFormatter.allow(RegExp(r'a-zA-z'))
                 ],
                 keyboardType: TextInputType.text,
                 controller: playlistEditingController,
@@ -33,7 +33,6 @@ class PlaylistCreateButton extends StatelessWidget {
                     onPressed: () {
                       provider.createNewPlaylist(
                           playlistname: playlistEditingController.text);
-                      playlistEditingController.clear();
                       Navigator.pop(context);
                     },
                     child: const Text("Create")),
@@ -45,8 +44,11 @@ class PlaylistCreateButton extends StatelessWidget {
           },
         );
       },
-      child: const Icon(Icons.add, size: 30),
-      backgroundColor: Colors.white,
+      child: const CircleAvatar(
+        radius: 30,
+        child: Icon(Icons.add, size: 30),
+        // backgroundColor: Colors.white,
+      ),
     );
   }
 }

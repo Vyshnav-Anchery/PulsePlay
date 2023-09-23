@@ -27,8 +27,8 @@ class RecentlyPlayedSongs extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text("no music found"),
+            return  Center(
+              child: Text("no music found",style: Constants.musicListTextStyle,),
             );
           } else {
             MusicPlayerController.allSongs = [...snapshot.data!];
@@ -66,20 +66,6 @@ class RecentlyPlayedSongs extends StatelessWidget {
                       style: Constants.musicListTextStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: PopupMenuButton(
-                      color: Constants.bottomBarIconColor,
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () {
-                                 
-                                },
-                                child: const Text("remove from playlist")),
-                          ),
-                        ];
-                      },
                     ),
                     onTap: () {
                       Navigator.push(
