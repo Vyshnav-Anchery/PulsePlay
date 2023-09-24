@@ -6,7 +6,6 @@ import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import '../../../database/serialized_song_model.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/common widgets/song_listtile.dart';
 import '../../../controller/musicplayer_controller.dart';

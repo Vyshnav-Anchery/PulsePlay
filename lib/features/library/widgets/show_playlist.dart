@@ -8,8 +8,6 @@ import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
 
-import '../../../database/serialized_song_model.dart';
-
 class ShowPlaylists extends StatelessWidget {
   const ShowPlaylists({super.key});
 

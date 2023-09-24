@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:music_player/database/serialized_song_model.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../database/playlistdatabase.dart';
@@ -78,31 +77,6 @@ class MusicPlayerController extends ChangeNotifier {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
-    for (SongModel songs in querysongs) {
-      if (!(songModelBox.containsKey(songs.id))) {
-        songModelBox.put(
-            songs.id,
-            SerializedSongModel(
-              id: songs.id,
-              data: songs.data,
-              displayName: songs.displayName,
-              displayNameWOExt: songs.displayNameWOExt,
-              size: songs.size,
-              title: songs.title,
-              fileExtension: songs.fileExtension,
-              artist: songs.artist,
-              duration: songs.duration,
-              dateAdded: songs.dateAdded,
-              uri: songs.uri,
-              album: songs.album,
-              genre: songs.genre,
-              track: songs.track,
-            ));
-      }
-    }
-    List<SerializedSongModel> serializedSongs = songModelBox.values.toList();
-    allSongs.clear();
-    allSongs = serializedSongs.map((song) => song.toSongModel()).toList();
     return querysongs;
   }
 
@@ -237,27 +211,11 @@ class MusicPlayerController extends ChangeNotifier {
       required BuildContext context,
       required SongModel song}) {
     var playlist = playlistBox.get(playlistName);
-    SerializedSongModel serializedSongModel = SerializedSongModel(
-      id: song.id,
-      data: song.data,
-      displayName: song.displayName,
-      displayNameWOExt: song.displayNameWOExt,
-      size: song.size,
-      title: song.title,
-      fileExtension: song.fileExtension,
-      artist: song.artist,
-      duration: song.duration,
-      dateAdded: song.dateAdded,
-      uri: song.uri,
-      album: song.album,
-      genre: song.genre,
-      track: song.track,
-    );
-    if (playlist!.songs.contains(serializedSongModel)) {
+    if (playlist!.songs.contains(song)) {
       return ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Song already in Playlist")));
     } else {
-      playlist.songs.add(serializedSongModel);
+      playlist.songs.add(song);
     }
     playlist.save();
     notifyListeners();
@@ -320,12 +278,12 @@ class MusicPlayerController extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  // removeFromPlaylist(String songUri, String playlistName) {
-  //   PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
-  //   playlistDatabase!.songUris[playlistName]!.remove(songUri);
-  //   playlistDatabase.save();
-  //   notifyListeners();
-  // }
+  removeFromPlaylist(SongModel song, String playlistName) {
+    PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
+    playlistDatabase!.songs.remove(song);
+    playlistDatabase.save();
+    notifyListeners();
+  }
 
   // toggleLibrary() {
   //   isPlaylistExpanded = true;

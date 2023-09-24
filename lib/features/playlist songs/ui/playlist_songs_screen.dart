@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/database/serialized_song_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/constants/constants.dart';
@@ -8,7 +7,7 @@ import '../../nowPlaying/ui/now_playing.dart';
 
 class PlaylistScreen extends StatelessWidget {
   final String playlistName;
-  final List<SerializedSongModel> playlist;
+  final List<SongModel> playlist;
   const PlaylistScreen(
       {super.key, required this.playlistName, required this.playlist});
 
@@ -64,9 +63,9 @@ class PlaylistScreen extends StatelessWidget {
                       PopupMenuItem(
                         child: TextButton(
                             onPressed: () {
-                              // provider.removeFromPlaylist(
-                              //     snapshot.data![index].uri!, playlistName);
-                              // Navigator.pop(context);
+                              provider.removeFromPlaylist(
+                                  playlist[index], playlistName);
+                              Navigator.pop(context);
                             },
                             child: const Text("remove from playlist")),
                       ),
@@ -74,14 +73,15 @@ class PlaylistScreen extends StatelessWidget {
                   },
                 ),
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => NowPlaying(
-                  //         songModel: playlist[index],
-                  //         index: index,
-                  //       ),
-                  //     ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NowPlaying(
+                          songModel: playlist[index],
+                          index: index,
+                          listofSongs: playlist,
+                        ),
+                      ));
                 },
               );
             }),

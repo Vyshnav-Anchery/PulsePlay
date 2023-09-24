@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:music_player/database/serialized_song_model.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:music_player/features/welcome/ui/welcome.dart';
@@ -17,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/authentication_controller.dart';
 import 'database/playlistdatabase.dart';
 import 'controller/musicplayer_controller.dart';
+import 'database/songmodel_adapter.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,25 +24,21 @@ void main() async {
 
   await Hive.initFlutter();
 
+  Hive.registerAdapter(SongModelAdapter());
+
   Hive.registerAdapter(PlaylistDatabaseAdapter());
 
   await Hive.openBox<PlaylistDatabase>(Constants.playlistBoxName);
 
   await Hive.openBox<PlaylistDatabase>(Constants.favoritesBoxName);
-  
+
   await Hive.openBox<PlaylistDatabase>(Constants.recentsBoxName);
-
-  Hive.registerAdapter(SerializedSongModelAdapter());
-
-  await Hive.openBox<SerializedSongModel>(Constants.songModelBoxName);
 
   playlistBox = Hive.box<PlaylistDatabase>(Constants.playlistBoxName);
 
   favoriteBox = Hive.box<PlaylistDatabase>(Constants.favoritesBoxName);
 
   recentsBox = Hive.box<PlaylistDatabase>(Constants.recentsBoxName);
-
-  songModelBox = Hive.box<SerializedSongModel>(Constants.songModelBoxName);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

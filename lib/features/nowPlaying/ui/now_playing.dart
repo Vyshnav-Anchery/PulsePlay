@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/song_controll_buttons.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/song_cover.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -11,11 +9,15 @@ import '../../../controller/musicplayer_controller.dart';
 import 'widgets/progressbar.dart';
 
 class NowPlaying extends StatefulWidget {
-  final List<SongModel>? listofSongs;
+  final List<SongModel> listofSongs;
   final SongModel songModel;
   final int? index;
-  const NowPlaying(
-      {super.key, required this.songModel, this.index, this.listofSongs});
+  const NowPlaying({
+    super.key,
+    required this.songModel,
+    this.index,
+    required this.listofSongs,
+  });
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -26,20 +28,16 @@ class _NowPlayingState extends State<NowPlaying> {
   @override
   void initState() {
     provider = Provider.of<MusicPlayerController>(context, listen: false);
-    if (!(widget.listofSongs == null)) {
-      provider.playSong(
-          songmodel: widget.songModel,
-          index: widget.index!,
-          listofSongs: widget.listofSongs!);
-    } else {
-      log(widget.index.toString());
-    }
+    provider.playSong(
+        songmodel: widget.songModel,
+        index: widget.index!,
+        listofSongs: widget.listofSongs);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<SongModel> songList = widget.listofSongs ?? provider.currentPlaylist;
+    List<SongModel> songList = widget.listofSongs;
     int songInd = widget.index ?? provider.currentlyPlayingIndex;
     provider.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
@@ -49,7 +47,7 @@ class _NowPlayingState extends State<NowPlaying> {
         }
       }
     });
-          log(provider.currentlyPlaying.toString());
+    log(provider.currentlyPlaying.toString());
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: Constants.linearGradient),
