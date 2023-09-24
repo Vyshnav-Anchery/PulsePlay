@@ -133,7 +133,7 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   playSongg(SongModel song, index) {
-    // addtoRecents(song.uri!);
+    addtoRecents(song);
     currentlyPlayingIndex = index;
     currentlyPlaying = song;
     audioPlayer.play();
@@ -196,9 +196,11 @@ class MusicPlayerController extends ChangeNotifier {
       {required String playlistname, required BuildContext context}) {
     if (!playlistBox.containsKey(playlistname)) {
       playlistBox.put(playlistname, PlaylistDatabase(songs: []));
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("$playlistname playlist created")));
     } else {
+      Navigator.pop(context);
       return ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Playlist exists already")));
     }
@@ -207,76 +209,92 @@ class MusicPlayerController extends ChangeNotifier {
 
   addtoPlaylist(
       {required String playlistName,
-      required String songUri,
       required BuildContext context,
       required SongModel song}) {
     var playlist = playlistBox.get(playlistName);
-    if (playlist!.songs.contains(song)) {
+    bool songExists = isInPlaylist(playlistName, song);
+    if (songExists) {
+      Navigator.pop(context);
       return ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Song already in Playlist")));
     } else {
-      playlist.songs.add(song);
+      playlist!.songs.add(song);
     }
     playlist.save();
-    notifyListeners();
   }
 
-  // addtoFavorite(String songUri) {
-  //   PlaylistDatabase playlistDatabase =
-  //       playlistBox.get(Constants.FAVORITESKEY)!;
-  //   if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
-  //     // If the playlist exists, add the song to it
-  //     if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
-  //         .contains(songUri)) {
-  //       log("already in playlist");
-  //     } else {
-  //       playlistDatabase.songUris[Constants.FAVORITESKEY]!.add(songUri);
-  //     }
-  //   } else {
-  //     playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
-  //   }
-  //   playlistDatabase.save();
-  //   notifyListeners();
-  // }
+  bool isInPlaylist(String playlistName, SongModel song) {
+    var playlistDb = playlistBox.get(playlistName);
+    List<SongModel> playlist = playlistDb!.songs;
+    for (SongModel data in playlist) {
+      if (data.id == song.id) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-  // addtoRecents(String songUri) {
-  //   PlaylistDatabase playlistDatabase =
-  //       playlistBox.get(Constants.RECENTPLAYEDKEY)!;
-  //   if (playlistDatabase.songUris.containsKey(Constants.RECENTPLAYEDKEY)) {
-  //     // If the playlist exists, add the song to it
-  //     if (playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
-  //         .contains(songUri)) {
-  //       log("already in recents");
-  //       final existingIndex = playlistDatabase
-  //           .songUris[Constants.RECENTPLAYEDKEY]!
-  //           .indexOf(songUri);
-  //       playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
-  //           .removeAt(existingIndex);
-  //     }
-  //     playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!.insert(0, songUri);
-  //   } else {
-  //     playlistDatabase.songUris[Constants.RECENTPLAYEDKEY] = [songUri];
-  //   }
-  //   playlistDatabase.save();
-  // }
+  addToFavorite(SongModel song, BuildContext context) {
+    var favoriteDatabase = favoriteBox.get(Constants.favoritesBoxName);
+    bool songExists = isFavorite(song);
+    if (songExists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Song already in Favorite")));
+    } else {
+      // Add the new song to the list
+      favoriteDatabase!.songs.add(song);
+      favoriteDatabase.save();
+    }
+  }
 
-  // removeFromFavorite(String songUri) {
-  //   PlaylistDatabase playlistDatabase =
-  //       playlistBox.get(Constants.FAVORITESKEY)!;
-  //   if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
-  //     // If the playlist exists, add the song to it
-  //     if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
-  //         .contains(songUri)) {
-  //       playlistDatabase.songUris[Constants.FAVORITESKEY]!.remove(songUri);
-  //     } else {
-  //       log("already removed");
-  //     }
-  //   } else {
-  //     playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
-  //   }
-  //   playlistDatabase.save();
-  //   notifyListeners();
-  // }
+  bool isFavorite(SongModel song) {
+    PlaylistDatabase favoriteDatabase =
+        favoriteBox.get(Constants.favoritesBoxName)!;
+    var favorites = favoriteDatabase.songs;
+    for (SongModel data in favorites) {
+      if (data.id == song.id) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  addtoRecents(SongModel song) {
+    PlaylistDatabase recentsDatabase =
+        recentsBox.get(Constants.recentsBoxName)!;
+    bool songExists = isInRecent(song);
+    if (songExists) {
+      log("already in recents");
+      int existingIndex = recentsDatabase.songs.indexOf(song);
+      recentsDatabase.songs.removeAt(existingIndex);
+    }
+    recentsDatabase.songs.insert(0, song);
+    recentsDatabase.save();
+  }
+
+  bool isInRecent(SongModel song) {
+    PlaylistDatabase recentsDatabase =
+        recentsBox.get(Constants.recentsBoxName)!;
+    List<SongModel> playlist = recentsDatabase.songs;
+    for (SongModel data in playlist) {
+      if (data.id == song.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  removeFromFavorite(SongModel song) {
+    PlaylistDatabase favoriteDatabase =
+        favoriteBox.get(Constants.favoritesBoxName)!;
+    if (favoriteDatabase.songs.contains(song)) {
+      favoriteDatabase.songs.remove(song);
+    }
+    favoriteDatabase.save();
+    notifyListeners();
+  }
 
   removeFromPlaylist(SongModel song, String playlistName) {
     PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
@@ -285,15 +303,15 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // toggleLibrary() {
-  //   isPlaylistExpanded = true;
-  //   isRecentlyPlayedExpanded = false;
-  //   notifyListeners();
-  // }
+  toggleLibrary() {
+    isPlaylistExpanded = true;
+    isRecentlyPlayedExpanded = false;
+    notifyListeners();
+  }
 
-  // toggleRecentlyPlayed() {
-  //   isRecentlyPlayedExpanded = true;
-  //   isPlaylistExpanded = false;
-  //   notifyListeners();
-  // }
+  toggleRecentlyPlayed() {
+    isRecentlyPlayedExpanded = true;
+    isPlaylistExpanded = false;
+    notifyListeners();
+  }
 }

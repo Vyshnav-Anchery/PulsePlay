@@ -91,7 +91,7 @@ class _NowPlayingState extends State<NowPlaying> {
                             const TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(height: 20),
-                      PlayingProgressBar(),
+                      const PlayingProgressBar(),
                       const SizedBox(height: 20),
                       SongControllwidgets(
                         index: songInd,

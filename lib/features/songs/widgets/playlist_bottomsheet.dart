@@ -12,7 +12,8 @@ import '../../../utils/constants/constants.dart';
 class PlaylistBottomSheet extends StatelessWidget {
   final String songUri;
   final SongModel song;
-  const PlaylistBottomSheet({super.key, required this.songUri,required this.song});
+  const PlaylistBottomSheet(
+      {super.key, required this.songUri, required this.song});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,6 @@ class PlaylistBottomSheet extends StatelessWidget {
                     onTap: () {
                       musicPlayerController.addtoPlaylist(
                           playlistName: playlistKey,
-                          songUri: songUri,
                           context: context,
                           song: song);
                     },

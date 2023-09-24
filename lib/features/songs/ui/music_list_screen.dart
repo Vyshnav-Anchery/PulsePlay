@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -118,9 +119,14 @@ class _MusicScreenState extends State<MusicScreen> {
   }
 
   void checkpermission() async {
-    songListController.searchSongs(context);
     await Permission.storage.request();
     await Permission.audio.request();
     await Permission.microphone.request();
+    if (!(favoriteBox.containsKey(Constants.favoritesBoxName))) {
+      favoriteBox.put(Constants.favoritesBoxName, PlaylistDatabase(songs: []));
+    }
+    if (!(recentsBox.containsKey(Constants.recentsBoxName))) {
+      recentsBox.put(Constants.recentsBoxName, PlaylistDatabase(songs: []));
+    }
   }
 }

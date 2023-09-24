@@ -15,75 +15,69 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
-    return Container(
-      decoration: BoxDecoration(gradient: Constants.linearGradient),
-      child: FutureBuilder<List<SongModel>>(
-        // future: provider.playlistToSongModel(favorites),
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.data!.isEmpty) {
-            return  Center(
-              child: Text("no songs in favorites",style: Constants.musicListTextStyle,),
-            );
-          } else {
-            MusicPlayerController.allSongs = [...snapshot.data!];
-            return ListView.separated(
-                itemCount: snapshot.data!.length,
-                separatorBuilder: (context, index) =>
-                    const Divider(color: Colors.transparent),
-                itemBuilder: (context, index) {
-                  int id = snapshot.data![index].id;
-                  return ListTile(
-                    leading: ListTileSongImage(id: id),
-                    title: Text(
-                      snapshot.data![index].title,
-                      style: Constants.musicListTextStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                    ),
-                    subtitle: Text(
-                      snapshot.data![index].artist! == "<unknown>"
-                          ? "Unknown Artist"
-                          : snapshot.data![index].artist!,
-                      style: Constants.musicListTextStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: PopupMenuButton(
-                      color: Constants.bottomBarIconColor,
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () {
-                                  // provider.removeFromPlaylist(
-                                  //     snapshot.data![index].uri!,
-                                  //     Constants.FAVORITESKEY);
-                                  // Navigator.pop(context);
-                                },
-                                child: const Text("remove from playlist")),
-                          ),
-                        ];
-                      },
-                    ),
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => NowPlaying(
-                      //         songModel: snapshot.data!,
-                      //         index: index,
-                      //       ),
-                      //     ));
-                    },
-                  );
-                });
-          }
-        },
-      ),
-    );
+    List<SongModel> favorites =
+        favoriteBox.get(Constants.favoritesBoxName)!.songs;
+    if (favorites.isEmpty) {
+      return Center(
+        child: Text(
+          "no favorites found",
+          style: Constants.musicListTextStyle,
+        ),
+      );
+    } else {
+      return Container(
+        decoration: BoxDecoration(gradient: Constants.linearGradient),
+        child: ListView.separated(
+            itemCount: favorites.length,
+            separatorBuilder: (context, index) =>
+                const Divider(color: Colors.transparent),
+            itemBuilder: (context, index) {
+              int id = favorites[index].id;
+              return ListTile(
+                leading: ListTileSongImage(id: id),
+                title: Text(
+                  favorites[index].title,
+                  style: Constants.musicListTextStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                ),
+                subtitle: Text(
+                  favorites[index].artist! == "<unknown>"
+                      ? "Unknown Artist"
+                      : favorites[index].artist!,
+                  style: Constants.musicListTextStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: PopupMenuButton(
+                  color: Constants.bottomBarIconColor,
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              provider.removeFromFavorite(favorites[index]);
+                            },
+                            child: const Text("remove from playlist")),
+                      ),
+                    ];
+                  },
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NowPlaying(
+                          songModel: favorites[index],
+                          index: index,
+                          listofSongs: favorites,
+                        ),
+                      ));
+                },
+              );
+            }),
+      );
+    }
   }
 }

@@ -34,7 +34,6 @@ class PlaylistCreateButton extends StatelessWidget {
                       provider.createNewPlaylist(
                           playlistname: playlistEditingController.text,
                           context: context);
-                      Navigator.pop(context);
                     },
                     child: const Text("Create")),
                 TextButton(

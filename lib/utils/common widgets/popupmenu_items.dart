@@ -25,7 +25,7 @@ class MusicLIstPopUpMenu extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  // controller.addtoFavorite(uri);
+                  controller.addToFavorite(song, context);
                 },
                 child: const Text("Add to favorite")),
           ),
@@ -48,7 +48,7 @@ class MusicLIstPopUpMenu extends StatelessWidget {
                   Navigator.pop(context);
                   showDialog(
                     context: context,
-                    builder: (context) => SleepTimerAlert(),
+                    builder: (context) => const SleepTimerAlert(),
                   );
                 },
                 child: const Text("Set sleep timer")),
