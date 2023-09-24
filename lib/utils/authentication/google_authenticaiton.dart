@@ -47,16 +47,10 @@ class Authentication {
       required String userName,
       required BuildContext context}) async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: emailAddress,
-            password: password,
-          )
-          .whenComplete(() => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              )));
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailAddress,
+        password: password,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
@@ -74,12 +68,7 @@ class Authentication {
       required BuildContext context}) async {
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password)
-          .whenComplete(() => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              )));
+          .signInWithEmailAndPassword(email: emailAddress, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         log('No user found for that email.');

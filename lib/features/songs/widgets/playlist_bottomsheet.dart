@@ -2,60 +2,76 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
-import '../../../utils/box/playlistbox.dart';
+import '../../../database/playlistdatabase.dart';
+import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
 
 class PlaylistBottomSheet extends StatelessWidget {
   final String songUri;
-  const PlaylistBottomSheet({super.key, required this.songUri});
+  final SongModel song;
+  const PlaylistBottomSheet({super.key, required this.songUri,required this.song});
 
   @override
   Widget build(BuildContext context) {
-    MusicPlayerController musicPlayerController = MusicPlayerController();
+    MusicPlayerController musicPlayerController =
+        Provider.of<MusicPlayerController>(context);
     return Container(
       decoration: Constants.bottomSheetDecoration,
       child: ListenableBuilder(
         listenable: playlistBox.listenable(),
         builder: (context, child) {
-          if (playlistBox.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+          // final filteredPlaylists = playlistBox.values
+          //     .skip(2)
+          //     .toList(); // Skip the first two playlists
+          if (playlistBox.values.isEmpty) {
+            return Center(
+              child: Text(
+                "No playlist found",
+                style: Constants.musicListTextStyle,
+              ),
+            );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               itemCount: playlistBox.length,
+              separatorBuilder: (context, index) => const Divider(
+                color: Colors.transparent,
+              ),
               itemBuilder: (context, index) {
-                var playlistKey = playlistBox.keyAt(index);
-                var playlist = playlistBox.get(playlistKey);
-                if (playlist == null) {
-                  return const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          "No Playlist Found",
-                          // style: Constants.musicListTextStyle,
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return ListTile(
-                    title: Text(playlistKey.toString(),
-                        style: Constants.musicListTextStyle),
+                String playlistKey = playlistBox.keyAt(index);
+                PlaylistDatabase playlist = playlistBox.getAt(index)!;
+                // final playlistKey = playlistBox.keyAt(index +
+                //     2); // Adjust the index for the actual playlist key
+                return Card(
+                  color: Colors.blueGrey.shade900,
+                  child: ListTile(
+                    leading: const SizedBox(
+                      height: 52,
+                      width: 52,
+                      child: Card(
+                          color: Color.fromARGB(209, 228, 227, 227),
+                          child:
+                              Center(child: Icon(Icons.play_lesson_outlined))),
+                    ),
+                    title: Text(
+                      playlistKey,
+                      style: Constants.musicListTextStyle,
+                    ),
                     subtitle: Text(
-                      "${playlist.songUris[playlistKey]!.length.toString()} Songs",
+                      "${playlist.songs.length} Songs",
                       style: Constants.musicListTextStyle,
                     ),
                     onTap: () {
-                      final playlistdb = playlistBox.get(playlistKey);
-                      var map = playlist.songUris;
-                      var list = map.values.toList();
-                      log(list.toString());
                       musicPlayerController.addtoPlaylist(
-                          playlistdb!, playlistKey.toString(), songUri);
+                          playlistName: playlistKey,
+                          songUri: songUri,
+                          context: context,
+                          song: song);
                     },
-                  );
-                }
+                  ),
+                );
               },
             );
           }

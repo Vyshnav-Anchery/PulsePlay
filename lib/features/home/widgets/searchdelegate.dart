@@ -51,8 +51,11 @@ class SongSearchDelegate extends SearchDelegate<SongModel> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        NowPlaying(songModel: results, index: index),
+                    builder: (context) => NowPlaying(
+                      listofSongs: results,
+                      index: index,
+                      songModel: song,
+                    ),
                   ));
             },
           );

@@ -4,7 +4,7 @@ import 'package:music_player/features/nowPlaying/ui/widgets/sleep_timer_alert.da
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../../database/playlistdatabase.dart';
-import '../../../../utils/box/playlistbox.dart';
+import '../../../../utils/box/hive_boxes.dart';
 import '../../../../utils/constants/constants.dart';
 import '../../../songs/widgets/playlist_bottomsheet.dart';
 import '../../../../controller/musicplayer_controller.dart';
@@ -22,9 +22,10 @@ class SongControllwidgets extends StatelessWidget {
   Widget build(BuildContext context) {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
-    PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites')!;
-    bool isFav = playlistDatabase.songUris['Favorites']!
-        .contains(provider.currentlyPlaying!.uri);
+    // PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites')!;
+    bool isFav = false;
+    // playlistDatabase.songUris['Favorites']!
+    //     .contains(provider.currentlyPlaying!.uri);
 
     bool isPlaying = provider.audioPlayer.playing;
     return Column(
@@ -101,20 +102,25 @@ class SongControllwidgets extends StatelessWidget {
                   color: Colors.white,
                 )),
             IconButton(
-              onPressed: () => isFav
-                  ? provider.removeFromFavorite(provider.currentlyPlaying!.uri!)
-                  : provider.addtoFavorite(provider.currentlyPlaying!.uri!),
+              onPressed: () {
+                // isFav
+                //     ? provider
+                //         .removeFromFavorite(provider.currentlyPlaying!.uri!)
+                //     : provider.addtoFavorite(provider.currentlyPlaying!.uri!);
+              },
               icon: Icon(
                 isFav ? Icons.favorite : Icons.favorite_border,
                 color: Constants.bottomBarIconColor,
               ),
             ),
             IconButton(
-              onPressed: () => showModalBottomSheet(
-                context: context,
-                builder: (context) =>
-                    PlaylistBottomSheet(songUri: songModel[index].uri!),
-              ),
+              onPressed: () {
+                //   showModalBottomSheet(
+                //   context: context,
+                //   builder: (context) =>
+                //       PlaylistBottomSheet(songUri: songModel[index].uri!),
+                // );
+              },
               icon:
                   Icon(Icons.playlist_add, color: Constants.bottomBarIconColor),
             ),

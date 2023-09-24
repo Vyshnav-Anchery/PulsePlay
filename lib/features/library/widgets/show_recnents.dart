@@ -3,7 +3,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/playlistdatabase.dart';
-import '../../../utils/box/playlistbox.dart';
+import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../controller/musicplayer_controller.dart';
 import '../../nowPlaying/ui/now_playing.dart';
@@ -13,14 +13,14 @@ class RecentlyPlayedSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlaylistDatabase playlistDatabase = playlistBox.get('RecentlyPlayed')!;
-    List<String> favorites = playlistDatabase.songUris['RecentlyPlayed']!;
+    // PlaylistDatabase playlistDatabase = playlistBox.get('RecentlyPlayed')!;
+    // List<String> favorites = playlistDatabase.songUris['RecentlyPlayed']!;
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: FutureBuilder<List<SongModel>>(
-        future: provider.playlistToSongModel(favorites),
+        // future: provider.playlistToSongModel(favorites),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
             return const Center(
@@ -68,14 +68,14 @@ class RecentlyPlayedSongs extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NowPlaying(
-                              songModel: snapshot.data!,
-                              index: index,
-                            ),
-                          ));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => NowPlaying(
+                      //         songModel: snapshot.data!,
+                      //         index: index,
+                      //       ),
+                      //     ));
                     },
                   );
                 });

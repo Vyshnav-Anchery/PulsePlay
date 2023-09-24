@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:music_player/utils/box/playlistbox.dart';
+import 'package:music_player/database/serialized_song_model.dart';
+import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../database/playlistdatabase.dart';
 import '../utils/constants/constants.dart';
@@ -32,11 +33,14 @@ class MusicPlayerController extends ChangeNotifier {
 
   List<SongModel> currentPlaylist = [];
 
-  playSong({required List<SongModel> songmodel, required index}) {
+  playSong(
+      {required SongModel songmodel,
+      required int index,
+      required List<SongModel> listofSongs}) {
     try {
-      audioPlayer.setAudioSource(createPlaylist(songmodel),
+      audioPlayer.setAudioSource(createPlaylist(listofSongs),
           initialIndex: index);
-      playSongg(songmodel[index], index);
+      playSongg(songmodel, index);
     } on Exception {
       log("error playing");
     } catch (e) {
@@ -66,14 +70,44 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  searchSongs() {
-    return audioquery.querySongs(
-      sortType: null,
-      orderType: OrderType.ASC_OR_SMALLER,
+  Future<List<SongModel>> searchSongs(BuildContext context,
+      {sortType, orderType}) async {
+    List<SongModel> querysongs = await audioquery.querySongs(
+      sortType: sortType,
+      orderType: orderType,
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
+    for (SongModel songs in querysongs) {
+      if (!(songModelBox.containsKey(songs.id))) {
+        songModelBox.put(
+            songs.id,
+            SerializedSongModel(
+              id: songs.id,
+              data: songs.data,
+              displayName: songs.displayName,
+              displayNameWOExt: songs.displayNameWOExt,
+              size: songs.size,
+              title: songs.title,
+              fileExtension: songs.fileExtension,
+              artist: songs.artist,
+              duration: songs.duration,
+              dateAdded: songs.dateAdded,
+              uri: songs.uri,
+              album: songs.album,
+              genre: songs.genre,
+              track: songs.track,
+            ));
+      }
+    }
+    List<SerializedSongModel> serializedSongs = songModelBox.values.toList();
+    allSongs.clear();
+    allSongs = serializedSongs.map((song) => song.toSongModel()).toList();
+    return querysongs;
   }
+
+  SongSortType songsSort = SongSortType.TITLE;
+  OrderType songOrder = OrderType.ASC_OR_SMALLER;
 
   void shuffleAll() async {
     await audioPlayer.setShuffleModeEnabled(true);
@@ -125,7 +159,7 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   playSongg(SongModel song, index) {
-    addtoRecents(song.uri!);
+    // addtoRecents(song.uri!);
     currentlyPlayingIndex = index;
     currentlyPlaying = song;
     audioPlayer.play();
@@ -184,100 +218,124 @@ class MusicPlayerController extends ChangeNotifier {
     }
   }
 
-  createNewPlaylist({required String playlistname}) {
+  createNewPlaylist(
+      {required String playlistname, required BuildContext context}) {
     if (!playlistBox.containsKey(playlistname)) {
-      playlistBox.put(
-          playlistname, PlaylistDatabase(songUris: {playlistname: []}));
+      playlistBox.put(playlistname, PlaylistDatabase(songs: []));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$playlistname playlist created")));
     } else {
-      log('playlist already exists');
+      return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Playlist exists already")));
     }
     notifyListeners();
   }
 
   addtoPlaylist(
-      PlaylistDatabase playlistDatabase, String playlistName, String songUri) {
-    if (playlistDatabase.songUris.containsKey(playlistName)) {
-      // If the playlist exists, add the song to it
-      playlistDatabase.songUris[playlistName]!.contains(songUri)
-          ? log("already in playlist")
-          : playlistDatabase.songUris[playlistName]!.add(songUri);
-    } else {}
-    playlistDatabase.save();
-  }
-
-  addtoFavorite(String songUri) {
-    PlaylistDatabase playlistDatabase =
-        playlistBox.get(Constants.FAVORITESKEY)!;
-    if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
-      // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
-          .contains(songUri)) {
-        log("already in playlist");
-      } else {
-        playlistDatabase.songUris[Constants.FAVORITESKEY]!.add(songUri);
-      }
+      {required String playlistName,
+      required String songUri,
+      required BuildContext context,
+      required SongModel song}) {
+    var playlist = playlistBox.get(playlistName);
+    SerializedSongModel serializedSongModel = SerializedSongModel(
+      id: song.id,
+      data: song.data,
+      displayName: song.displayName,
+      displayNameWOExt: song.displayNameWOExt,
+      size: song.size,
+      title: song.title,
+      fileExtension: song.fileExtension,
+      artist: song.artist,
+      duration: song.duration,
+      dateAdded: song.dateAdded,
+      uri: song.uri,
+      album: song.album,
+      genre: song.genre,
+      track: song.track,
+    );
+    if (playlist!.songs.contains(serializedSongModel)) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Song already in Playlist")));
     } else {
-      playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
+      playlist.songs.add(serializedSongModel);
     }
-    playlistDatabase.save();
+    playlist.save();
     notifyListeners();
   }
 
-  addtoRecents(String songUri) {
-    PlaylistDatabase playlistDatabase =
-        playlistBox.get(Constants.RECENTPLAYEDKEY)!;
-    if (playlistDatabase.songUris.containsKey(Constants.RECENTPLAYEDKEY)) {
-      // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
-          .contains(songUri)) {
-        log("already in recents");
-        final existingIndex = playlistDatabase
-            .songUris[Constants.RECENTPLAYEDKEY]!
-            .indexOf(songUri);
-        playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
-            .removeAt(existingIndex);
-      }
-      playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!.insert(0, songUri);
-    } else {
-      playlistDatabase.songUris[Constants.RECENTPLAYEDKEY] = [songUri];
-    }
-    playlistDatabase.save();
-  }
+  // addtoFavorite(String songUri) {
+  //   PlaylistDatabase playlistDatabase =
+  //       playlistBox.get(Constants.FAVORITESKEY)!;
+  //   if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
+  //     // If the playlist exists, add the song to it
+  //     if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
+  //         .contains(songUri)) {
+  //       log("already in playlist");
+  //     } else {
+  //       playlistDatabase.songUris[Constants.FAVORITESKEY]!.add(songUri);
+  //     }
+  //   } else {
+  //     playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
+  //   }
+  //   playlistDatabase.save();
+  //   notifyListeners();
+  // }
 
-  removeFromFavorite(String songUri) {
-    PlaylistDatabase playlistDatabase =
-        playlistBox.get(Constants.FAVORITESKEY)!;
-    if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
-      // If the playlist exists, add the song to it
-      if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
-          .contains(songUri)) {
-        playlistDatabase.songUris[Constants.FAVORITESKEY]!.remove(songUri);
-      } else {
-        log("already removed");
-      }
-    } else {
-      playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
-    }
-    playlistDatabase.save();
-    notifyListeners();
-  }
+  // addtoRecents(String songUri) {
+  //   PlaylistDatabase playlistDatabase =
+  //       playlistBox.get(Constants.RECENTPLAYEDKEY)!;
+  //   if (playlistDatabase.songUris.containsKey(Constants.RECENTPLAYEDKEY)) {
+  //     // If the playlist exists, add the song to it
+  //     if (playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
+  //         .contains(songUri)) {
+  //       log("already in recents");
+  //       final existingIndex = playlistDatabase
+  //           .songUris[Constants.RECENTPLAYEDKEY]!
+  //           .indexOf(songUri);
+  //       playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!
+  //           .removeAt(existingIndex);
+  //     }
+  //     playlistDatabase.songUris[Constants.RECENTPLAYEDKEY]!.insert(0, songUri);
+  //   } else {
+  //     playlistDatabase.songUris[Constants.RECENTPLAYEDKEY] = [songUri];
+  //   }
+  //   playlistDatabase.save();
+  // }
 
-  removeFromPlaylist(String songUri, String playlistName) {
-    PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
-    playlistDatabase!.songUris[playlistName]!.remove(songUri);
-    playlistDatabase.save();
-    notifyListeners();
-  }
+  // removeFromFavorite(String songUri) {
+  //   PlaylistDatabase playlistDatabase =
+  //       playlistBox.get(Constants.FAVORITESKEY)!;
+  //   if (playlistDatabase.songUris.containsKey(Constants.FAVORITESKEY)) {
+  //     // If the playlist exists, add the song to it
+  //     if (playlistDatabase.songUris[Constants.FAVORITESKEY]!
+  //         .contains(songUri)) {
+  //       playlistDatabase.songUris[Constants.FAVORITESKEY]!.remove(songUri);
+  //     } else {
+  //       log("already removed");
+  //     }
+  //   } else {
+  //     playlistDatabase.songUris[Constants.FAVORITESKEY] = [songUri];
+  //   }
+  //   playlistDatabase.save();
+  //   notifyListeners();
+  // }
 
-  toggleLibrary() {
-    isPlaylistExpanded = true;
-    isRecentlyPlayedExpanded = false;
-    notifyListeners();
-  }
+  // removeFromPlaylist(String songUri, String playlistName) {
+  //   PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
+  //   playlistDatabase!.songUris[playlistName]!.remove(songUri);
+  //   playlistDatabase.save();
+  //   notifyListeners();
+  // }
 
-  toggleRecentlyPlayed() {
-    isRecentlyPlayedExpanded = true;
-    isPlaylistExpanded = false;
-    notifyListeners();
-  }
+  // toggleLibrary() {
+  //   isPlaylistExpanded = true;
+  //   isRecentlyPlayedExpanded = false;
+  //   notifyListeners();
+  // }
+
+  // toggleRecentlyPlayed() {
+  //   isRecentlyPlayedExpanded = true;
+  //   isPlaylistExpanded = false;
+  //   notifyListeners();
+  // }
 }

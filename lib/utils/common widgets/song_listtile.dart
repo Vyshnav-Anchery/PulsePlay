@@ -11,7 +11,8 @@ class SongListTile extends StatelessWidget {
   final MusicPlayerController songListController;
   final int id;
   final int index;
-  final List<SongModel> songmodel;
+  final List<SongModel> listofSongs;
+  final SongModel songmodel;
   final String title;
   final String artist;
   final String uri;
@@ -24,12 +25,13 @@ class SongListTile extends StatelessWidget {
     required this.uri,
     required this.songmodel,
     required this.index,
+    required this.listofSongs
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      selected: songListController.audioPlayer.playing,
+      // selected: songListController.audioPlayer.playing,
       leading: ListTileSongImage(id: id),
       title: Text(
         title,
@@ -43,7 +45,11 @@ class SongListTile extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: MusicLIstPopUpMenu(uri: uri, controller: songListController),
+      trailing: MusicLIstPopUpMenu(
+        uri: uri,
+        controller: songListController,
+        song: songmodel,
+      ),
       onTap: () {
         Navigator.push(
             context,
@@ -51,6 +57,7 @@ class SongListTile extends StatelessWidget {
               builder: (context) => NowPlaying(
                 songModel: songmodel,
                 index: index,
+                listofSongs: listofSongs,
               ),
             ));
       },

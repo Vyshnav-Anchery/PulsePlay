@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import '../constants/constants.dart';
 import '../../features/nowPlaying/ui/widgets/sleep_timer_alert.dart';
 
 class MusicLIstPopUpMenu extends StatelessWidget {
   final String uri;
   final MusicPlayerController controller;
+  final SongModel song;
   const MusicLIstPopUpMenu(
-      {super.key, required this.uri, required this.controller});
+      {super.key,
+      required this.uri,
+      required this.controller,
+      required this.song});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class MusicLIstPopUpMenu extends StatelessWidget {
             child: TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  controller.addtoFavorite(uri);
+                  // controller.addtoFavorite(uri);
                 },
                 child: const Text("Add to favorite")),
           ),
@@ -31,7 +36,7 @@ class MusicLIstPopUpMenu extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
-                      return PlaylistBottomSheet(songUri: uri);
+                      return PlaylistBottomSheet(songUri: uri, song: song);
                     },
                   );
                 },

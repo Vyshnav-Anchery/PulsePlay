@@ -69,11 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                       onPressed: () {
-                        authenticationController.logout();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WelcomeScreen()));
+                        // authenticationController.logout();
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const WelcomeScreen()));
                       },
                       icon: const Icon(
                         Icons.logout,
@@ -92,11 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                       onPressed: () {
-                        authenticationController.logout();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WelcomeScreen()));
+                        // authenticationController.logout();
+                        // Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const WelcomeScreen()));
                       },
                       icon: const Icon(Icons.logout, color: Colors.white))
                 ],

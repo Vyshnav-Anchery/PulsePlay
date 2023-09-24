@@ -25,7 +25,7 @@ class LibraryScreen extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  musicPlayerController.toggleLibrary();
+                  // musicPlayerController.toggleLibrary();
                 },
                 child: SizedBox(
                   height: MediaQuery.sizeOf(context).height * (1 / 10),
@@ -47,7 +47,7 @@ class LibraryScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  musicPlayerController.toggleRecentlyPlayed();
+                  // musicPlayerController.toggleRecentlyPlayed();
                 },
                 child: SizedBox(
                   height: MediaQuery.sizeOf(context).height * (1 / 10),

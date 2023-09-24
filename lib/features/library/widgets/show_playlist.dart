@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/features/library/widgets/playlist_create_Button.dart';
 import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.dart';
-import 'package:music_player/utils/box/playlistbox.dart';
+import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
+
+import '../../../database/serialized_song_model.dart';
 
 class ShowPlaylists extends StatelessWidget {
   const ShowPlaylists({super.key});
@@ -19,10 +22,10 @@ class ShowPlaylists extends StatelessWidget {
           child: ListenableBuilder(
             listenable: playlistBox.listenable(),
             builder: (context, child) {
-              final filteredPlaylists = playlistBox.values
-                  .skip(2)
-                  .toList(); // Skip the first two playlists
-              if (filteredPlaylists.isEmpty) {
+              // final filteredPlaylists = playlistBox.values
+              //     .skip(2)
+              //     .toList(); // Skip the first two playlists
+              if (playlistBox.values.isEmpty) {
                 return Center(
                   child: Text(
                     "No playlist found",
@@ -31,14 +34,15 @@ class ShowPlaylists extends StatelessWidget {
                 );
               } else {
                 return ListView.separated(
-                  itemCount: filteredPlaylists.length,
+                  itemCount: playlistBox.length,
                   separatorBuilder: (context, index) => const Divider(
                     color: Colors.transparent,
                   ),
                   itemBuilder: (context, index) {
-                    final playlist = filteredPlaylists[index];
-                    final playlistKey = playlistBox.keyAt(index +
-                        2); // Adjust the index for the actual playlist key
+                    String playlistKey = playlistBox.keyAt(index);
+                    PlaylistDatabase playlist = playlistBox.getAt(index)!;
+                    // final playlistKey = playlistBox.keyAt(index +
+                    //     2); // Adjust the index for the actual playlist key
                     return Card(
                       color: Colors.blueGrey.shade900,
                       child: ListTile(
@@ -51,21 +55,21 @@ class ShowPlaylists extends StatelessWidget {
                                   child: Icon(Icons.play_lesson_outlined))),
                         ),
                         title: Text(
-                          playlistKey.toString(),
+                          playlistKey,
                           style: Constants.musicListTextStyle,
                         ),
                         subtitle: Text(
-                          "${playlist.songUris[playlistKey]!.length.toString()} Songs",
+                          "${playlist.songs.length} Songs",
                           style: Constants.musicListTextStyle,
                         ),
                         onTap: () {
-                          log(index.toString());
+                          // log(index.toString());
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PlaylistScreen(
                                 playlistName: playlistKey.toString(),
-                                playlist: playlist.songUris,
+                                playlist: playlist.songs,
                               ),
                             ),
                           );

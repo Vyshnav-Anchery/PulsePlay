@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/utils/box/playlistbox.dart';
+import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../database/playlistdatabase.dart';
@@ -13,15 +13,12 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlaylistDatabase playlistDatabase =
-        playlistBox.get(Constants.FAVORITESKEY)!;
-    List<String> favorites = playlistDatabase.songUris[Constants.FAVORITESKEY]!;
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
     return Container(
       decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: FutureBuilder<List<SongModel>>(
-        future: provider.playlistToSongModel(favorites),
+        // future: provider.playlistToSongModel(favorites),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
             return const Center(
@@ -62,10 +59,10 @@ class FavoriteScreen extends StatelessWidget {
                           PopupMenuItem(
                             child: TextButton(
                                 onPressed: () {
-                                  provider.removeFromPlaylist(
-                                      snapshot.data![index].uri!,
-                                      Constants.FAVORITESKEY);
-                                  Navigator.pop(context);
+                                  // provider.removeFromPlaylist(
+                                  //     snapshot.data![index].uri!,
+                                  //     Constants.FAVORITESKEY);
+                                  // Navigator.pop(context);
                                 },
                                 child: const Text("remove from playlist")),
                           ),
@@ -73,14 +70,14 @@ class FavoriteScreen extends StatelessWidget {
                       },
                     ),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NowPlaying(
-                              songModel: snapshot.data!,
-                              index: index,
-                            ),
-                          ));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => NowPlaying(
+                      //         songModel: snapshot.data!,
+                      //         index: index,
+                      //       ),
+                      //     ));
                     },
                   );
                 });

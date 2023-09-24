@@ -11,9 +11,11 @@ import '../../../controller/musicplayer_controller.dart';
 import 'widgets/progressbar.dart';
 
 class NowPlaying extends StatefulWidget {
-  final List<SongModel>? songModel;
+  final List<SongModel>? listofSongs;
+  final SongModel songModel;
   final int? index;
-  const NowPlaying({super.key, this.songModel, this.index});
+  const NowPlaying(
+      {super.key, required this.songModel, this.index, this.listofSongs});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -21,30 +23,33 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> {
   late MusicPlayerController provider;
-  late AudioPlayer audioPlayer;
   @override
   void initState() {
     provider = Provider.of<MusicPlayerController>(context, listen: false);
-    audioPlayer = AudioPlayer();
-    if (!(widget.songModel == null)) {
-      provider.playSong(songmodel: widget.songModel!, index: widget.index);
+    if (!(widget.listofSongs == null)) {
+      provider.playSong(
+          songmodel: widget.songModel,
+          index: widget.index!,
+          listofSongs: widget.listofSongs!);
     } else {
-      log("message");
+      log(widget.index.toString());
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var songList = widget.songModel ?? provider.currentPlaylist;
-    var songInd = widget.index ?? provider.currentlyPlayingIndex;
+    List<SongModel> songList = widget.listofSongs ?? provider.currentPlaylist;
+    int songInd = widget.index ?? provider.currentlyPlayingIndex;
     provider.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         if (index != provider.currentlyPlayingIndex) {
           provider.updateCurrentPlayingDetails(index);
+          log(provider.currentlyPlaying.toString());
         }
       }
     });
+          log(provider.currentlyPlaying.toString());
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: Constants.linearGradient),
@@ -69,7 +74,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       MusicCover(provider: provider),
                       const SizedBox(height: 30),
                       Text(
-                        provider.currentlyPlaying!.title,
+                        songList[songInd].title,
                         overflow: TextOverflow.fade,
                         maxLines: 1,
                         style: const TextStyle(
@@ -88,7 +93,7 @@ class _NowPlayingState extends State<NowPlaying> {
                             const TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(height: 20),
-                      PlayingProgressBar(provider: provider),
+                      PlayingProgressBar(),
                       const SizedBox(height: 20),
                       SongControllwidgets(
                         index: songInd,

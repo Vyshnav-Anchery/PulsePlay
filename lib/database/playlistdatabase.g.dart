@@ -11,23 +11,27 @@ class PlaylistDatabaseAdapter extends TypeAdapter<PlaylistDatabase> {
   final int typeId = 1;
 
   @override
-  PlaylistDatabase read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return PlaylistDatabase(
-      songUris: (fields[0] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<String>())),
-    );
-  }
+PlaylistDatabase read(BinaryReader reader) {
+  final numOfFields = reader.readByte();
+  final fields = <int, dynamic>{
+    for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+  };
+
+  // Cast each item in the list to SerializedSongModel
+  final List<SerializedSongModel> songs =
+      (fields[0] as List<dynamic>).map((item) => item as SerializedSongModel).toList();
+
+  return PlaylistDatabase(
+    songs: songs,
+  );
+}
 
   @override
   void write(BinaryWriter writer, PlaylistDatabase obj) {
     writer
       ..writeByte(1)
       ..writeByte(0)
-      ..write(obj.songUris);
+      ..write(obj.songs);
   }
 
   @override

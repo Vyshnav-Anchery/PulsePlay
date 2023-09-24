@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:music_player/database/serialized_song_model.dart';
 import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:music_player/features/welcome/ui/welcome.dart';
-import 'package:music_player/utils/box/playlistbox.dart';
+import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/controller/bottom_nav_controller.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
@@ -24,9 +26,23 @@ void main() async {
 
   Hive.registerAdapter(PlaylistDatabaseAdapter());
 
-  await Hive.openBox<PlaylistDatabase>(Constants.boxName);
+  await Hive.openBox<PlaylistDatabase>(Constants.playlistBoxName);
 
-  playlistBox = Hive.box<PlaylistDatabase>(Constants.boxName);
+  await Hive.openBox<PlaylistDatabase>(Constants.favoritesBoxName);
+  
+  await Hive.openBox<PlaylistDatabase>(Constants.recentsBoxName);
+
+  Hive.registerAdapter(SerializedSongModelAdapter());
+
+  await Hive.openBox<SerializedSongModel>(Constants.songModelBoxName);
+
+  playlistBox = Hive.box<PlaylistDatabase>(Constants.playlistBoxName);
+
+  favoriteBox = Hive.box<PlaylistDatabase>(Constants.favoritesBoxName);
+
+  recentsBox = Hive.box<PlaylistDatabase>(Constants.recentsBoxName);
+
+  songModelBox = Hive.box<SerializedSongModel>(Constants.songModelBoxName);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -66,22 +82,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Pulse Play',
-        theme: Constants.appTheme,
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData && snapshot.data != null) {
-              return const HomeScreen();
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const WelcomeScreen();
-            } else {
-              return WelcomeScreen();
-            }
-          },
-        ),
-      ),
+          debugShowCheckedModeBanner: false,
+          title: 'Pulse Play',
+          theme: Constants.appTheme,
+          home: HomeScreen()
+
+          // StreamBuilder(
+          //   stream: FirebaseAuth.instance.authStateChanges(),
+          //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+          //     if (snapshot.hasData && snapshot.data != null) {
+          //       return const HomeScreen();
+          //     } else if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return const WelcomeScreen();
+          //     } else {
+          //       return WelcomeScreen();
+          //     }
+          //   },
+          // ),
+          ),
     );
   }
 }

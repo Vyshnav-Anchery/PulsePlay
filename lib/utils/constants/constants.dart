@@ -101,9 +101,11 @@ class Constants {
 
   // Hive
 
-  static String boxName = "playlists";
+  static String playlistBoxName = "playlists";
+  
+  static String songModelBoxName = "songmodels";
 
-  static String RECENTPLAYEDKEY = 'RecentlyPlayed';
+  static String recentsBoxName = 'recentlyPlayed';
 
-  static String FAVORITESKEY = 'Favorites';
+  static String favoritesBoxName = 'favorites';
 }
