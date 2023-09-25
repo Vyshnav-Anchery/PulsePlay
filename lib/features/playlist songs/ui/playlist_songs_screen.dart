@@ -77,6 +77,7 @@ class PlaylistScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => NowPlaying(
+                          playlistName: playlistName,
                           songModel: playlist[index],
                           index: index,
                           listofSongs: playlist,

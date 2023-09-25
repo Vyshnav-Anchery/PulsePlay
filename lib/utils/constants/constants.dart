@@ -102,10 +102,16 @@ class Constants {
   // Hive
 
   static String playlistBoxName = "playlists";
-  
+
   static String songModelBoxName = "songmodels";
 
   static String recentsBoxName = 'recentlyPlayed';
 
   static String favoritesBoxName = 'favorites';
+
+  static String allSongs = 'allSongs';
+
+  static String lastPlaylist = 'lastplaylist';
+
+  static String lastPlayedIndex = 'lastindex';
 }

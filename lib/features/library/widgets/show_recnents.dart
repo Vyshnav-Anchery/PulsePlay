@@ -67,6 +67,7 @@ class RecentlyPlayedSongs extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => NowPlaying(
+                          playlistName: Constants.playlistBoxName,
                           listofSongs: recents,
                           songModel: recents[index],
                           index: index,

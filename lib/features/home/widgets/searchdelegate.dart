@@ -52,6 +52,7 @@ class SongSearchDelegate extends SearchDelegate<SongModel> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => NowPlaying(
+                      playlistName: Constants.allSongs,
                       listofSongs: results,
                       index: index,
                       songModel: song,

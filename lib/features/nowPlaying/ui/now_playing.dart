@@ -12,12 +12,13 @@ class NowPlaying extends StatefulWidget {
   final List<SongModel> listofSongs;
   final SongModel songModel;
   final int? index;
-  const NowPlaying({
-    super.key,
-    required this.songModel,
-    this.index,
-    required this.listofSongs,
-  });
+  final String playlistName;
+  const NowPlaying(
+      {super.key,
+      required this.songModel,
+      this.index,
+      required this.listofSongs,
+      required this.playlistName});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -31,7 +32,9 @@ class _NowPlayingState extends State<NowPlaying> {
     provider.playSong(
         songmodel: widget.songModel,
         index: widget.index!,
-        listofSongs: widget.listofSongs);
+        listofSongs: widget.listofSongs,
+        lastPlaylist: widget.playlistName
+        );
     super.initState();
   }
 

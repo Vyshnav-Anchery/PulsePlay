@@ -69,6 +69,7 @@ class FavoriteScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => NowPlaying(
+                          playlistName: Constants.favoritesBoxName,
                           songModel: favorites[index],
                           index: index,
                           listofSongs: favorites,

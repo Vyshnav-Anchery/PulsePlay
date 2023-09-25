@@ -16,17 +16,18 @@ class SongListTile extends StatelessWidget {
   final String title;
   final String artist;
   final String uri;
-  const SongListTile({
-    super.key,
-    required this.songListController,
-    required this.id,
-    required this.title,
-    required this.artist,
-    required this.uri,
-    required this.songmodel,
-    required this.index,
-    required this.listofSongs
-  });
+  final String playlistName;
+  const SongListTile(
+      {super.key,
+      required this.songListController,
+      required this.id,
+      required this.title,
+      required this.artist,
+      required this.uri,
+      required this.songmodel,
+      required this.index,
+      required this.listofSongs,
+      required this.playlistName});
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,7 @@ class SongListTile extends StatelessWidget {
                 songModel: songmodel,
                 index: index,
                 listofSongs: listofSongs,
+                playlistName: playlistName,
               ),
             ));
       },

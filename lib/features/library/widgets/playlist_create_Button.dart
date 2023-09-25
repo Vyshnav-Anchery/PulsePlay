@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
+import 'package:provider/provider.dart';
 
 class PlaylistCreateButton extends StatelessWidget {
   const PlaylistCreateButton({
@@ -11,7 +12,7 @@ class PlaylistCreateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController playlistEditingController =
         TextEditingController();
-    final MusicPlayerController provider = MusicPlayerController();
+    final MusicPlayerController provider = Provider.of<MusicPlayerController>(context);
     return InkWell(
       onTap: () {
         showDialog(

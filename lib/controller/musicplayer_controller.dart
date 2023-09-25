@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
+import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../database/playlistdatabase.dart';
 import '../utils/constants/constants.dart';
@@ -35,11 +36,12 @@ class MusicPlayerController extends ChangeNotifier {
   playSong(
       {required SongModel songmodel,
       required int index,
-      required List<SongModel> listofSongs}) {
+      required List<SongModel> listofSongs,
+      required String lastPlaylist}) {
     try {
       audioPlayer.setAudioSource(createPlaylist(listofSongs),
           initialIndex: index);
-      playSongg(songmodel, index);
+      playSongg(songmodel, index, lastPlaylist);
     } on Exception {
       log("error playing");
     } catch (e) {
@@ -77,6 +79,8 @@ class MusicPlayerController extends ChangeNotifier {
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
     );
+    allSongs.clear();
+    allSongs = [...querysongs];
     return querysongs;
   }
 
@@ -132,8 +136,10 @@ class MusicPlayerController extends ChangeNotifier {
     return songModel;
   }
 
-  playSongg(SongModel song, index) {
-    addtoRecents(song);
+  playSongg(SongModel song, int index, String lastPlaylist) {
+    addToRecents(song);
+    prefs.setString(Constants.lastPlaylist, lastPlaylist);
+    prefs.setInt(Constants.lastPlayedIndex, index);
     currentlyPlayingIndex = index;
     currentlyPlaying = song;
     audioPlayer.play();
@@ -261,29 +267,25 @@ class MusicPlayerController extends ChangeNotifier {
     return false;
   }
 
-  addtoRecents(SongModel song) {
+  addToRecents(SongModel song) {
     PlaylistDatabase recentsDatabase =
         recentsBox.get(Constants.recentsBoxName)!;
-    bool songExists = isInRecent(song);
-    if (songExists) {
-      log("already in recents");
-      int existingIndex = recentsDatabase.songs.indexOf(song);
-      recentsDatabase.songs.removeAt(existingIndex);
-    }
-    recentsDatabase.songs.insert(0, song);
-    recentsDatabase.save();
-  }
 
-  bool isInRecent(SongModel song) {
-    PlaylistDatabase recentsDatabase =
-        recentsBox.get(Constants.recentsBoxName)!;
-    List<SongModel> playlist = recentsDatabase.songs;
-    for (SongModel data in playlist) {
-      if (data.id == song.id) {
-        return true;
+    // Find the index of the song based on a custom equality check (e.g., using the 'id' property)
+    int index = -1;
+    for (int i = 0; i < recentsDatabase.songs.length; i++) {
+      if (recentsDatabase.songs[i].id == song.id) {
+        index = i;
+        break;
       }
     }
-    return false;
+    if (index != -1) {
+      log("Song already in recents");
+      recentsDatabase.songs.removeAt(index); // Remove the existing song
+    }
+    // Insert the new song at the beginning of the list
+    recentsDatabase.songs.insert(0, song);
+    recentsDatabase.save();
   }
 
   removeFromFavorite(SongModel song) {
