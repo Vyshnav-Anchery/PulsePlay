@@ -4,11 +4,11 @@ import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import '../../../controller/authentication_controller.dart';
-import '../../../utils/constants/constants.dart';
 import '../../../controller/bottom_nav_controller.dart';
+import '../../../utils/constants/constants.dart';
 import '../../library/ui/library_screen.dart';
-import '../../welcome/ui/welcome.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         appBar: provider.bottomNavIndex == 0
             ? AppBar(
+                elevation: 2,
                 backgroundColor: Constants.appBg,
                 leading: IconButton(
                   onPressed: () {
@@ -82,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               )
             : AppBar(
+              elevation: 2,
                 automaticallyImplyLeading: false,
                 backgroundColor: Constants.appBg,
                 centerTitle: true,

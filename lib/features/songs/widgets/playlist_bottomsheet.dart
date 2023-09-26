@@ -59,6 +59,12 @@ class PlaylistBottomSheet extends StatelessWidget {
                           "${playlist.songs.length} Songs",
                           style: Constants.musicListTextStyle,
                         ),
+                        trailing: Icon(
+                          musicPlayerController.isInPlaylist(playlistKey, song)
+                              ? Icons.playlist_add_check
+                              : Icons.playlist_add,
+                          color: Colors.white,
+                        ),
                         onTap: () {
                           musicPlayerController.addtoPlaylist(
                               playlistName: playlistKey,

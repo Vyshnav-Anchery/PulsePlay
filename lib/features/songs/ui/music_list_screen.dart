@@ -34,7 +34,7 @@ class _MusicScreenState extends State<MusicScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      // margin: const EdgeInsets.only(top: 5),
       decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: Stack(
         children: [
