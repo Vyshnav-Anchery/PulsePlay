@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/database/playlistdatabase.dart';
+import 'package:music_player/features/library/widgets/alert_dialogue.dart';
 import 'package:music_player/features/library/widgets/playlist_create_Button.dart';
 import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
@@ -39,8 +40,6 @@ class ShowPlaylists extends StatelessWidget {
                   itemBuilder: (context, index) {
                     String playlistKey = playlistBox.keyAt(index);
                     PlaylistDatabase playlist = playlistBox.getAt(index)!;
-                    // final playlistKey = playlistBox.keyAt(index +
-                    //     2); // Adjust the index for the actual playlist key
                     return Card(
                       color: Colors.blueGrey.shade900,
                       child: ListTile(
@@ -73,7 +72,10 @@ class ShowPlaylists extends StatelessWidget {
                           );
                         },
                         trailing: IconButton(
-                          onPressed: () => playlistBox.delete(playlistKey),
+                          onPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => DeleteAlertDialogue(
+                                  playlistKey: playlistKey)),
                           icon: const Icon(
                             Icons.delete,
                             color: Color.fromARGB(209, 228, 227, 227),

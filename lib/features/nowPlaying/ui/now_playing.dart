@@ -13,12 +13,15 @@ class NowPlaying extends StatefulWidget {
   final SongModel songModel;
   final int? index;
   final String playlistName;
+
+  final bool? play;
   const NowPlaying(
       {super.key,
       required this.songModel,
       this.index,
       required this.listofSongs,
-      required this.playlistName});
+      required this.playlistName,
+      this.play});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -26,31 +29,33 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> {
   late MusicPlayerController provider;
+  late int songInd = 0;
   @override
   void initState() {
+    bool play = widget.play ?? true;
     provider = Provider.of<MusicPlayerController>(context, listen: false);
-    provider.playSong(
-        songmodel: widget.songModel,
-        index: widget.index!,
-        listofSongs: widget.listofSongs,
-        lastPlaylist: widget.playlistName
-        );
+    songInd = widget.index ?? provider.currentlyPlayingIndex;
+    if (play) {
+      provider.playSong(
+          songmodel: widget.songModel,
+          index: songInd,
+          listofSongs: widget.listofSongs,
+          lastPlaylist: widget.playlistName);
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    log(widget.listofSongs.toString());
     List<SongModel> songList = widget.listofSongs;
-    int songInd = widget.index ?? provider.currentlyPlayingIndex;
     provider.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
         if (index != provider.currentlyPlayingIndex) {
           provider.updateCurrentPlayingDetails(index);
-          log(provider.currentlyPlaying.toString());
         }
       }
     });
-    log(provider.currentlyPlaying.toString());
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: Constants.linearGradient),
@@ -59,51 +64,57 @@ class _NowPlayingState extends State<NowPlaying> {
         child: StreamBuilder(
             stream: provider.audioPlayer.currentIndexStream,
             builder: (context, streamSnapshot) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      )),
-                  const SizedBox(height: 30),
-                  Center(
-                      child: Column(
-                    children: [
-                      MusicCover(provider: provider),
-                      const SizedBox(height: 30),
-                      Text(
-                        songList[songInd].title,
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.white),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        songList[songInd].artist! == "<unknown>"
-                            ? "Unknown Artist"
-                            : provider.currentlyPlaying!.artist!,
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        style:
-                            const TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                      const SizedBox(height: 20),
-                      const PlayingProgressBar(),
-                      const SizedBox(height: 20),
-                      SongControllwidgets(
-                        index: songInd,
-                        songModel: songList,
-                      )
-                    ],
-                  )),
-                ],
-              );
+              if (streamSnapshot.data == null) {
+                return Container();
+              } else {
+                provider.currentlyPlayingIndex = streamSnapshot.data!;
+                log(provider.currentlyPlayingIndex.toString());
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        )),
+                    const SizedBox(height: 30),
+                    Center(
+                        child: Column(
+                      children: [
+                        MusicCover(provider: provider),
+                        const SizedBox(height: 30),
+                        Text(
+                          provider.currentlyPlaying!.title,
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Colors.white),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          provider.currentlyPlaying!.artist! == "<unknown>"
+                              ? "Unknown Artist"
+                              : provider.currentlyPlaying!.artist!,
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                        const SizedBox(height: 20),
+                        const PlayingProgressBar(),
+                        const SizedBox(height: 20),
+                        SongControllwidgets(
+                          index: songInd,
+                          songModel: songList,
+                        )
+                      ],
+                    )),
+                  ],
+                );
+              }
             }),
       ),
     );

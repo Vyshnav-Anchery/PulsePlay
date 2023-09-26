@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import '../../../database/playlistdatabase.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/common widgets/listtile_song_image.dart';
 import '../../../controller/musicplayer_controller.dart';

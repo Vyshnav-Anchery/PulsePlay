@@ -1,10 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/sleep_timer_alert.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import '../../../../database/playlistdatabase.dart';
-import '../../../../utils/box/hive_boxes.dart';
 import '../../../../utils/constants/constants.dart';
 import '../../../songs/widgets/playlist_bottomsheet.dart';
 import '../../../../controller/musicplayer_controller.dart';
@@ -22,11 +22,7 @@ class SongControllwidgets extends StatelessWidget {
   Widget build(BuildContext context) {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
-    // PlaylistDatabase? playlistDatabase = playlistBox.get('Favorites')!;
-    bool isFav = false;
-    // playlistDatabase.songUris['Favorites']!
-    //     .contains(provider.currentlyPlaying!.uri);
-
+    bool isFav = provider.isFavorite(provider.currentlyPlaying!);
     bool isPlaying = provider.audioPlayer.playing;
     return Column(
       children: [
@@ -64,7 +60,7 @@ class SongControllwidgets extends StatelessWidget {
                   size: 50,
                 )),
             IconButton(
-              onPressed: () => provider.toggleSong(uri: songModel[index].uri!),
+              onPressed: () => provider.toggleSong(),
               icon: Icon(
                 isPlaying ? Icons.pause : Icons.play_arrow_rounded,
                 color: Constants.bottomBarIconColor,
@@ -103,10 +99,10 @@ class SongControllwidgets extends StatelessWidget {
                 )),
             IconButton(
               onPressed: () {
-                // isFav
-                //     ? provider
-                //         .removeFromFavorite(provider.currentlyPlaying!.uri!)
-                //     : provider.addtoFavorite(provider.currentlyPlaying!.uri!);
+                isFav
+                    ? provider.removeFromFavorite(provider.currentlyPlaying!)
+                    : provider.addToFavorite(
+                        provider.currentlyPlaying!, context);
               },
               icon: Icon(
                 isFav ? Icons.favorite : Icons.favorite_border,
@@ -114,13 +110,11 @@ class SongControllwidgets extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {
-                //   showModalBottomSheet(
-                //   context: context,
-                //   builder: (context) =>
-                //       PlaylistBottomSheet(songUri: songModel[index].uri!),
-                // );
-              },
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                builder: (context) =>
+                    PlaylistBottomSheet(song: provider.currentlyPlaying!),
+              ),
               icon:
                   Icon(Icons.playlist_add, color: Constants.bottomBarIconColor),
             ),

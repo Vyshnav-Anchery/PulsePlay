@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
@@ -20,6 +22,7 @@ class FloatingMiniPlayer extends StatelessWidget {
       if (recentSongdb == null || recentSongdb.songs.isEmpty) {
         return Container();
       } else {
+        log("first");
         String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
         int lastIndex = prefs.getInt(Constants.lastPlayedIndex)!;
         return FutureBuilder(
@@ -66,14 +69,13 @@ class FloatingMiniPlayer extends StatelessWidget {
                   ),
                   trailing: IconButton(
                       onPressed: () {
-                        musicPlayerController.audioPlayer.playing
+                        !musicPlayerController.audioPlayer.playing
                             ? musicPlayerController.playSong(
                                 songmodel: lastPlayed,
                                 index: lastIndex,
                                 listofSongs: playlist,
                                 lastPlaylist: lastPlayedPlaylist)
-                            : musicPlayerController.toggleSong(
-                                uri: lastPlayed.uri!);
+                            : musicPlayerController.toggleSong();
                       },
                       icon: Icon(musicPlayerController.audioPlayer.playing
                           ? Icons.pause
@@ -94,7 +96,17 @@ class FloatingMiniPlayer extends StatelessWidget {
             });
       }
     } else {
-      if (musicPlayerController.audioPlayer.playing) {}
+      log("sec");
+      // if (musicPlayerController.audioPlayer.playing) {}
+      String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
+      List<SongModel> playlist = [];
+      if (lastPlayedPlaylist == Constants.allSongs) {
+        playlist = MusicPlayerController.allSongs;
+      } else if (lastPlayedPlaylist == Constants.recentsBoxName) {
+        playlist = recentsBox.get(Constants.recentsBoxName)!.songs;
+      } else {
+        playlist = favoriteBox.get(Constants.favoritesBoxName)!.songs;
+      }
       return Card(
         child: ListTile(
           leading: QueryArtworkWidget(
@@ -126,10 +138,7 @@ class FloatingMiniPlayer extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           trailing: IconButton(
-              onPressed: () {
-                musicPlayerController.toggleSong(
-                    uri: musicPlayerController.currentlyPlaying!.uri!);
-              },
+              onPressed: () => musicPlayerController.toggleSong(),
               icon: Icon(musicPlayerController.audioPlayer.playing
                   ? Icons.pause
                   : Icons.play_arrow)),
@@ -139,9 +148,12 @@ class FloatingMiniPlayer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => NowPlaying(
-                      songModel: musicPlayerController.currentlyPlaying!,
-                      listofSongs: musicPlayerController.currentPlaylist,
-                      playlistName: playlistName),
+                    index: musicPlayerController.currentlyPlayingIndex,
+                    songModel: musicPlayerController.currentlyPlaying!,
+                    listofSongs: playlist,
+                    playlistName: playlistName,
+                    play: false,
+                  ),
                 ));
           },
         ),

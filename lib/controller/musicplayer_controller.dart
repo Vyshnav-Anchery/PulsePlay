@@ -49,7 +49,7 @@ class MusicPlayerController extends ChangeNotifier {
     }
   }
 
-  toggleSong({required String uri}) async {
+  toggleSong() async {
     try {
       audioPlayer.playing ? await audioPlayer.pause() : audioPlayer.play();
       notifyListeners();
@@ -61,13 +61,14 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   playNextSong({required index}) {
-    audioPlayer.seekToNext();
-
+    audioPlayer.seekToNext().then((value) => addToRecents(currentlyPlaying!));
     notifyListeners();
   }
 
   playPrevSong({required index}) {
-    audioPlayer.seekToPrevious();
+    audioPlayer
+        .seekToPrevious()
+        .then((value) => addToRecents(currentlyPlaying!));
     notifyListeners();
   }
 
@@ -222,11 +223,13 @@ class MusicPlayerController extends ChangeNotifier {
     if (songExists) {
       Navigator.pop(context);
       return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Song already in Playlist")));
+          const SnackBar(content: Text("Song already in playlist")));
     } else {
       playlist!.songs.add(song);
+      playlist.save();
+      return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Song added to playlist")));
     }
-    playlist.save();
   }
 
   bool isInPlaylist(String playlistName, SongModel song) {
@@ -245,23 +248,24 @@ class MusicPlayerController extends ChangeNotifier {
     bool songExists = isFavorite(song);
     if (songExists) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Song already in Favorite")));
+          const SnackBar(content: Text("Song already in Favorites")));
     } else {
       // Add the new song to the list
       favoriteDatabase!.songs.add(song);
       favoriteDatabase.save();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Added to Favorites")));
+      notifyListeners();
     }
   }
 
   bool isFavorite(SongModel song) {
     PlaylistDatabase favoriteDatabase =
         favoriteBox.get(Constants.favoritesBoxName)!;
-    var favorites = favoriteDatabase.songs;
+    List<SongModel> favorites = favoriteDatabase.songs;
     for (SongModel data in favorites) {
       if (data.id == song.id) {
         return true;
-      } else {
-        return false;
       }
     }
     return false;
@@ -293,6 +297,7 @@ class MusicPlayerController extends ChangeNotifier {
         favoriteBox.get(Constants.favoritesBoxName)!;
     if (favoriteDatabase.songs.contains(song)) {
       favoriteDatabase.songs.remove(song);
+      log("removed");
     }
     favoriteDatabase.save();
     notifyListeners();
