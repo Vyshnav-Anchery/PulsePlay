@@ -1,8 +1,12 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:music_player/features/home/ui/home.dart';
+
+import '../../main.dart';
 
 class Authentication {
   static verifyPhone(String phoneNumber) async {
@@ -47,18 +51,27 @@ class Authentication {
       required String userName,
       required BuildContext context}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: emailAddress,
+            password: password,
+          )
+          .then((UserCredential value) => FirebaseFirestore.instance
+              .collection('users')
+              .doc(value.user!.uid)
+              .set({'name': userName}));
+      FirebaseAuth.instance.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         log('The account already exists for that email.');
+        scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+            content: Text("The account already exists for that email")));
       }
     } catch (e) {
-      log(e.toString());
+      scaffoldMessengerKey.currentState!
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
@@ -68,13 +81,25 @@ class Authentication {
       required BuildContext context}) async {
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
+          .signInWithEmailAndPassword(email: emailAddress, password: password)
+          .then((value) => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen())));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        log('No user found for that email.');
+        scaffoldMessengerKey.currentState!.showSnackBar(
+            const SnackBar(content: Text("No user found for that email")));
       } else if (e.code == 'wrong-password') {
-        log('Wrong password provided for that user.');
+        scaffoldMessengerKey.currentState!
+            .showSnackBar(const SnackBar(content: Text("Wrong password")));
+      } else if (e.code == 'too-many-requests') {
+        scaffoldMessengerKey.currentState!.showSnackBar(
+            const SnackBar(content: Text("Too many requests try again later")));
+      } else if (e.code == 'user-disabled') {
+        scaffoldMessengerKey.currentState!.showSnackBar(
+            const SnackBar(content: Text("The email has been disabled")));
       }
+    } on PlatformException catch (r) {
+      log(r.toString());
     }
   }
 }

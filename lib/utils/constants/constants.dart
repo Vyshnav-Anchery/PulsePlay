@@ -57,12 +57,12 @@ class Constants {
 
   static Text loginHeading = const Text(
     "Login",
-    style: TextStyle(color: Colors.white, fontSize: 20),
+    style: TextStyle(color: Colors.white, fontSize: 25),
   );
 
   static Text signUpHeading = const Text(
     "Sign Up",
-    style: TextStyle(color: Colors.white, fontSize: 20),
+    style: TextStyle(color: Colors.white, fontSize: 25),
   );
 
   static Text signupText = const Text(
@@ -114,4 +114,9 @@ class Constants {
   static String lastPlaylist = 'lastplaylist';
 
   static String lastPlayedIndex = 'lastindex';
+
+// colors
+
+  static Color white = Colors.white;
+  static Color red = Colors.red;
 }

@@ -5,7 +5,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/features/home/ui/home.dart';
-import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:music_player/features/welcome/ui/welcome.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -70,32 +69,39 @@ void main() async {
   ));
 }
 
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Pulse Play',
-          theme: Constants.appTheme,
-          home: HomeScreen()
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Pulse Play',
+        theme: Constants.appTheme,
+        home:
+            // HomeScreen()
 
-          // StreamBuilder(
-          //   stream: FirebaseAuth.instance.authStateChanges(),
-          //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-          //     if (snapshot.hasData && snapshot.data != null) {
-          //       return const HomeScreen();
-          //     } else if (snapshot.connectionState == ConnectionState.waiting) {
-          //       return const WelcomeScreen();
-          //     } else {
-          //       return WelcomeScreen();
-          //     }
-          //   },
-          // ),
-          ),
+            StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData && snapshot.data != null) {
+              if (FirebaseAuth.instance.currentUser!.emailVerified) {
+                return const HomeScreen();
+              } else
+                return (WelcomeScreen());
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const WelcomeScreen();
+            } else {
+              return WelcomeScreen();
+            }
+          },
+        ),
+      ),
     );
   }
 }

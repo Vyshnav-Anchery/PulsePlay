@@ -15,8 +15,6 @@ class RecentlyPlayedSongs extends StatelessWidget {
     PlaylistDatabase recentsDatabase =
         recentsBox.get(Constants.recentsBoxName)!;
     List<SongModel> recents = recentsDatabase.songs;
-    MusicPlayerController provider =
-        Provider.of<MusicPlayerController>(context);
     if (recents.isEmpty) {
       return Center(
         child: Text(

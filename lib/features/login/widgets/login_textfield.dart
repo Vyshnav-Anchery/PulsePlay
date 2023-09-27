@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/utils/constants/constants.dart';
 
 class LoginFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -15,20 +16,17 @@ class LoginFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-      ),
-      child: TextFormField(
-        validator: validator,
-        controller: controller,
-        obscureText: pass ?? false,
-        decoration: InputDecoration(
-          hintText: hint,
-          labelStyle: const TextStyle(color: Colors.red),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-        ),
+    return TextFormField(
+      validator: validator,
+      controller: controller,
+      obscureText: pass ?? false,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+        fillColor: Constants.white,
+        filled: true,
+        hintText: hint,
+        labelStyle: TextStyle(color: Constants.red),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }

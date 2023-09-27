@@ -6,7 +6,7 @@ import '../../../utils/constants/constants.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> loginformKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -37,16 +37,34 @@ class LoginScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Form(
-                    key: signupformKey,
+                    key: loginformKey,
                     child: Column(
                       children: [
                         const SizedBox(height: 60),
                         Constants.loginHeading,
                         const SizedBox(height: 30),
                         LoginFormField(
-                            controller: emailController, hint: "Email"),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              final emailRegex = RegExp(
+                                  r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+
+                              if (!emailRegex.hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            controller: emailController,
+                            hint: "Email"),
                         const SizedBox(height: 10),
                         LoginFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }return null;
+                          },
                           controller: passwordController,
                           hint: "Password",
                           pass: true,
@@ -55,10 +73,12 @@ class LoginScreen extends StatelessWidget {
                         ElevatedButton(
                             style: Constants.welcomeButtonStyle,
                             onPressed: () {
-                              authenticationController.emailLogin(
-                                  emailController.text,
-                                  passwordController.text,
-                                  context);
+                              if (loginformKey.currentState!.validate()) {
+                                authenticationController.emailLogin(
+                                    emailController.text,
+                                    passwordController.text,
+                                    context);
+                              }
                             },
                             child: Constants.loginText),
                         Constants.or,

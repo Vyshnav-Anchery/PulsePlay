@@ -9,6 +9,7 @@ import '../../../controller/authentication_controller.dart';
 import '../../../controller/bottom_nav_controller.dart';
 import '../../../utils/constants/constants.dart';
 import '../../library/ui/library_screen.dart';
+import '../../welcome/ui/welcome.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                       onPressed: () {
-                        // authenticationController.logout();
+                        authenticationController.logout(context);
                         // Navigator.pushReplacement(
                         //     context,
                         //     MaterialPageRoute(
@@ -83,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               )
             : AppBar(
-              elevation: 2,
+                elevation: 2,
                 automaticallyImplyLeading: false,
                 backgroundColor: Constants.appBg,
                 centerTitle: true,
