@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:provider/provider.dart';
 

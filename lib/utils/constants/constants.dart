@@ -50,6 +50,9 @@ class Constants {
   static Text loginText = const Text("Login",
       style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1)));
 
+  static TextStyle loginTextStyle =
+      const TextStyle(color: Color.fromRGBO(51, 51, 51, 1));
+
   static Text welcomeText = const Text(
     "Welcome",
     style: TextStyle(color: Colors.white, fontSize: 25),
@@ -65,9 +68,9 @@ class Constants {
     style: TextStyle(color: Colors.white, fontSize: 25),
   );
 
-  static Text signupText = const Text(
+  static Text signupText = Text(
     "Sign Up",
-    style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1)),
+    style: loginTextStyle,
   );
 
   static TextStyle musicListTextStyle = const TextStyle(color: Colors.white);

@@ -6,13 +6,15 @@ class LoginFormField extends StatelessWidget {
   final String hint;
   final bool? pass;
   final String? Function(String?)? validator;
+  final Widget? suffix;
 
   const LoginFormField(
       {super.key,
       required this.controller,
       required this.hint,
       this.pass,
-      this.validator});
+      this.validator,
+      this.suffix});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,14 @@ class LoginFormField extends StatelessWidget {
       controller: controller,
       obscureText: pass ?? false,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-        fillColor: Constants.white,
-        filled: true,
-        hintText: hint,
-        labelStyle: TextStyle(color: Constants.red),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+          fillColor: Constants.white,
+          filled: true,
+          hintText: hint,
+          labelStyle: TextStyle(color: Constants.red),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          suffixIcon: (pass != null) ? suffix : Container()),
     );
   }
 }

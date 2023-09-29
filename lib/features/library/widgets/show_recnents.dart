@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:provider/provider.dart';
 import '../../../database/playlistdatabase.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../controller/musicplayer_controller.dart';
 import '../../nowPlaying/ui/now_playing.dart';
 
 class RecentlyPlayedSongs extends StatelessWidget {

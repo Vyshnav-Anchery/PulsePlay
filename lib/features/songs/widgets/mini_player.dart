@@ -1,7 +1,5 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:miniplayer/miniplayer.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
@@ -22,7 +20,6 @@ class FloatingMiniPlayer extends StatelessWidget {
       if (recentSongdb == null || recentSongdb.songs.isEmpty) {
         return Container();
       } else {
-        log("first");
         String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
         int lastIndex = prefs.getInt(Constants.lastPlayedIndex)!;
         return FutureBuilder(
@@ -96,7 +93,6 @@ class FloatingMiniPlayer extends StatelessWidget {
             });
       }
     } else {
-      log("sec");
       // if (musicPlayerController.audioPlayer.playing) {}
       String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
       List<SongModel> playlist = [];

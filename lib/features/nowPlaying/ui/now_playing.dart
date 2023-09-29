@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/song_controll_buttons.dart';
 import 'package:music_player/features/nowPlaying/ui/widgets/song_cover.dart';
@@ -47,7 +47,6 @@ class _NowPlayingState extends State<NowPlaying> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.listofSongs.toString());
     List<SongModel> songList = widget.listofSongs;
     provider.audioPlayer.currentIndexStream.listen((index) {
       if (index != null) {
@@ -68,7 +67,7 @@ class _NowPlayingState extends State<NowPlaying> {
                 return Container();
               } else {
                 provider.currentlyPlayingIndex = streamSnapshot.data!;
-                log(provider.currentlyPlayingIndex.toString());
+                
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

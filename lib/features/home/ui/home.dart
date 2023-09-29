@@ -4,12 +4,11 @@ import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controller/authentication_controller.dart';
 import '../../../controller/bottom_nav_controller.dart';
 import '../../../utils/constants/constants.dart';
 import '../../library/ui/library_screen.dart';
-import '../../welcome/ui/welcome.dart';
+import '../../user/ui/user_screen.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const MusicScreen(),
     const FavoriteScreen(),
     const LibraryScreen(),
-    // const UserScreen()
+    const UserScreen()
   ];
   final titles = [
     "Songs",
@@ -45,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     AuthenticationController authenticationController =
         Provider.of<AuthenticationController>(context);
+    authenticationController.getUserName();
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
         appBar: provider.bottomNavIndex == 0
@@ -92,17 +92,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   titles[provider.bottomNavIndex],
                   style: Constants.musicListTextStyle,
                 ),
-                actions: [
-                  IconButton(
-                      onPressed: () {
-                        // authenticationController.logout();
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const WelcomeScreen()));
-                      },
-                      icon: const Icon(Icons.logout, color: Colors.white))
-                ],
+                // actions: [
+                //   // IconButton(
+                //   // onPressed: () {
+                //   //   // authenticationController.logout();
+                //   //   // Navigator.pushReplacement(
+                //   //   //     context,
+                //   //   //     MaterialPageRoute(
+                //   //   //         builder: (context) => const WelcomeScreen()));
+                //   // },
+                //   // icon: const Icon(Icons.logout, color: Colors.white))
+                // ],
               ),
         body: Container(
             decoration: BoxDecoration(gradient: Constants.linearGradient),

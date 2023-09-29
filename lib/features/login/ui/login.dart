@@ -16,11 +16,10 @@ class LoginScreen extends StatelessWidget {
         Provider.of<AuthenticationController>(context);
     return Scaffold(
       backgroundColor: Constants.appBg,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
@@ -31,8 +30,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                 color: Constants.cardBg,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -50,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                               }
                               final emailRegex = RegExp(
                                   r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-
+        
                               if (!emailRegex.hasMatch(value)) {
                                 return 'Please enter a valid email address';
                               }
@@ -60,15 +58,21 @@ class LoginScreen extends StatelessWidget {
                             hint: "Email"),
                         const SizedBox(height: 10),
                         LoginFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }return null;
-                          },
-                          controller: passwordController,
-                          hint: "Password",
-                          pass: true,
-                        ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                            controller: passwordController,
+                            hint: "Password",
+                            pass: authenticationController.isLoginPassObscure,
+                            suffix: IconButton(
+                                onPressed: () => authenticationController
+                                    .toggleLoginPasswordVisbility(),
+                                icon: Icon(authenticationController.isPassObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off))),
                         const SizedBox(height: 10),
                         ElevatedButton(
                             style: Constants.welcomeButtonStyle,
@@ -81,9 +85,6 @@ class LoginScreen extends StatelessWidget {
                               }
                             },
                             child: Constants.loginText),
-                        Constants.or,
-                        TextButton(
-                            onPressed: () {}, child: Constants.withoutLogin),
                         const SizedBox(height: 50)
                       ],
                     ),

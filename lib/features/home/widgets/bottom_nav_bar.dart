@@ -14,7 +14,7 @@ class BottomNavBar extends StatelessWidget {
         NavigationDestination(icon: Icon(Icons.favorite), label: "Favorites"),
         NavigationDestination(
             icon: Icon(Icons.playlist_play), label: "Playlist"),
-        // NavigationDestination(icon: Icon(Icons.person), label: "User"),
+        NavigationDestination(icon: Icon(Icons.person), label: "User"),
       ],
       selectedIndex: provider.bottomNavIndex,
       onDestinationSelected: (value) {

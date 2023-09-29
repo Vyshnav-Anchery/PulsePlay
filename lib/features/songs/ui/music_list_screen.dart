@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -26,8 +23,6 @@ class _MusicScreenState extends State<MusicScreen> {
     songListController =
         Provider.of<MusicPlayerController>(context, listen: false);
     checkpermission();
-    // log(FirebaseAuth.instance.currentUser!.email!);
-    // log(prefs.getString(FirebaseAuth.instance.currentUser!.email! ?? "lol")!);
     super.initState();
   }
 
@@ -51,7 +46,7 @@ class _MusicScreenState extends State<MusicScreen> {
                   child: Text("no music found"),
                 );
               } else {
-                MusicPlayerController.allSongs=[...snapshot.data!];
+                MusicPlayerController.allSongs = [...snapshot.data!];
                 return SizedBox(
                   height: MediaQuery.sizeOf(context).height - 168,
                   child: ListView.separated(

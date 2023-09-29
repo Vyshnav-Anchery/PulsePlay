@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
-import '../../email verify/verifyemail.dart';
 import '../../login/widgets/login_textfield.dart';
+
+final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
-  final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
   final TextEditingController emailSignUpController = TextEditingController();
   final TextEditingController passwordSignUpController =
       TextEditingController();
@@ -25,11 +25,9 @@ class SignUpScreen extends StatelessWidget {
         Provider.of<AuthenticationController>(context);
     return Scaffold(
       backgroundColor: Constants.appBg,
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
@@ -81,60 +79,77 @@ class SignUpScreen extends StatelessWidget {
                             hint: "Email"),
                         const SizedBox(height: 10),
                         LoginFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a password';
-                            }
-                            // Check for minimum length
-                            if (value.length < 8) {
-                              return 'Password must be at least 8 characters long';
-                            }
-                            // Check for at least one uppercase letter
-                            if (!value.contains(RegExp(r'[A-Z]'))) {
-                              return 'Password must contain at least one uppercase letter';
-                            }
-                            // Check for at least one lowercase letter
-                            if (!value.contains(RegExp(r'[a-z]'))) {
-                              return 'Password must contain at least one lowercase letter';
-                            }
-                            // Check for at least one digit
-                            if (!value.contains(RegExp(r'[0-9]'))) {
-                              return 'Password must contain at least one digit';
-                            }
-                            // Check for at least one special character (customize the character set)
-                            if (!value.contains(
-                                RegExp(r'[!@#\$%^&*()_+{}:;<>,.?~]'))) {
-                              return 'Password must contain at least one special character';
-                            }
-                            if (value.contains(' ')) {
-                              return 'Password must not contain spaces';
-                            }
-                            return null;
-                          },
-                          controller: passwordSignUpController,
-                          hint: "Password",
-                          pass: false,
-                        ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a password';
+                              }
+                              // Check for minimum length
+                              if (value.length < 8) {
+                                return 'Password must be at least 8 characters long';
+                              }
+                              // Check for at least one uppercase letter
+                              if (!value.contains(RegExp(r'[A-Z]'))) {
+                                return 'Password must contain at least one uppercase letter';
+                              }
+                              // Check for at least one lowercase letter
+                              if (!value.contains(RegExp(r'[a-z]'))) {
+                                return 'Password must contain at least one lowercase letter';
+                              }
+                              // Check for at least one digit
+                              if (!value.contains(RegExp(r'[0-9]'))) {
+                                return 'Password must contain at least one digit';
+                              }
+                              // Check for at least one special character (customize the character set)
+                              if (!value.contains(
+                                  RegExp(r'[!@#\$%^&*()_+{}:;<>,.?~]'))) {
+                                return 'Password must contain at least one special character';
+                              }
+                              if (value.contains(' ')) {
+                                return 'Password must not contain spaces';
+                              }
+                              authenticationController.setPasswordValidated();
+                              return null;
+                            },
+                            controller: passwordSignUpController,
+                            hint: "Password",
+                            pass: authenticationController.isPassObscure,
+                            suffix: IconButton(
+                                onPressed: () => authenticationController
+                                    .togglePasswordVisbility(),
+                                icon: Icon(
+                                    authenticationController.isPassObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off))),
                         const SizedBox(height: 10),
-                        LoginFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a password';
-                            }
-                            // Check for minimum length
-                            if (value.length < 8) {
-                              return 'Password must be at least 8 characters long';
-                            }
-                            if (confirmPasswordSignUpController.text !=
-                                passwordSignUpController.text) {
-                              return 'Passwords are not same';
-                            }
-                            return null;
-                          },
-                          controller: confirmPasswordSignUpController,
-                          hint: "Re-Enter password",
-                          pass: false,
-                        ),
+                        authenticationController.isPassValidated
+                            ? LoginFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a password';
+                                  }
+                                  // Check for minimum length
+                                  if (value.length < 8) {
+                                    return 'Password must be at least 8 characters long';
+                                  }
+                                  if (confirmPasswordSignUpController.text !=
+                                      passwordSignUpController.text) {
+                                    return 'Passwords are not same';
+                                  }
+                                  return null;
+                                },
+                                controller: confirmPasswordSignUpController,
+                                hint: "Re-Enter password",
+                                pass: authenticationController
+                                    .isConfirmPassObscure,
+                                suffix: IconButton(
+                                    onPressed: () => authenticationController
+                                        .toggleConfirmPasswordVisibility(),
+                                    icon: Icon(authenticationController
+                                            .isConfirmPassObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off)),
+                              )
+                            : Container(),
                         const SizedBox(height: 10),
                         ElevatedButton(
                             style: Constants.welcomeButtonStyle,
@@ -147,7 +162,7 @@ class SignUpScreen extends StatelessWidget {
                                     context);
                                 showDialog(
                                     context: context,
-                                    builder: (context) => VerificationAlert());
+                                    builder: (context) => const VerificationAlert());
                               }
                             },
                             child: Constants.signupText),

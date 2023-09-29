@@ -92,12 +92,13 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData && snapshot.data != null) {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 return const HomeScreen();
-              } else
-                return (WelcomeScreen());
+              } else {
+                return (const WelcomeScreen());
+              }
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return const WelcomeScreen();
             } else {
-              return WelcomeScreen();
+              return const WelcomeScreen();
             }
           },
         ),
