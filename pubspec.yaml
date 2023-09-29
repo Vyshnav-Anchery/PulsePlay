@@ -41,15 +41,12 @@ dependencies:
   provider: ^6.0.5
   on_audio_query: ^2.9.0
   just_audio: ^0.9.34
-  audio_query: ^0.0.2
   shared_preferences: ^2.2.1
   audio_video_progress_bar: ^2.0.0
-  rxdart: ^0.27.7
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   just_audio_background: ^0.0.1-beta.10
   miniplayer: ^1.0.1
-  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:

@@ -15,6 +15,7 @@ class AuthenticationController extends ChangeNotifier {
   bool isLoginPassObscure = true;
   bool isPassObscure = true;
   bool isConfirmPassObscure = true;
+  static bool isLoggedIn = true;
 
   emailSignUp(String emailAddress, String password, String userName,
       BuildContext context) {

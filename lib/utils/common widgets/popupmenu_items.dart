@@ -3,7 +3,7 @@ import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../constants/constants.dart';
-import '../../features/nowPlaying/ui/widgets/sleep_timer_alert.dart';
+import '../../features/nowPlaying/widgets/sleep_timer_alert.dart';
 
 class MusicLIstPopUpMenu extends StatelessWidget {
   final String uri;

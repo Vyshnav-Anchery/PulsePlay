@@ -45,8 +45,12 @@ class SongSearchDelegate extends SearchDelegate<SongModel> {
           final song = results[index];
           return ListTile(
             title: Text(song.title, style: Constants.musicListTextStyle),
-            subtitle:
-                Text(song.artist ?? '', style: Constants.musicListTextStyle),
+            subtitle: Text(
+              song.artist ?? '',
+              style: Constants.musicListTextStyle,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+            ),
             onTap: () {
               Navigator.push(
                   context,
@@ -82,8 +86,12 @@ class SongSearchDelegate extends SearchDelegate<SongModel> {
           final song = suggestions[index];
           return ListTile(
             title: Text(song.title, style: Constants.musicListTextStyle),
-            subtitle: Text(song.artist ?? 'Unknown Artist',
-                style: Constants.musicListTextStyle),
+            subtitle: Text(
+              song.artist ?? 'Unknown Artist',
+              style: Constants.musicListTextStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             onTap: () {
               query = song.title;
               showResults(context);

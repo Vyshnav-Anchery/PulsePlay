@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/login/widgets/login_textfield.dart';
+import 'package:music_player/features/user_authentication/widgets/login_textfield.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
@@ -78,6 +78,7 @@ class LoginScreen extends StatelessWidget {
                             style: Constants.welcomeButtonStyle,
                             onPressed: () {
                               if (loginformKey.currentState!.validate()) {
+                                AuthenticationController.isLoggedIn = true;
                                 authenticationController.emailLogin(
                                     emailController.text,
                                     passwordController.text,

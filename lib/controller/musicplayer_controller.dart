@@ -7,6 +7,7 @@ import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../database/playlistdatabase.dart';
+import '../main.dart';
 import '../utils/constants/constants.dart';
 
 class MusicPlayerController extends ChangeNotifier {
@@ -43,7 +44,8 @@ class MusicPlayerController extends ChangeNotifier {
           initialIndex: index);
       playSongg(songmodel, index, lastPlaylist);
     } on Exception {
-      log("error playing");
+      scaffoldMessengerKey.currentState!
+          .showSnackBar(const SnackBar(content: Text('Error Playing')));
     } catch (e) {
       log(e.toString());
     }
@@ -55,6 +57,8 @@ class MusicPlayerController extends ChangeNotifier {
       notifyListeners();
     } on Exception {
       log("error playing");
+      scaffoldMessengerKey.currentState!
+          .showSnackBar(const SnackBar(content: Text('Error Playing')));
     } catch (e) {
       log(e.toString());
     }
@@ -204,11 +208,11 @@ class MusicPlayerController extends ChangeNotifier {
     if (!playlistBox.containsKey(playlistname)) {
       playlistBox.put(playlistname, PlaylistDatabase(songs: []));
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState!.showSnackBar(
           SnackBar(content: Text("$playlistname playlist created")));
     } else {
       Navigator.pop(context);
-      return ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Playlist exists already")));
     }
     notifyListeners();
@@ -222,12 +226,12 @@ class MusicPlayerController extends ChangeNotifier {
     bool songExists = isInPlaylist(playlistName, song);
     if (songExists) {
       Navigator.pop(context);
-      return ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song already in playlist")));
     } else {
       playlist!.songs.add(song);
       playlist.save();
-      return ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song added to playlist")));
     }
   }
@@ -247,13 +251,13 @@ class MusicPlayerController extends ChangeNotifier {
     var favoriteDatabase = favoriteBox.get(Constants.favoritesBoxName);
     bool songExists = isFavorite(song);
     if (songExists) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song already in Favorites")));
     } else {
       // Add the new song to the list
       favoriteDatabase!.songs.add(song);
       favoriteDatabase.save();
-      ScaffoldMessenger.of(context)
+      scaffoldMessengerKey.currentState!
           .showSnackBar(const SnackBar(content: Text("Added to Favorites")));
       notifyListeners();
     }

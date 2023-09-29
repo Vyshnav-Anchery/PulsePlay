@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:provider/provider.dart';
-import '../../../../utils/constants/constants.dart';
-import '../../../../controller/musicplayer_controller.dart';
+import '../../../utils/constants/constants.dart';
+import '../../../controller/musicplayer_controller.dart';
 
 class PlayingProgressBar extends StatelessWidget {
   const PlayingProgressBar({

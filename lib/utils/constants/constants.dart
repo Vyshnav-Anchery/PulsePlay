@@ -122,4 +122,7 @@ class Constants {
 
   static Color white = Colors.white;
   static Color red = Colors.red;
+
+// Shared Pref
+  static String USERNAMEKEY = 'username';
 }

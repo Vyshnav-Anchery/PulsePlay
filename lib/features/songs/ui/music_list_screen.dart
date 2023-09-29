@@ -4,9 +4,10 @@ import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../../controller/musicplayer_controller.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/common widgets/song_listtile.dart';
-import '../../../controller/musicplayer_controller.dart';
 import '../widgets/mini_player.dart';
 
 class MusicScreen extends StatefulWidget {
@@ -48,7 +49,8 @@ class _MusicScreenState extends State<MusicScreen> {
               } else {
                 MusicPlayerController.allSongs = [...snapshot.data!];
                 return SizedBox(
-                  height: MediaQuery.sizeOf(context).height - 168,
+                  height: MediaQuery.sizeOf(context).height -
+                      MediaQuery.sizeOf(context).width * (1 / 2.35),
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         const Divider(color: Colors.transparent),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/features/home/ui/home.dart';
-import 'package:music_player/features/signup_screen/widget/verification_alert.dart';
+import 'package:music_player/features/user_authentication/widgets/verification_alert.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
-import '../../login/widgets/login_textfield.dart';
+import '../../../utils/sharedpref/prefvariable.dart';
+import '../../user screen/widgets/alertdialogue.dart';
+import '../widgets/login_textfield.dart';
 
 final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
 
@@ -18,6 +20,7 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController confirmPasswordSignUpController =
       TextEditingController();
   final TextEditingController unameSignUpController = TextEditingController();
+  final TextEditingController uNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +158,7 @@ class SignUpScreen extends StatelessWidget {
                             style: Constants.welcomeButtonStyle,
                             onPressed: () {
                               if (signupformKey.currentState!.validate()) {
+                                AuthenticationController.isLoggedIn = true;
                                 authenticationController.emailSignUp(
                                     emailSignUpController.text,
                                     passwordSignUpController.text,
@@ -162,18 +166,37 @@ class SignUpScreen extends StatelessWidget {
                                     context);
                                 showDialog(
                                     context: context,
-                                    builder: (context) => const VerificationAlert());
+                                    builder: (context) =>
+                                        const VerificationAlert());
                               }
                             },
                             child: Constants.signupText),
                         Constants.or,
                         TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ));
+                              AuthenticationController.isLoggedIn = false;
+                              showDialog(
+                                context: context,
+                                builder: (context) => UserAlertDialogue(
+                                  title: 'Enter Username',
+                                  content: TextFormField(
+                                    controller: uNameController,
+                                    decoration: const InputDecoration(
+                                        hintText: 'Enter Username'),
+                                  ),
+                                  function: () {
+                                    prefs.setString(
+                                        'username', uNameController.text);
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen(),
+                                        ));
+                                  },
+                                ),
+                              );
                             },
                             child: Constants.withoutLogin),
                         const SizedBox(height: 50)

@@ -22,6 +22,7 @@ class DeleteAlertDialogue extends StatelessWidget {
         TextButton(
             onPressed: () {
               playlistBox.delete(playlistKey);
+              Navigator.pop(context);
             },
             child: const Text("Ok"))
       ],
