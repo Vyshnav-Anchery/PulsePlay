@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -108,7 +109,6 @@ class MusicPlayerController extends ChangeNotifier {
 
   audioimageQuery() {
     // audioquery.queryArtwork(currentlyPlaying!.id, ArtworkType.AUDIO);
-    
   }
 
   ConcatenatingAudioSource createPlaylist(List<SongModel> songs) {
@@ -209,8 +209,10 @@ class MusicPlayerController extends ChangeNotifier {
 
   createNewPlaylist(
       {required String playlistname, required BuildContext context}) {
-    if (!playlistBox.containsKey(playlistname)) {
-      playlistBox.put(playlistname, PlaylistDatabase(songs: []));
+    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!.songs;
+    if (!playlistDb.containsKey(playlistname)) {
+      playlistBox.put(FirebaseAuth.instance.currentUser!.uid,
+          PlaylistDatabase(songs: {playlistname: []}));
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
           SnackBar(content: Text("$playlistname playlist created")));
@@ -226,23 +228,24 @@ class MusicPlayerController extends ChangeNotifier {
       {required String playlistName,
       required BuildContext context,
       required SongModel song}) {
-    var playlist = playlistBox.get(playlistName);
+    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    List<SongModel> playlist = playlistDb.songs[playlistName]!;
     bool songExists = isInPlaylist(playlistName, song);
     if (songExists) {
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song already in playlist")));
     } else {
-      playlist!.songs.add(song);
-      playlist.save();
+      playlist.add(song);
+      playlistDb.save();
       scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song added to playlist")));
     }
   }
 
   bool isInPlaylist(String playlistName, SongModel song) {
-    var playlistDb = playlistBox.get(playlistName);
-    List<SongModel> playlist = playlistDb!.songs;
+    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    List<SongModel> playlist = playlistDb.songs[playlistName]!;
     for (SongModel data in playlist) {
       if (data.id == song.id) {
         return true;
@@ -252,14 +255,14 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   addToFavorite(SongModel song, BuildContext context) {
-    var favoriteDatabase = favoriteBox.get(Constants.favoritesBoxName);
+    var favoriteDatabase = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
     bool songExists = isFavorite(song);
     if (songExists) {
       scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song already in Favorites")));
     } else {
       // Add the new song to the list
-      favoriteDatabase!.songs.add(song);
+      favoriteDatabase!.songs[Constants.favoritesBoxName]!.add(song);
       favoriteDatabase.save();
       scaffoldMessengerKey.currentState!
           .showSnackBar(const SnackBar(content: Text("Added to Favorites")));
@@ -268,9 +271,9 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   bool isFavorite(SongModel song) {
-    PlaylistDatabase favoriteDatabase =
-        favoriteBox.get(Constants.favoritesBoxName)!;
-    List<SongModel> favorites = favoriteDatabase.songs;
+    var favoriteDatabase = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    List<SongModel> favorites =
+        favoriteDatabase.songs[Constants.favoritesBoxName]!;
     for (SongModel data in favorites) {
       if (data.id == song.id) {
         return true;
@@ -281,30 +284,31 @@ class MusicPlayerController extends ChangeNotifier {
 
   addToRecents(SongModel song) {
     PlaylistDatabase recentsDatabase =
-        recentsBox.get(Constants.recentsBoxName)!;
-
+        recentsBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    List<SongModel> recentList =
+        recentsDatabase.songs[Constants.recentsBoxName]!;
     // Find the index of the song based on a custom equality check (e.g., using the 'id' property)
     int index = -1;
-    for (int i = 0; i < recentsDatabase.songs.length; i++) {
-      if (recentsDatabase.songs[i].id == song.id) {
+    for (int i = 0; i < recentList.length; i++) {
+      if (recentList[i].id == song.id) {
         index = i;
         break;
       }
     }
     if (index != -1) {
       log("Song already in recents");
-      recentsDatabase.songs.removeAt(index); // Remove the existing song
+      recentList.removeAt(index); // Remove the existing song
     }
     // Insert the new song at the beginning of the list
-    recentsDatabase.songs.insert(0, song);
+    recentList.insert(0, song);
     recentsDatabase.save();
   }
 
   removeFromFavorite(SongModel song) {
     PlaylistDatabase favoriteDatabase =
-        favoriteBox.get(Constants.favoritesBoxName)!;
-    if (favoriteDatabase.songs.contains(song)) {
-      favoriteDatabase.songs.remove(song);
+        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    if (isFavorite(song)) {
+      favoriteDatabase.songs[Constants.favoritesBoxName]!.remove(song);
       log("removed");
     }
     favoriteDatabase.save();
@@ -312,10 +316,17 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   removeFromPlaylist(SongModel song, String playlistName) {
-    PlaylistDatabase? playlistDatabase = playlistBox.get(playlistName);
-    playlistDatabase!.songs.remove(song);
-    playlistDatabase.save();
+    PlaylistDatabase playlistDb =
+        playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    playlistDb.songs[playlistName]!.remove(song);
+    playlistDb.save();
     notifyListeners();
+  }
+
+  deletePlaylist(String playlistKey) {
+    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid);
+    playlistDb!.songs.remove(playlistKey);
+    playlistDb.save();
   }
 
   toggleLibrary() {

@@ -59,22 +59,6 @@ class WelcomeScreen extends StatelessWidget {
                                   ));
                             },
                             child: Constants.signupText),
-                        Constants.or,
-                        TextButton(
-                            onPressed: () {
-                              AuthenticationController.isLoggedIn = false;
-                              if (prefs.getString(Constants.USERNAMEKEY) ==
-                                  null) {
-                                enterUserName(context, uNameController);
-                              } else {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomeScreen(),
-                                    ));
-                              }
-                            },
-                            child: Constants.withoutLogin),
                         const SizedBox(height: 50)
                       ],
                     ),

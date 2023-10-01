@@ -97,9 +97,9 @@ class Authentication {
       } else if (e.code == 'user-disabled') {
         scaffoldMessengerKey.currentState!.showSnackBar(
             const SnackBar(content: Text("The email has been disabled")));
+      } else {
+        log(e.toString());
       }
-    } on PlatformException catch (r) {
-      log(r.toString());
     }
   }
 }

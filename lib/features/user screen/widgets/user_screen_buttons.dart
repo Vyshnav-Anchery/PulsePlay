@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/controller/bottom_nav_controller.dart';
+import 'package:provider/provider.dart';
 
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
@@ -19,6 +22,7 @@ class UserActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController passwordController = TextEditingController();
     return Center(
       child: Column(
         children: [
@@ -45,10 +49,8 @@ class UserActionButtons extends StatelessWidget {
                       },
                     ),
                     function: () {
-                      AuthenticationController.isLoggedIn == true
-                          ? authenticationController
-                              .updateUserName(unameController.text)
-                          : prefs.setString('username', unameController.text);
+                      authenticationController
+                          .updateUserName(unameController.text);
 
                       Navigator.pop(context);
                     },
@@ -67,17 +69,13 @@ class UserActionButtons extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => UserAlertDialogue(
-                    title: AuthenticationController.isLoggedIn == true
-                        ? "Log Out"
-                        : 'Sign In',
-                    content: AuthenticationController.isLoggedIn == true
-                        ? const Text('Are you sure to log out?')
-                        : const Text('Go to sign in page?'),
+                    title: "Log Out",
+                    content: const Text('Are you sure to log out?'),
                     function: () {
                       Navigator.pop(context);
-                      if (AuthenticationController.isLoggedIn == true) {
-                        authenticationController.logout(context);
-                      }
+
+                      authenticationController.logout(context);
+
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -87,30 +85,53 @@ class UserActionButtons extends StatelessWidget {
                 );
               },
               child: Text(
-                AuthenticationController.isLoggedIn == true
-                    ? "Log Out"
-                    : 'Sign In',
+                "Log Out",
                 style: TextStyle(color: Constants.red),
               )),
-          AuthenticationController.isLoggedIn == true
-              ? ElevatedButton(
-                  style: Constants.welcomeButtonStyle,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => UserAlertDialogue(
-                        title: 'Delete Account',
-                        content: const Text(
-                            'Do you want to delete the current account?'),
-                        function: () {
-                          authenticationController.delete(context);
-                        },
-                      ),
-                    );
-                  },
-                  child:
-                      Text("Delete Account", style: Constants.loginTextStyle))
-              : Container()
+          ElevatedButton(
+              style: Constants.welcomeButtonStyle,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => UserAlertDialogue(
+                    title: 'Delete Account',
+                    content: const Text(
+                        'Do you want to delete the current account?'),
+                    function: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) => UserAlertDialogue(
+                          title: 'Confirm Password',
+                          content: Consumer<AuthenticationController>(
+                            builder: (context,provider,child) {
+                              return LoginFormField(
+                                  pass: authenticationController.isPassObscure,
+                                  suffix: IconButton(
+                                      onPressed: () {
+                                        authenticationController
+                                            .togglePasswordVisbility();
+                                      },
+                                      icon: Icon(
+                                          authenticationController.isPassObscure
+                                              ? Icons.visibility
+                                              : Icons.visibility_off)),
+                                  controller: passwordController,
+                                  hint: 'Enter Password');
+                            }
+                          ),
+                          function: () {
+                            authenticationController.deleteAccount(
+                                passwordController.text, context);
+                            // authenticationController.delete(context);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Text("Delete Account", style: Constants.loginTextStyle))
         ],
       ),
     );

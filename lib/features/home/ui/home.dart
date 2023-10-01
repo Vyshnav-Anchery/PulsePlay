@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/features/Favorites/ui/favorites_screen.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
@@ -23,10 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   late AuthenticationController authenticationController;
   @override
   void initState() {
-    authenticationController = Provider.of<AuthenticationController>(context);
+    authenticationController =
+        Provider.of<AuthenticationController>(context, listen: false);
     Permission.accessMediaLocation.request();
     Permission.audio.request();
     authenticationController.getUserName();
+    log("verified ${FirebaseAuth.instance.currentUser!.emailVerified}");
     provider = Provider.of<BottomNavController>(context, listen: false);
     super.initState();
   }

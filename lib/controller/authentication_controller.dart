@@ -15,7 +15,6 @@ class AuthenticationController extends ChangeNotifier {
   bool isLoginPassObscure = true;
   bool isPassObscure = true;
   bool isConfirmPassObscure = true;
-  static bool isLoggedIn = true;
 
   emailSignUp(String emailAddress, String password, String userName,
       BuildContext context) {
@@ -126,6 +125,26 @@ class AuthenticationController extends ChangeNotifier {
       documentRef.update({'name': newUname});
       uName = newUname;
       notifyListeners(); // Replace with your field name
+    }
+  }
+
+  deleteAccount(String pass, BuildContext context) {
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: FirebaseAuth.instance.currentUser!.email!, password: pass);
+    try {
+      FirebaseAuth.instance.currentUser!
+          .reauthenticateWithCredential(credential)
+          .then((value) => delete(context));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        scaffoldMessengerKey.currentState!
+            .showSnackBar(const SnackBar(content: Text("Wrong Password")));
+        Navigator.pop(context);
+      } else if (e.code == 'ERROR_TOO_MANY_REQUESTS ') {
+        scaffoldMessengerKey.currentState!.showSnackBar(
+            const SnackBar(content: Text("Too many attempts.Try again later")));
+        Navigator.pop(context);
+      }
     }
   }
 }

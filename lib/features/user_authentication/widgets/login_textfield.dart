@@ -26,6 +26,8 @@ class LoginFormField extends StatelessWidget {
       controller: controller,
       obscureText: pass ?? false,
       decoration: InputDecoration(
+        errorMaxLines: 2,
+        
           contentPadding:
               const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
           fillColor: Constants.white,

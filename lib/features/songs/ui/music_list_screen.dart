@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -87,11 +88,30 @@ class _MusicScreenState extends State<MusicScreen> {
     await Permission.storage.request();
     await Permission.audio.request();
     await Permission.microphone.request();
-    if (!(favoriteBox.containsKey(Constants.favoritesBoxName))) {
-      favoriteBox.put(Constants.favoritesBoxName, PlaylistDatabase(songs: []));
+    var favoritesDb = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
+    var recentsDb = recentsBox.get(FirebaseAuth.instance.currentUser!.uid);
+    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid);
+    if (playlistDb == null) {
+      playlistBox.put(
+          FirebaseAuth.instance.currentUser!.uid, PlaylistDatabase(songs: {}));
     }
-    if (!(recentsBox.containsKey(Constants.recentsBoxName))) {
-      recentsBox.put(Constants.recentsBoxName, PlaylistDatabase(songs: []));
+    if (favoritesDb != null) {
+      if (!(favoritesDb.songs.containsKey(Constants.favoritesBoxName))) {
+        favoriteBox.put(Constants.favoritesBoxName,
+            PlaylistDatabase(songs: {Constants.favoritesBoxName: []}));
+      }
+    } else {
+      favoriteBox.put(FirebaseAuth.instance.currentUser!.uid,
+          PlaylistDatabase(songs: {Constants.favoritesBoxName: []}));
+    }
+    if (recentsDb != null) {
+      if (!(recentsDb.songs.containsKey(Constants.recentsBoxName))) {
+        recentsBox.put(Constants.recentsBoxName,
+            PlaylistDatabase(songs: {Constants.recentsBoxName: []}));
+      }
+    } else {
+      recentsBox.put(FirebaseAuth.instance.currentUser!.uid,
+          PlaylistDatabase(songs: {Constants.recentsBoxName: []}));
     }
   }
 }

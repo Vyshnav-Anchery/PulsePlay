@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
@@ -15,11 +16,11 @@ class FloatingMiniPlayer extends StatelessWidget {
     MusicPlayerController musicPlayerController =
         Provider.of<MusicPlayerController>(context);
     if (musicPlayerController.currentlyPlaying == null) {
-      var recentSongdb = recentsBox.get(Constants.recentsBoxName);
-      if (recentSongdb == null || recentSongdb.songs.isEmpty) {
+      var recentSongdb = recentsBox.get(FirebaseAuth.instance.currentUser!.uid);
+        String? lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist);
+      if (recentSongdb == null || recentSongdb.songs[Constants.recentsBoxName]!.isEmpty||lastPlayedPlaylist==null) {
         return Container();
       } else {
-        String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
         int lastIndex = prefs.getInt(Constants.lastPlayedIndex)!;
         return FutureBuilder(
             future: musicPlayerController.searchSongs(),
@@ -28,11 +29,16 @@ class FloatingMiniPlayer extends StatelessWidget {
               if (lastPlayedPlaylist == Constants.allSongs) {
                 playlist = MusicPlayerController.allSongs;
               } else if (lastPlayedPlaylist == Constants.recentsBoxName) {
-                playlist = recentsBox.get(Constants.recentsBoxName)!.songs;
+                playlist = recentsBox
+                    .get(FirebaseAuth.instance.currentUser!.uid)!
+                    .songs[Constants.recentsBoxName]!;
               } else {
-                playlist = favoriteBox.get(Constants.favoritesBoxName)!.songs;
+                playlist = favoriteBox
+                    .get(FirebaseAuth.instance.currentUser!.uid)!
+                    .songs[Constants.favoritesBoxName]!;
               }
-              SongModel lastPlayed = recentSongdb.songs.first;
+              SongModel lastPlayed =
+                  recentSongdb.songs[Constants.recentsBoxName]!.first;
               return Card(
                 child: ListTile(
                   leading: QueryArtworkWidget(
@@ -95,9 +101,13 @@ class FloatingMiniPlayer extends StatelessWidget {
       if (lastPlayedPlaylist == Constants.allSongs) {
         playlist = MusicPlayerController.allSongs;
       } else if (lastPlayedPlaylist == Constants.recentsBoxName) {
-        playlist = recentsBox.get(Constants.recentsBoxName)!.songs;
+        playlist = recentsBox
+            .get(FirebaseAuth.instance.currentUser!.uid)!
+            .songs[Constants.recentsBoxName]!;
       } else {
-        playlist = favoriteBox.get(Constants.favoritesBoxName)!.songs;
+        playlist = favoriteBox
+            .get(FirebaseAuth.instance.currentUser!.uid)!
+            .songs[Constants.favoritesBoxName]!;
       }
       return Card(
         child: ListTile(

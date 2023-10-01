@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                             style: Constants.welcomeButtonStyle,
                             onPressed: () {
                               if (loginformKey.currentState!.validate()) {
-                                AuthenticationController.isLoggedIn = true;
+                                
                                 authenticationController.emailLogin(
                                     emailController.text,
                                     passwordController.text,

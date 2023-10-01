@@ -13,14 +13,13 @@ class UserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticationController authenticationController =
         Provider.of<AuthenticationController>(context);
-    late String uname;
-    if (AuthenticationController.isLoggedIn == true) {
-      uname = authenticationController.uName??"";
-    } else {
-      uname = prefs.getString('username') ?? '';
+    String? uname = authenticationController.uName;
+    if (uname == null) {
+      authenticationController.getUserName();
     }
+
     TextEditingController unameController = TextEditingController();
-    unameController.text = uname;
+    unameController.text = uname!;
     return Container(
         decoration: BoxDecoration(gradient: Constants.linearGradient),
         width: MediaQuery.sizeOf(context).width,

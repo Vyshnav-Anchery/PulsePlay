@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/database/playlistdatabase.dart';
@@ -6,6 +7,7 @@ import 'package:music_player/features/library/widgets/playlist_create_button.dar
 import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class ShowPlaylists extends StatelessWidget {
   const ShowPlaylists({super.key});
@@ -19,9 +21,6 @@ class ShowPlaylists extends StatelessWidget {
           child: ListenableBuilder(
             listenable: playlistBox.listenable(),
             builder: (context, child) {
-              // final filteredPlaylists = playlistBox.values
-              //     .skip(2)
-              //     .toList(); // Skip the first two playlists
               if (playlistBox.values.isEmpty) {
                 return Center(
                   child: Text(
@@ -30,14 +29,19 @@ class ShowPlaylists extends StatelessWidget {
                   ),
                 );
               } else {
+                var playlistDb =
+                    playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+                //  List<SongModel> playlist=;
                 return ListView.separated(
-                  itemCount: playlistBox.length,
+                  itemCount: playlistDb.songs.length,
                   separatorBuilder: (context, index) => const Divider(
                     color: Colors.transparent,
                   ),
                   itemBuilder: (context, index) {
-                    String playlistKey = playlistBox.keyAt(index);
-                    PlaylistDatabase playlist = playlistBox.getAt(index)!;
+                    List<String> playlistKeyList =
+                        playlistDb.songs.keys.toList();
+                    String playlistKey = playlistKeyList[index];
+                    // PlaylistDatabase playlist = playlistBox.getAt(index)!;
                     return Card(
                       color: Colors.blueGrey.shade900,
                       child: ListTile(
@@ -54,17 +58,16 @@ class ShowPlaylists extends StatelessWidget {
                           style: Constants.musicListTextStyle,
                         ),
                         subtitle: Text(
-                          "${playlist.songs.length} Songs",
+                          "${playlistDb.songs[playlistKey]!.length} Songs",
                           style: Constants.musicListTextStyle,
                         ),
                         onTap: () {
-                         
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PlaylistScreen(
                                 playlistName: playlistKey.toString(),
-                                playlist: playlist.songs,
+                                playlist: playlistDb.songs[playlistKey]!,
                               ),
                             ),
                           );
