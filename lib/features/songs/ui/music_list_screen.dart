@@ -35,7 +35,7 @@ class _MusicScreenState extends State<MusicScreen> {
       child: Stack(
         children: [
           FutureBuilder<List<SongModel>>(
-            future: songListController.searchSongs(context),
+            future: songListController.searchSongs(),
             builder: (context, snapshot) {
               if (snapshot.data == null ||
                   snapshot.connectionState == ConnectionState.waiting) {

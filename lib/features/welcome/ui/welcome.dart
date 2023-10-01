@@ -6,7 +6,6 @@ import 'package:music_player/features/user_authentication/ui/signup.dart';
 import 'package:music_player/features/welcome/widgets/enterusernameAlert.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/sharedpref/prefvariable.dart';
-import '../../user screen/widgets/alertdialogue.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

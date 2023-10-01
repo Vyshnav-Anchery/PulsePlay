@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
+import 'package:music_player/utils/common%20widgets/song_details.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../constants/constants.dart';
-import '../../features/nowPlaying/widgets/sleep_timer_alert.dart';
 
 class MusicLIstPopUpMenu extends StatelessWidget {
   final String uri;
@@ -45,16 +45,25 @@ class MusicLIstPopUpMenu extends StatelessWidget {
           PopupMenuItem(
             child: TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
                   showDialog(
                     context: context,
-                    builder: (context) => const SleepTimerAlert(),
+                    builder: (context) => AlertDialog(
+                      title: const Text('Details'),
+                      content: SongDetails(song: song),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Ok'))
+                      ],
+                    ),
                   );
                 },
-                child: const Text("Set sleep timer")),
+                child: const Text("Details")),
           ),
         ];
       },
     );
   }
 }
+
+

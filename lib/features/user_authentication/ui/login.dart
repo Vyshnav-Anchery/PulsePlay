@@ -42,6 +42,7 @@ class LoginScreen extends StatelessWidget {
                         Constants.loginHeading,
                         const SizedBox(height: 30),
                         LoginFormField(
+                          pass: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';

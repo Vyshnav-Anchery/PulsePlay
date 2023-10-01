@@ -14,7 +14,7 @@ class SleepTimerAlert extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       contentPadding: const EdgeInsets.only(bottom: 0, top: 10),
       alignment: Alignment.center,
-      title: const Text("Set time"),
+      title: const Text("Set Sleep timer"),
       content: SizedBox(
         height: 70,
         child: SizedBox(
@@ -36,6 +36,11 @@ class SleepTimerAlert extends StatelessWidget {
         ),
       ),
       actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel")),
         TextButton(
             onPressed: () {
               provider.startSleepTimer(Duration(minutes: provider.sleepTime));

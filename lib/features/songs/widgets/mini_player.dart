@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
@@ -23,7 +22,7 @@ class FloatingMiniPlayer extends StatelessWidget {
         String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
         int lastIndex = prefs.getInt(Constants.lastPlayedIndex)!;
         return FutureBuilder(
-            future: musicPlayerController.searchSongs(context),
+            future: musicPlayerController.searchSongs(),
             builder: (context, snapshot) {
               List<SongModel> playlist = [];
               if (lastPlayedPlaylist == Constants.allSongs) {
@@ -52,7 +51,6 @@ class FloatingMiniPlayer extends StatelessWidget {
                       type: ArtworkType.AUDIO),
                   title: Text(
                     lastPlayed.title,
-                    // style: Constants.musicListTextStyle,
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                   ),
@@ -60,7 +58,6 @@ class FloatingMiniPlayer extends StatelessWidget {
                     lastPlayed.artist! == "<unknown>"
                         ? "Unknown Artist"
                         : lastPlayed.artist!,
-                    // style: Constants.musicListTextStyle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -93,7 +90,6 @@ class FloatingMiniPlayer extends StatelessWidget {
             });
       }
     } else {
-      // if (musicPlayerController.audioPlayer.playing) {}
       String lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist)!;
       List<SongModel> playlist = [];
       if (lastPlayedPlaylist == Constants.allSongs) {

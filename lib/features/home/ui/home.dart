@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:music_player/features/Favorites/ui/favorites_screen.dart';
 import 'package:music_player/features/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/features/songs/ui/music_list_screen.dart';
-import 'package:music_player/features/user%20screen/widgets/alertdialogue.dart';
-import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/authentication_controller.dart';
@@ -22,12 +20,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late BottomNavController provider;
-
+  late AuthenticationController authenticationController;
   @override
   void initState() {
+    authenticationController = Provider.of<AuthenticationController>(context);
     Permission.accessMediaLocation.request();
     Permission.audio.request();
-
+    authenticationController.getUserName();
     provider = Provider.of<BottomNavController>(context, listen: false);
     super.initState();
   }
@@ -46,11 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    AuthenticationController authenticationController =
-        Provider.of<AuthenticationController>(context);
-    if (AuthenticationController.isLoggedIn) {
-      authenticationController.getUserName();
-    }
     return Consumer<BottomNavController>(builder: (context, provider, child) {
       return Scaffold(
         appBar: provider.bottomNavIndex == 0

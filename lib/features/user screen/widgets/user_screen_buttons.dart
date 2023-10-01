@@ -32,6 +32,7 @@ class UserActionButtons extends StatelessWidget {
                   builder: (context) => UserAlertDialogue(
                     title: 'Change Username',
                     content: LoginFormField(
+                      pass: false,
                       controller: unameController,
                       hint: 'Username',
                       validator: (value) {

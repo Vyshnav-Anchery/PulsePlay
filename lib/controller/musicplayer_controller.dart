@@ -76,8 +76,7 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<SongModel>> searchSongs(BuildContext context,
-      {sortType, orderType}) async {
+  Future<List<SongModel>> searchSongs({sortType, orderType}) async {
     List<SongModel> querysongs = await audioquery.querySongs(
       sortType: sortType,
       orderType: orderType,
@@ -105,6 +104,11 @@ class MusicPlayerController extends ChangeNotifier {
       currentlyPlaying = null;
       audioPlayer.dispose();
     }
+  }
+
+  audioimageQuery() {
+    // audioquery.queryArtwork(currentlyPlaying!.id, ArtworkType.AUDIO);
+    
   }
 
   ConcatenatingAudioSource createPlaylist(List<SongModel> songs) {

@@ -19,6 +19,9 @@ class LoginFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTapOutside: (event) {},
+
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       controller: controller,
       obscureText: pass ?? false,

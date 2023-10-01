@@ -9,9 +9,9 @@ import '../../../utils/sharedpref/prefvariable.dart';
 import '../../user screen/widgets/alertdialogue.dart';
 import '../widgets/login_textfield.dart';
 
-final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
 
 class SignUpScreen extends StatelessWidget {
+final GlobalKey<FormState> signupformKey = GlobalKey<FormState>();
   SignUpScreen({super.key});
 
   final TextEditingController emailSignUpController = TextEditingController();
@@ -54,6 +54,7 @@ class SignUpScreen extends StatelessWidget {
                         Constants.signUpHeading,
                         const SizedBox(height: 30),
                         LoginFormField(
+                          pass: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter username';
@@ -66,6 +67,7 @@ class SignUpScreen extends StatelessWidget {
                             hint: "User Name"),
                         const SizedBox(height: 10),
                         LoginFormField(
+                          pass: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';

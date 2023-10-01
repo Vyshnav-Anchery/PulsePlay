@@ -4,7 +4,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 class SongModelAdapter extends TypeAdapter<SongModel> {
   @override
-  final int typeId = 3; // Choose a unique ID for your SongModel type
+  final int typeId = 3; 
 
   @override
   SongModel read(BinaryReader reader) {

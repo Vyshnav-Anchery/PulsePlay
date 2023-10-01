@@ -31,7 +31,7 @@ class LibraryScreen extends StatelessWidget {
                   height: MediaQuery.sizeOf(context).height * (1 / 10),
                   width: MediaQuery.sizeOf(context).width * (1 / 2.1),
                   child: Card(
-                    color: musicPlayerController.isPlaylistExpanded
+                    color: !musicPlayerController.isPlaylistExpanded
                         ? Colors.blueGrey
                         : null,
                     child: const Row(
@@ -53,7 +53,7 @@ class LibraryScreen extends StatelessWidget {
                   height: MediaQuery.sizeOf(context).height * (1 / 10),
                   width: MediaQuery.sizeOf(context).width * (1 / 2.1),
                   child: Card(
-                    color: !musicPlayerController.isPlaylistExpanded
+                    color: musicPlayerController.isPlaylistExpanded
                         ? Colors.blueGrey
                         : null,
                     child: const Row(

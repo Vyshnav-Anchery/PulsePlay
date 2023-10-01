@@ -16,7 +16,7 @@ class MusicCover extends StatelessWidget {
       nullArtworkWidget:  SizedBox(
         width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).width,
-        child: Card(
+        child: const Card(
             child: Icon(
           Icons.music_note_rounded,
           size: 150,
