@@ -1,13 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/controller/bottom_nav_controller.dart';
+import 'package:music_player/features/user%20screen/widgets/image_selector.dart';
+import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:provider/provider.dart';
-
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../utils/sharedpref/prefvariable.dart';
 import '../../user_authentication/widgets/login_textfield.dart';
-import '../../welcome/ui/welcome.dart';
 import 'alertdialogue.dart';
 
 class UserActionButtons extends StatelessWidget {
@@ -31,10 +28,25 @@ class UserActionButtons extends StatelessWidget {
                 minimumSize: MaterialStatePropertyAll(Size(200, 40)),
               ),
               onPressed: () {
+                showBottomSheet(
+                  context: context,
+                  builder: (context) => ImageSelectorBottomSheet(
+                      authenticationController: authenticationController),
+                );
+              },
+              child: Text(
+                "Change User Image",
+                style: Constants.loginTextStyle,
+              )),
+          ElevatedButton(
+              style: const ButtonStyle(
+                minimumSize: MaterialStatePropertyAll(Size(200, 40)),
+              ),
+              onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) => UserAlertDialogue(
-                    title: 'Change Username',
+                    title: 'Change Image',
                     content: LoginFormField(
                       pass: false,
                       controller: unameController,
@@ -73,13 +85,11 @@ class UserActionButtons extends StatelessWidget {
                     content: const Text('Are you sure to log out?'),
                     function: () {
                       Navigator.pop(context);
-
                       authenticationController.logout(context);
-
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const WelcomeScreen()));
+                              builder: (context) => LoginScreen()));
                     },
                   ),
                 );
@@ -104,26 +114,24 @@ class UserActionButtons extends StatelessWidget {
                         builder: (context) => UserAlertDialogue(
                           title: 'Confirm Password',
                           content: Consumer<AuthenticationController>(
-                            builder: (context,provider,child) {
-                              return LoginFormField(
-                                  pass: authenticationController.isPassObscure,
-                                  suffix: IconButton(
-                                      onPressed: () {
-                                        authenticationController
-                                            .togglePasswordVisbility();
-                                      },
-                                      icon: Icon(
-                                          authenticationController.isPassObscure
-                                              ? Icons.visibility
-                                              : Icons.visibility_off)),
-                                  controller: passwordController,
-                                  hint: 'Enter Password');
-                            }
-                          ),
+                              builder: (context, provider, child) {
+                            return LoginFormField(
+                                pass: authenticationController.isPassObscure,
+                                suffix: IconButton(
+                                    onPressed: () {
+                                      authenticationController
+                                          .togglePasswordVisbility();
+                                    },
+                                    icon: Icon(
+                                        authenticationController.isPassObscure
+                                            ? Icons.visibility
+                                            : Icons.visibility_off)),
+                                controller: passwordController,
+                                hint: 'Enter Password');
+                          }),
                           function: () {
                             authenticationController.deleteAccount(
                                 passwordController.text, context);
-                            // authenticationController.delete(context);
                           },
                         ),
                       );

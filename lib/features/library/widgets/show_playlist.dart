@@ -1,13 +1,13 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/features/library/widgets/alert_dialogue.dart';
 import 'package:music_player/features/library/widgets/playlist_create_button.dart';
 import 'package:music_player/features/playlist%20songs/ui/playlist_songs_screen.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 class ShowPlaylists extends StatelessWidget {
   const ShowPlaylists({super.key});
@@ -31,7 +31,6 @@ class ShowPlaylists extends StatelessWidget {
               } else {
                 var playlistDb =
                     playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-                //  List<SongModel> playlist=;
                 return ListView.separated(
                   itemCount: playlistDb.songs.length,
                   separatorBuilder: (context, index) => const Divider(
@@ -41,7 +40,7 @@ class ShowPlaylists extends StatelessWidget {
                     List<String> playlistKeyList =
                         playlistDb.songs.keys.toList();
                     String playlistKey = playlistKeyList[index];
-                    // PlaylistDatabase playlist = playlistBox.getAt(index)!;
+                    log(playlistDb.songs.length.toString());
                     return Card(
                       color: Colors.blueGrey.shade900,
                       child: ListTile(

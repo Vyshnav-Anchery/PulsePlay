@@ -1,16 +1,18 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/features/welcome/ui/welcome.dart';
+import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:music_player/main.dart';
 import '../utils/authentication/google_authenticaiton.dart';
 
 class AuthenticationController extends ChangeNotifier {
   bool isEmailVerified = false;
-  bool canSentVerification = false;
+  bool canSentVerification = true;
   String? uName;
+  String? uImage;
   bool isPassValidated = false;
   bool isLoginPassObscure = true;
   bool isPassObscure = true;
@@ -59,7 +61,7 @@ class AuthenticationController extends ChangeNotifier {
     FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const WelcomeScreen(),
+          builder: (context) => LoginScreen(),
         )));
   }
 
@@ -69,17 +71,27 @@ class AuthenticationController extends ChangeNotifier {
         .then((value) => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const WelcomeScreen(),
+              builder: (context) => LoginScreen(),
             )));
   }
 
   sendVerificationMail() async {
     try {
-      final user = FirebaseAuth.instance.currentUser!;
-      await user.sendEmailVerification();
-      canSentVerification = false;
-      await Future.delayed(const Duration(seconds: 5));
-      canSentVerification = true;
+      if (canSentVerification) {
+        final user = FirebaseAuth.instance.currentUser!;
+        if (!user.emailVerified) {
+          await user.sendEmailVerification();
+        } else {
+          scaffoldMessengerKey.currentState!.showSnackBar(
+              const SnackBar(content: Text("Email already verified!")));
+        }
+        canSentVerification = false;
+        await Future.delayed(const Duration(seconds: 10));
+        canSentVerification = true;
+      } else {
+        scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+            content: Text("Please wait before sendig mail again")));
+      }
     } on FirebaseAuthException catch (e) {
       scaffoldMessengerKey.currentState!
           .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -91,26 +103,26 @@ class AuthenticationController extends ChangeNotifier {
     return FirebaseAuth.instance.currentUser!.emailVerified;
   }
 
-  getUserName() async {
+  Future<String?> getUserName() async {
     try {
-      // Reference to the Firestore collection and document
-      final DocumentReference documentRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid);
+      final user = FirebaseAuth.instance.currentUser;
 
-      // Get the document snapshot
-      final DocumentSnapshot snapshot = await documentRef.get();
+      if (user != null) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
-      // Check if the document exists
-      if (snapshot.exists) {
-        // Access the specific field value
-        uName = snapshot.get('name');
-        notifyListeners(); // Replace with your field name
+        if (userDoc.exists) {
+          final String username = userDoc.get('name');
+          uName = username;
+          return username;
+        }
       }
     } catch (e) {
-      log('Error retrieving data: $e');
-      return '';
+      log('Error fetching username: $e');
     }
+    return null;
   }
 
   updateUserName(String newUname) async {
@@ -145,6 +157,57 @@ class AuthenticationController extends ChangeNotifier {
             const SnackBar(content: Text("Too many attempts.Try again later")));
         Navigator.pop(context);
       }
+    }
+  }
+
+  Future<String?> getUserImage() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists) {
+          String userImage = userDoc.get('imageUrl');
+          uImage = userImage;
+          return userImage;
+        }
+      }
+    } catch (e) {
+      log('Error fetching username: $e');
+    }
+
+    return null;
+  }
+
+  addImageToFirebaseStorage(String path) async {
+    File image = File(path);
+    try {
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child(DateTime.now().toString());
+
+      UploadTask uploadTask = storageReference.putFile(image);
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      await taskSnapshot.ref.getDownloadURL().then((value) async {
+        var user = FirebaseAuth.instance.currentUser!;
+        final DocumentReference documentRef =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final DocumentSnapshot userDoc = await documentRef.get();
+        if (userDoc.exists) {
+          documentRef.update({"imageUrl": value});
+          notifyListeners();
+        }
+      });
+    } catch (e) {
+      log('Error uploading image: $e');
+      return null;
     }
   }
 }

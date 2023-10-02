@@ -1,11 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/features/library/widgets/playlist_create_button.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-
-import '../../../database/playlistdatabase.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
 
@@ -32,47 +31,50 @@ class PlaylistBottomSheet extends StatelessWidget {
                   ),
                 );
               } else {
+                var playlistDb =
+                    playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
                 return ListView.separated(
-                  itemCount: playlistBox.length,
+                  itemCount: playlistDb.songs.length,
                   separatorBuilder: (context, index) => const Divider(
                     color: Colors.transparent,
                   ),
                   itemBuilder: (context, index) {
-                    String playlistKey = playlistBox.keyAt(index);
-                    PlaylistDatabase playlist = playlistBox.getAt(index)!;
+                    List<String> playlistKeyList =
+                        playlistDb.songs.keys.toList();
+                    String playlistKey = playlistKeyList[index];
                     return Card(
-                      color: Colors.blueGrey.shade900,
-                      child: ListTile(
-                        leading: const SizedBox(
-                          height: 52,
-                          width: 52,
-                          child: Card(
-                              color: Color.fromARGB(209, 228, 227, 227),
-                              child: Center(
-                                  child: Icon(Icons.play_lesson_outlined))),
-                        ),
-                        title: Text(
-                          playlistKey,
-                          style: Constants.musicListTextStyle,
-                        ),
-                        subtitle: Text(
-                          "${playlist.songs.length} Songs",
-                          style: Constants.musicListTextStyle,
-                        ),
-                        trailing: Icon(
-                          musicPlayerController.isInPlaylist(playlistKey, song)
-                              ? Icons.playlist_add_check
-                              : Icons.playlist_add,
-                          color: Colors.white,
-                        ),
-                        onTap: () {
-                          musicPlayerController.addtoPlaylist(
-                              playlistName: playlistKey,
-                              context: context,
-                              song: song);
-                        },
-                      ),
-                    );
+                        color: Colors.blueGrey.shade900,
+                        child: ListTile(
+                          leading: const SizedBox(
+                            height: 52,
+                            width: 52,
+                            child: Card(
+                                color: Color.fromARGB(209, 228, 227, 227),
+                                child: Center(
+                                    child: Icon(Icons.play_lesson_outlined))),
+                          ),
+                          title: Text(
+                            playlistKey,
+                            style: Constants.musicListTextStyle,
+                          ),
+                          subtitle: Text(
+                            "${playlistDb.songs[playlistKey]!.length} Songs",
+                            style: Constants.musicListTextStyle,
+                          ),
+                          trailing: Icon(
+                            musicPlayerController.isInPlaylist(
+                                    playlistKey, song)
+                                ? Icons.playlist_add_check
+                                : Icons.playlist_add,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            musicPlayerController.addtoPlaylist(
+                                playlistName: playlistKey,
+                                context: context,
+                                song: song);
+                          },
+                        ));
                   },
                 );
               }

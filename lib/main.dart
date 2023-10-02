@@ -5,7 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/features/home/ui/home.dart';
-import 'package:music_player/features/welcome/ui/welcome.dart';
+import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/controller/bottom_nav_controller.dart';
@@ -90,12 +90,12 @@ class MyApp extends StatelessWidget {
               if (FirebaseAuth.instance.currentUser!.emailVerified) {
                 return const HomeScreen();
               } else {
-                return (const WelcomeScreen());
+                return (LoginScreen());
               }
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const WelcomeScreen();
+              return LoginScreen();
             } else {
-              return const WelcomeScreen();
+              return LoginScreen();
             }
           },
         ),

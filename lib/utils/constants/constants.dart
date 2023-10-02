@@ -48,7 +48,9 @@ class Constants {
           MaterialStatePropertyAll(Color.fromRGBO(255, 90, 95, 1)));
 
   static Text loginText = const Text("Login",
-      style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1)));
+  style: TextStyle(color: Colors.white),
+      // style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1))
+      );
 
   static TextStyle loginTextStyle =
       const TextStyle(color: Color.fromRGBO(51, 51, 51, 1));

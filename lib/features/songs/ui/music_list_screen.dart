@@ -87,7 +87,6 @@ class _MusicScreenState extends State<MusicScreen> {
   void checkpermission() async {
     await Permission.storage.request();
     await Permission.audio.request();
-    await Permission.microphone.request();
     var favoritesDb = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
     var recentsDb = recentsBox.get(FirebaseAuth.instance.currentUser!.uid);
     var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid);

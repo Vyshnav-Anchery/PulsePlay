@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/box/hive_boxes.dart';
-
 class DeleteAlertDialogue extends StatelessWidget {
   final String playlistKey;
 

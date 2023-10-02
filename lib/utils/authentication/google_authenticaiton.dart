@@ -2,49 +2,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:music_player/features/home/ui/home.dart';
 
 import '../../main.dart';
 
 class Authentication {
-  static verifyPhone(String phoneNumber) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) {
-        log("success");
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        log("failed");
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        log("otp send");
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        log("timeout");
-      },
-    );
-  }
-
-  static Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
   static createAccountWithEmail(
       {required String emailAddress,
       required String password,
@@ -60,7 +22,9 @@ class Authentication {
               .collection('users')
               .doc(value.user!.uid)
               .set({'name': userName}));
-      FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+        FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');

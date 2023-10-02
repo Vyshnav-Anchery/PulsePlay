@@ -3,6 +3,7 @@ import 'package:music_player/features/user_authentication/widgets/login_textfiel
 import 'package:provider/provider.dart';
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
+import '../widgets/signup_text_button.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -30,7 +31,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               Card(
-                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                 color: Constants.cardBg,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -42,14 +44,14 @@ class LoginScreen extends StatelessWidget {
                         Constants.loginHeading,
                         const SizedBox(height: 30),
                         LoginFormField(
-                          pass: false,
+                            pass: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
                               }
                               final emailRegex = RegExp(
                                   r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-        
+
                               if (!emailRegex.hasMatch(value)) {
                                 return 'Please enter a valid email address';
                               }
@@ -71,15 +73,15 @@ class LoginScreen extends StatelessWidget {
                             suffix: IconButton(
                                 onPressed: () => authenticationController
                                     .toggleLoginPasswordVisbility(),
-                                icon: Icon(authenticationController.isPassObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off))),
+                                icon: Icon(
+                                    authenticationController.isPassObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off))),
                         const SizedBox(height: 10),
                         ElevatedButton(
                             style: Constants.welcomeButtonStyle,
                             onPressed: () {
                               if (loginformKey.currentState!.validate()) {
-                                
                                 authenticationController.emailLogin(
                                     emailController.text,
                                     passwordController.text,
@@ -87,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                               }
                             },
                             child: Constants.loginText),
+                        const SIgnUpTextButton(),
                         const SizedBox(height: 50)
                       ],
                     ),

@@ -209,13 +209,14 @@ class MusicPlayerController extends ChangeNotifier {
 
   createNewPlaylist(
       {required String playlistname, required BuildContext context}) {
-    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!.songs;
+    var hivePlaylistbox = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    Map<String, List<SongModel>> playlistDb = hivePlaylistbox.songs;
     if (!playlistDb.containsKey(playlistname)) {
-      playlistBox.put(FirebaseAuth.instance.currentUser!.uid,
-          PlaylistDatabase(songs: {playlistname: []}));
+      playlistDb.addAll({playlistname: []});
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
           SnackBar(content: Text("$playlistname playlist created")));
+      hivePlaylistbox.save();
     } else {
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
@@ -255,7 +256,8 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   addToFavorite(SongModel song, BuildContext context) {
-    var favoriteDatabase = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
+    var favoriteDatabase =
+        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
     bool songExists = isFavorite(song);
     if (songExists) {
       scaffoldMessengerKey.currentState!.showSnackBar(
@@ -271,7 +273,8 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   bool isFavorite(SongModel song) {
-    var favoriteDatabase = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    var favoriteDatabase =
+        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
     List<SongModel> favorites =
         favoriteDatabase.songs[Constants.favoritesBoxName]!;
     for (SongModel data in favorites) {
@@ -279,6 +282,7 @@ class MusicPlayerController extends ChangeNotifier {
         return true;
       }
     }
+    log('nope');
     return false;
   }
 
