@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:music_player/main.dart';
+import 'package:music_player/utils/box/hive_boxes.dart';
 import '../utils/authentication/google_authenticaiton.dart';
 
 class AuthenticationController extends ChangeNotifier {
@@ -66,6 +67,9 @@ class AuthenticationController extends ChangeNotifier {
   }
 
   delete(BuildContext context) {
+    playlistBox.delete(FirebaseAuth.instance.currentUser!.uid);
+    recentsBox.delete(FirebaseAuth.instance.currentUser!.uid);
+    favoriteBox.delete(FirebaseAuth.instance.currentUser!.uid);
     FirebaseAuth.instance.currentUser!
         .delete()
         .then((value) => Navigator.pushReplacement(
@@ -171,7 +175,7 @@ class AuthenticationController extends ChangeNotifier {
             .get();
 
         if (userDoc.exists) {
-          String userImage = userDoc.get('imageUrl');
+          String? userImage = userDoc.get('imageUrl');
           uImage = userImage;
           return userImage;
         }

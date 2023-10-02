@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongDetails extends StatelessWidget {
@@ -17,32 +18,37 @@ class SongDetails extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ListTile(
+            titleTextStyle: Constants.songDetailTextStyle,
             leading: const Text('Name :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            trailing:
+            title:
                 Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
+            titleTextStyle: Constants.songDetailTextStyle,
             leading: const Text('Artist :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            trailing: Text(song.artist!,
+            title: Text(song.artist!,
                 maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
+            titleTextStyle: Constants.songDetailTextStyle,
             leading: const Text('Duration :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            trailing: Text(Duration(milliseconds: song.duration!).toString()),
+            title: Text(Duration(milliseconds: song.duration!).toString()),
           ),
           ListTile(
+            titleTextStyle: Constants.songDetailTextStyle,
             leading: const Text('File Extension :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            trailing: Text(song.fileExtension,
+            title: Text(song.fileExtension,
                 maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
+            titleTextStyle: Constants.songDetailTextStyle,
             leading: const Text('Album :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            trailing:
+            title:
                 Text(song.album!, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],

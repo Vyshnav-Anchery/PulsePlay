@@ -16,25 +16,26 @@ class UserImageWidget extends StatelessWidget {
         future: authenticationController.getUserImage(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircleAvatar(child: CircularProgressIndicator());
-          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const CircleAvatar(
+                radius: 100, child: CircularProgressIndicator());
+          } else if (!snapshot.hasData ||
+              snapshot.data == null ||
+              snapshot.data == '') {
             return InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) => ImageSelectorBottomSheet(
-                      authenticationController: authenticationController),
-                );
-              },
+              onTap: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => ImageSelectorBottomSheet(
+                    authenticationController: authenticationController),
+              ),
               child: const CircleAvatar(
-                radius: 30,
+                radius: 100,
                 child: Icon(Icons.add_photo_alternate),
               ),
             );
           }
           return CircleAvatar(
             backgroundImage: NetworkImage(snapshot.data!),
-            radius: 30,
+            radius: 100,
           );
         });
   }

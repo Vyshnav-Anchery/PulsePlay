@@ -21,7 +21,9 @@ class ShowPlaylists extends StatelessWidget {
           child: ListenableBuilder(
             listenable: playlistBox.listenable(),
             builder: (context, child) {
-              if (playlistBox.values.isEmpty) {
+              var playlistDb =
+                  playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+              if (playlistBox.values.isEmpty || playlistDb.songs.isEmpty) {
                 return Center(
                   child: Text(
                     "No playlist found",
@@ -29,8 +31,8 @@ class ShowPlaylists extends StatelessWidget {
                   ),
                 );
               } else {
-                var playlistDb =
-                    playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+                // var playlistDb =
+                //     playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
                 return ListView.separated(
                   itemCount: playlistDb.songs.length,
                   separatorBuilder: (context, index) => const Divider(

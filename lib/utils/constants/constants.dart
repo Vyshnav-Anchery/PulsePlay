@@ -47,10 +47,11 @@ class Constants {
       backgroundColor:
           MaterialStatePropertyAll(Color.fromRGBO(255, 90, 95, 1)));
 
-  static Text loginText = const Text("Login",
-  style: TextStyle(color: Colors.white),
-      // style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1))
-      );
+  static Text loginText = const Text(
+    "Login",
+    style: TextStyle(color: Colors.white),
+    // style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1))
+  );
 
   static TextStyle loginTextStyle =
       const TextStyle(color: Color.fromRGBO(51, 51, 51, 1));
@@ -74,6 +75,9 @@ class Constants {
     "Sign Up",
     style: loginTextStyle,
   );
+
+  static TextStyle songDetailTextStyle =
+      const TextStyle(fontSize: 15, color: Colors.black);
 
   static TextStyle musicListTextStyle = const TextStyle(color: Colors.white);
 
@@ -127,4 +131,8 @@ class Constants {
 
 // Shared Pref
   static String USERNAMEKEY = 'username';
+
+  // Firebase
+  static String FIREBASENAMEKEY = 'name';
+  static String FIREBASEIMAGEKEY = 'imageUrl';
 }

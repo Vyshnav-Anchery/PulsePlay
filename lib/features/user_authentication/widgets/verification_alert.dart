@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:provider/provider.dart';
 
@@ -28,21 +27,17 @@ class VerificationAlert extends StatelessWidget {
                 TextButton(
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.zero), // Remove padding
+                            EdgeInsets.zero),
                         backgroundColor: MaterialStateProperty.all<Color?>(
                             Colors.transparent),
-                        overlayColor: MaterialStateProperty.all<Color?>(Colors
-                            .transparent), // Remove overlay color on press
-                        alignment:
-                            Alignment.centerLeft, // Align text to the left
-                        tapTargetSize: MaterialTapTargetSize
-                            .shrinkWrap, // Remove extra tap target size
+                        overlayColor: MaterialStateProperty.all<Color?>(
+                            Colors.transparent),
+                        alignment: Alignment.centerLeft,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         textStyle: MaterialStateProperty.all<TextStyle>(
                             const TextStyle(
-                          color: Colors
-                              .red, // Set the text color to blue or your desired link color
-                          decoration: TextDecoration
-                              .underline, // Add underline decoration to mimic a link
+                          color: Colors.red,
+                          decoration: TextDecoration.underline,
                         ))),
                     onPressed: () =>
                         authenticationController.sendVerificationMail(),
@@ -75,7 +70,7 @@ class VerificationAlert extends StatelessWidget {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+                      builder: (context) => LoginScreen(),
                     ));
               }
             },

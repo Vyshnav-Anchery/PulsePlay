@@ -27,13 +27,11 @@ class UserActionButtons extends StatelessWidget {
               style: const ButtonStyle(
                 minimumSize: MaterialStatePropertyAll(Size(200, 40)),
               ),
-              onPressed: () {
-                showBottomSheet(
+              onPressed: () => showBottomSheet(
                   context: context,
                   builder: (context) => ImageSelectorBottomSheet(
                       authenticationController: authenticationController),
-                );
-              },
+                ),
               child: Text(
                 "Change User Image",
                 style: Constants.loginTextStyle,
@@ -42,8 +40,7 @@ class UserActionButtons extends StatelessWidget {
               style: const ButtonStyle(
                 minimumSize: MaterialStatePropertyAll(Size(200, 40)),
               ),
-              onPressed: () {
-                showDialog(
+              onPressed: () => showDialog(
                   context: context,
                   builder: (context) => UserAlertDialogue(
                     title: 'Change Image',
@@ -67,8 +64,7 @@ class UserActionButtons extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                );
-              },
+                ),
               child: Text(
                 "Edit User Name",
                 style: Constants.loginTextStyle,
@@ -77,8 +73,7 @@ class UserActionButtons extends StatelessWidget {
               style: const ButtonStyle(
                 minimumSize: MaterialStatePropertyAll(Size(200, 40)),
               ),
-              onPressed: () {
-                showDialog(
+              onPressed: () => showDialog(
                   context: context,
                   builder: (context) => UserAlertDialogue(
                     title: "Log Out",
@@ -92,16 +87,14 @@ class UserActionButtons extends StatelessWidget {
                               builder: (context) => LoginScreen()));
                     },
                   ),
-                );
-              },
+                ),
               child: Text(
                 "Log Out",
                 style: TextStyle(color: Constants.red),
               )),
           ElevatedButton(
               style: Constants.welcomeButtonStyle,
-              onPressed: () {
-                showDialog(
+              onPressed: () => showDialog(
                   context: context,
                   builder: (context) => UserAlertDialogue(
                     title: 'Delete Account',
@@ -118,10 +111,8 @@ class UserActionButtons extends StatelessWidget {
                             return LoginFormField(
                                 pass: authenticationController.isPassObscure,
                                 suffix: IconButton(
-                                    onPressed: () {
-                                      authenticationController
-                                          .togglePasswordVisbility();
-                                    },
+                                    onPressed: () => authenticationController
+                                          .togglePasswordVisbility(),
                                     icon: Icon(
                                         authenticationController.isPassObscure
                                             ? Icons.visibility
@@ -129,16 +120,13 @@ class UserActionButtons extends StatelessWidget {
                                 controller: passwordController,
                                 hint: 'Enter Password');
                           }),
-                          function: () {
-                            authenticationController.deleteAccount(
-                                passwordController.text, context);
-                          },
+                          function: () => authenticationController.deleteAccount(
+                                passwordController.text, context),
                         ),
                       );
                     },
                   ),
-                );
-              },
+                ),
               child: Text("Delete Account", style: Constants.loginTextStyle))
         ],
       ),

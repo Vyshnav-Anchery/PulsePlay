@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/utils/constants/constants.dart';
 
 import '../../main.dart';
 
@@ -19,9 +20,12 @@ class Authentication {
             password: password,
           )
           .then((UserCredential value) => FirebaseFirestore.instance
-              .collection('users')
-              .doc(value.user!.uid)
-              .set({'name': userName}));
+                  .collection('users')
+                  .doc(value.user!.uid)
+                  .set({
+                Constants.FIREBASENAMEKEY: userName,
+                Constants.FIREBASEIMAGEKEY: ''
+              }));
       if (!FirebaseAuth.instance.currentUser!.emailVerified) {
         FirebaseAuth.instance.currentUser!.sendEmailVerification();
       }

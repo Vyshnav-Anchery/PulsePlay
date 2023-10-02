@@ -50,21 +50,14 @@ class FavoriteScreen extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: PopupMenuButton(
-                  color: Constants.bottomBarIconColor,
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        child: TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              provider.removeFromFavorite(favorites[index]);
-                            },
-                            child: const Text("remove from playlist")),
-                      ),
-                    ];
-                  },
-                ),
+                trailing: IconButton(
+                    onPressed: () {
+                      provider.removeFromFavorite(favorites[index]);
+                    },
+                    icon: Icon(
+                      Icons.favorite,
+                      color: Constants.white,
+                    )),
                 onTap: () {
                   Navigator.push(
                       context,

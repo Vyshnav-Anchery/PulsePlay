@@ -21,8 +21,8 @@ class UserScreen extends StatelessWidget {
         width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).height,
         child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: FutureBuilder(
+            padding: const EdgeInsets.all(20),
+            child: FutureBuilder(
               future: authenticationController.getUserName(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,37 +48,23 @@ class UserScreen extends StatelessWidget {
                       child: Text('Username not available',
                           style: Constants.musicListTextStyle));
                 } else {
-                  String? uname = authenticationController.uName ?? "User";
+                  String? uname = snapshot.data ?? "User";
                   unameController.text = uname;
                   return SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Text("Welcome to PulsePlay,",
-                            //     style: TextStyle(
-                            //       fontSize: 20,
-                            //       color: Constants.white,
-                            //     )),
-                            Card(
-                              margin: const EdgeInsets.all(10),
-                              child: ListTile(
-                                title: Text(
-                                  uname,
-                                  style: const TextStyle(fontSize: 30),
-                                ),
-                                subtitle: Text(
-                                  FirebaseAuth.instance.currentUser!.email!,
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                trailing: const UserImageWidget(),
-                              ),
-                            ),
-                          ],
-                        ),
+                        const UserImageWidget(),
+                        const SizedBox(height: 20),
+                        Text(uname,
+                            style: const TextStyle(
+                                fontSize: 30, color: Colors.white)),
+                        const SizedBox(height: 20),
+                        Text(FirebaseAuth.instance.currentUser!.email!,
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white)),
+                        const SizedBox(height: 20),
                         UserActionButtons(
                             unameController: unameController,
                             authenticationController: authenticationController)
@@ -86,7 +72,7 @@ class UserScreen extends StatelessWidget {
                     ),
                   );
                 }
-              }),
-        ));
+              },
+            )));
   }
 }

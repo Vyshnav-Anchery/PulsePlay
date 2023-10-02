@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthenticationController>(context, listen: false);
     Permission.accessMediaLocation.request();
     Permission.audio.request();
-    authenticationController.getUserName();
     log("verified ${FirebaseAuth.instance.currentUser!.emailVerified}");
     provider = Provider.of<BottomNavController>(context, listen: false);
     super.initState();
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "Songs",
     "Favorites",
     "Library",
-    "User Details",
+    "",
   ];
   @override
   Widget build(BuildContext context) {
