@@ -114,7 +114,7 @@ class AuthenticationController extends ChangeNotifier {
   sendVerificationMail() async {
     try {
       if (canSentVerification) {
-        final user =  FirebaseAuth.instance.currentUser!;
+        final user = FirebaseAuth.instance.currentUser!;
         if (!user.emailVerified) {
           await user.sendEmailVerification();
         } else {
@@ -128,6 +128,7 @@ class AuthenticationController extends ChangeNotifier {
         scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
             content: Text("Please wait before sendig mail again")));
       }
+      notifyListeners();
     } on FirebaseAuthException catch (e) {
       log(e.toString());
       scaffoldMessengerKey.currentState!
@@ -135,14 +136,14 @@ class AuthenticationController extends ChangeNotifier {
     }
   }
 
-  bool checkEmailVerified() {
-    // scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
-    //     content: Row(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [Text("Checking verification  "), CircularProgressIndicator()],
-    // )));
-    FirebaseAuth.instance.currentUser!.reload();
-    // scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+  Future<bool> checkEmailVerified() async {
+    scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+        content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text("Checking verification  "), CircularProgressIndicator()],
+    )));
+    await FirebaseAuth.instance.currentUser!.reload();
+    scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
     return FirebaseAuth.instance.currentUser!.emailVerified;
   }
 
@@ -232,7 +233,8 @@ class AuthenticationController extends ChangeNotifier {
     return null;
   }
 
-  addImageToFirebaseStorage(String path,BuildContext context) async {
+  addImageToFirebaseStorage(String path, BuildContext context) async {
+    Navigator.pop(context);
     scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
         duration: Duration(minutes: 1),
         content: Row(
@@ -258,12 +260,10 @@ class AuthenticationController extends ChangeNotifier {
         final DocumentSnapshot userDoc = await documentRef.get();
         if (userDoc.exists) {
           documentRef.update({Constants.FIREBASEIMAGEKEY: value}).then((value) {
-            Navigator.pop(context);
             scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
             scaffoldMessengerKey.currentState!
                 .showSnackBar(const SnackBar(content: Text("Image Updated")));
           });
-          
           notifyListeners();
         }
       });

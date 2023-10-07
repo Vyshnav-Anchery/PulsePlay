@@ -65,8 +65,8 @@ class VerificationAlert extends StatelessWidget {
             },
             child: const Text('Cancel')),
         TextButton(
-            onPressed: () {
-              if (authenticationController.checkEmailVerified()) {
+            onPressed: () async {
+              if (await authenticationController.checkEmailVerified()) {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
