@@ -29,7 +29,7 @@ class UserImageWidget extends StatelessWidget {
               ),
               child: const CircleAvatar(
                 radius: 100,
-                child: Icon(Icons.add_photo_alternate),
+                child: Icon(Icons.add_photo_alternate, size: 50),
               ),
             );
           }

@@ -11,7 +11,8 @@ class PlaylistCreateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController playlistEditingController =
         TextEditingController();
-    final MusicPlayerController provider = Provider.of<MusicPlayerController>(context);
+    final MusicPlayerController provider =
+        Provider.of<MusicPlayerController>(context);
     return InkWell(
       onTap: () {
         showDialog(
@@ -19,7 +20,16 @@ class PlaylistCreateButton extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               title: const Text("Create Playlist"),
-              content: TextField(
+              content: TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  if (value.contains(' ')) {
+                    return 'Password must not contain spaces';
+                  }
+                  return null;
+                },
                 inputFormatters: const [
                   // FilteringTextInputFormatter.allow(RegExp(r'a-zA-z'))
                 ],

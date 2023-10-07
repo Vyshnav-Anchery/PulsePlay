@@ -134,5 +134,6 @@ class Constants {
 
   // Firebase
   static String FIREBASENAMEKEY = 'name';
+  static String FIREBASECOLLECTIONKEY = 'users';
   static String FIREBASEIMAGEKEY = 'imageUrl';
 }

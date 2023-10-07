@@ -35,44 +35,46 @@ class _MusicScreenState extends State<MusicScreen> {
       decoration: BoxDecoration(gradient: Constants.linearGradient),
       child: Stack(
         children: [
-          FutureBuilder<List<SongModel>>(
-            future: songListController.searchSongs(),
-            builder: (context, snapshot) {
-              if (snapshot.data == null ||
-                  snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text("no music found"),
-                );
-              } else {
-                MusicPlayerController.allSongs = [...snapshot.data!];
-                return SizedBox(
-                  height: MediaQuery.sizeOf(context).height -
-                      MediaQuery.sizeOf(context).width * (1 / 2.35),
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const Divider(color: Colors.transparent),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return SongListTile(
-                          playlistName: Constants.allSongs,
-                          listofSongs: snapshot.data!,
-                          artist: snapshot.data![index].artist!,
-                          index: index,
-                          songmodel: snapshot.data![index],
-                          title: snapshot.data![index].title,
-                          uri: snapshot.data![index].uri!,
-                          songListController: songListController,
-                          id: snapshot.data![index].id);
-                    },
-                  ),
-                );
-              }
-            },
-          ),
+          Consumer(builder: (context, provider, child) {
+            return FutureBuilder<List<SongModel>>(
+              future: songListController.searchSongs(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text("no music found"),
+                  );
+                } else {
+                  MusicPlayerController.allSongs = [...snapshot.data!];
+                  return SizedBox(
+                    height: MediaQuery.sizeOf(context).height -
+                        MediaQuery.sizeOf(context).width * (1 / 2.35),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) =>
+                          const Divider(color: Colors.transparent),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return SongListTile(
+                            playlistName: Constants.allSongs,
+                            listofSongs: snapshot.data!,
+                            artist: snapshot.data![index].artist!,
+                            index: index,
+                            songmodel: snapshot.data![index],
+                            title: snapshot.data![index].title,
+                            uri: snapshot.data![index].uri!,
+                            songListController: songListController,
+                            id: snapshot.data![index].id);
+                      },
+                    ),
+                  );
+                }
+              },
+            );
+          }),
           const Positioned(
             bottom: 0,
             left: 10,

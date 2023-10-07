@@ -77,7 +77,8 @@ class MusicPlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<SongModel>> searchSongs({sortType, orderType}) async {
+  Future<List<SongModel>> searchSongs(
+      {SongSortType? sortType, OrderType? orderType}) async {
     List<SongModel> querysongs = await audioquery.querySongs(
       sortType: sortType,
       orderType: orderType,
@@ -209,7 +210,8 @@ class MusicPlayerController extends ChangeNotifier {
 
   createNewPlaylist(
       {required String playlistname, required BuildContext context}) {
-    var hivePlaylistbox = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+    var hivePlaylistbox =
+        playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
     Map<String, List<SongModel>> playlistDb = hivePlaylistbox.songs;
     if (!playlistDb.containsKey(playlistname)) {
       playlistDb.addAll({playlistname: []});

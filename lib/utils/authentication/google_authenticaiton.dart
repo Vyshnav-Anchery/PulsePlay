@@ -48,10 +48,19 @@ class Authentication {
       required String password,
       required BuildContext context}) async {
     try {
+      scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+          duration: Duration(minutes: 1),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text("Logging in  "), CircularProgressIndicator()],
+          )));
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password)
-          .then((value) => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen())));
+          .then((value) {
+        scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+        return Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         scaffoldMessengerKey.currentState!.showSnackBar(

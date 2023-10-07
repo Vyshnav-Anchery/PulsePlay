@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player/features/user_authentication/ui/login.dart';
 import 'package:music_player/main.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
+import 'package:music_player/utils/constants/constants.dart';
 import '../utils/authentication/google_authenticaiton.dart';
 
 class AuthenticationController extends ChangeNotifier {
@@ -59,30 +60,61 @@ class AuthenticationController extends ChangeNotifier {
   }
 
   logout(BuildContext context) {
-    FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        )));
+    scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+        content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text("Signing out  "), CircularProgressIndicator()],
+    )));
+    FirebaseAuth.instance.signOut().then((value) {
+      scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+      return Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ));
+    });
   }
 
-  delete(BuildContext context) {
+  delete(BuildContext context) async {
+    scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+        duration: Duration(minutes: 1),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text("Deleting account "), CircularProgressIndicator()],
+        )));
     playlistBox.delete(FirebaseAuth.instance.currentUser!.uid);
     recentsBox.delete(FirebaseAuth.instance.currentUser!.uid);
     favoriteBox.delete(FirebaseAuth.instance.currentUser!.uid);
-    FirebaseAuth.instance.currentUser!
-        .delete()
-        .then((value) => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LoginScreen(),
-            )));
+    var collection = await FirebaseFirestore.instance
+        .collection(Constants.FIREBASECOLLECTIONKEY)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    if (collection.get(Constants.FIREBASEIMAGEKEY) != "") {
+      FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child(FirebaseAuth.instance.currentUser!.uid)
+          .delete()
+          .then((value) =>
+              FirebaseAuth.instance.currentUser!.delete().then((value) {
+                scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+                return Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              }));
+    }
+    FirebaseFirestore.instance
+        .collection(Constants.FIREBASECOLLECTIONKEY)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .delete();
   }
 
   sendVerificationMail() async {
     try {
       if (canSentVerification) {
-        final user = FirebaseAuth.instance.currentUser!;
+        final user =  FirebaseAuth.instance.currentUser!;
         if (!user.emailVerified) {
           await user.sendEmailVerification();
         } else {
@@ -97,13 +129,20 @@ class AuthenticationController extends ChangeNotifier {
             content: Text("Please wait before sendig mail again")));
       }
     } on FirebaseAuthException catch (e) {
+      log(e.toString());
       scaffoldMessengerKey.currentState!
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
   bool checkEmailVerified() {
+    // scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+    //     content: Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [Text("Checking verification  "), CircularProgressIndicator()],
+    // )));
     FirebaseAuth.instance.currentUser!.reload();
+    // scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
     return FirebaseAuth.instance.currentUser!.emailVerified;
   }
 
@@ -113,12 +152,12 @@ class AuthenticationController extends ChangeNotifier {
 
       if (user != null) {
         final userDoc = await FirebaseFirestore.instance
-            .collection('users')
+            .collection(Constants.FIREBASECOLLECTIONKEY)
             .doc(user.uid)
             .get();
 
         if (userDoc.exists) {
-          final String username = userDoc.get('name');
+          final String username = userDoc.get(Constants.FIREBASENAMEKEY);
           uName = username;
           return username;
         }
@@ -130,15 +169,21 @@ class AuthenticationController extends ChangeNotifier {
   }
 
   updateUserName(String newUname) async {
+    scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+        content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text("Updating username  "), CircularProgressIndicator()],
+    )));
     // Reference to the Firestore collection and document
     final DocumentReference documentRef = FirebaseFirestore.instance
-        .collection('users')
+        .collection(Constants.FIREBASECOLLECTIONKEY)
         .doc(FirebaseAuth.instance.currentUser!.uid);
 
     // Get the document snapshot
     final DocumentSnapshot snapshot = await documentRef.get();
     if (snapshot.exists) {
-      documentRef.update({'name': newUname});
+      documentRef.update({Constants.FIREBASENAMEKEY: newUname}).then((value) =>
+          scaffoldMessengerKey.currentState!.removeCurrentSnackBar());
       uName = newUname;
       notifyListeners(); // Replace with your field name
     }
@@ -170,12 +215,12 @@ class AuthenticationController extends ChangeNotifier {
 
       if (user != null) {
         final userDoc = await FirebaseFirestore.instance
-            .collection('users')
+            .collection(Constants.FIREBASECOLLECTIONKEY)
             .doc(user.uid)
             .get();
 
         if (userDoc.exists) {
-          String? userImage = userDoc.get('imageUrl');
+          String? userImage = userDoc.get(Constants.FIREBASEIMAGEKEY);
           uImage = userImage;
           return userImage;
         }
@@ -187,13 +232,19 @@ class AuthenticationController extends ChangeNotifier {
     return null;
   }
 
-  addImageToFirebaseStorage(String path) async {
+  addImageToFirebaseStorage(String path,BuildContext context) async {
+    scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+        duration: Duration(minutes: 1),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text("Updating image  "), CircularProgressIndicator()],
+        )));
     File image = File(path);
     try {
       Reference storageReference = FirebaseStorage.instance
           .ref()
           .child('images')
-          .child(DateTime.now().toString());
+          .child(FirebaseAuth.instance.currentUser!.uid);
 
       UploadTask uploadTask = storageReference.putFile(image);
 
@@ -201,11 +252,18 @@ class AuthenticationController extends ChangeNotifier {
 
       await taskSnapshot.ref.getDownloadURL().then((value) async {
         var user = FirebaseAuth.instance.currentUser!;
-        final DocumentReference documentRef =
-            FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final DocumentReference documentRef = FirebaseFirestore.instance
+            .collection(Constants.FIREBASECOLLECTIONKEY)
+            .doc(user.uid);
         final DocumentSnapshot userDoc = await documentRef.get();
         if (userDoc.exists) {
-          documentRef.update({"imageUrl": value});
+          documentRef.update({Constants.FIREBASEIMAGEKEY: value}).then((value) {
+            Navigator.pop(context);
+            scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+            scaffoldMessengerKey.currentState!
+                .showSnackBar(const SnackBar(content: Text("Image Updated")));
+          });
+          
           notifyListeners();
         }
       });

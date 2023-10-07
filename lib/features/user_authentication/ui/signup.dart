@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:music_player/features/user_authentication/widgets/verification_alert.dart';
 import 'package:provider/provider.dart';
@@ -131,8 +129,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return 'Password must not contain spaces';
                                 }
                                 // authenticationController.setPasswordValidated();
-                                log(authenticationController.isPassObscure
-                                    .toString());
                                 return null;
                               },
                               controller: passwordSignUpController,

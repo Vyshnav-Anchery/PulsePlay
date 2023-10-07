@@ -56,22 +56,13 @@ class PlaylistScreen extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: PopupMenuButton(
-                  color: Constants.bottomBarIconColor,
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        child: TextButton(
-                            onPressed: () {
-                              provider.removeFromPlaylist(
-                                  playlist[index], playlistName);
-                              Navigator.pop(context);
-                            },
-                            child: const Text("remove from playlist")),
-                      ),
-                    ];
-                  },
-                ),
+                trailing: IconButton(
+                    onPressed: () {
+                      provider.removeFromPlaylist(
+                          playlist[index], playlistName);
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.playlist_remove,color: Colors.white,)),
                 onTap: () {
                   Navigator.push(
                       context,

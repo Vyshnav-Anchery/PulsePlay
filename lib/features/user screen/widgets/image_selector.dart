@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';
 
@@ -27,12 +26,11 @@ class ImageSelectorBottomSheet extends StatelessWidget {
               onTap: () async {
                 await Permission.camera.request();
                 ImagePicker imagepicker = ImagePicker();
-                XFile? pickedFile = await imagepicker.pickImage(
-                    source: ImageSource.camera);
+                XFile? pickedFile =
+                    await imagepicker.pickImage(source: ImageSource.camera);
                 if (pickedFile != null) {
-                  authenticationController
-                      .addImageToFirebaseStorage(
-                          pickedFile.path);
+                  authenticationController.addImageToFirebaseStorage(
+                      pickedFile.path, context);
                 }
               },
               child: Column(
@@ -43,20 +41,18 @@ class ImageSelectorBottomSheet extends StatelessWidget {
                     size: 50,
                     color: Colors.white,
                   ),
-                  Text("Camera",
-                      style: Constants.musicListTextStyle)
+                  Text("Camera", style: Constants.musicListTextStyle)
                 ],
               ),
             ),
             InkWell(
               onTap: () async {
                 ImagePicker imagepicker = ImagePicker();
-                XFile? pickedFile = await imagepicker.pickImage(
-                    source: ImageSource.gallery);
+                XFile? pickedFile =
+                    await imagepicker.pickImage(source: ImageSource.gallery);
                 if (pickedFile != null) {
-                  authenticationController
-                      .addImageToFirebaseStorage(
-                          pickedFile.path);
+                  authenticationController.addImageToFirebaseStorage(
+                      pickedFile.path, context);
                 }
               },
               child: Column(
@@ -67,8 +63,7 @@ class ImageSelectorBottomSheet extends StatelessWidget {
                     color: Colors.white,
                     size: 50,
                   ),
-                  Text("Gallery",
-                      style: Constants.musicListTextStyle)
+                  Text("Gallery", style: Constants.musicListTextStyle)
                 ],
               ),
             ),
