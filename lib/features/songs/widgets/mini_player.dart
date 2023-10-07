@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
@@ -17,10 +19,14 @@ class FloatingMiniPlayer extends StatelessWidget {
         Provider.of<MusicPlayerController>(context);
     if (musicPlayerController.currentlyPlaying == null) {
       var recentSongdb = recentsBox.get(FirebaseAuth.instance.currentUser!.uid);
-        String? lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist);
-      if (recentSongdb == null || recentSongdb.songs[Constants.recentsBoxName]!.isEmpty||lastPlayedPlaylist==null) {
+      String? lastPlayedPlaylist = prefs.getString(Constants.lastPlaylist);
+      if (recentSongdb == null ||
+          recentSongdb.songs[Constants.recentsBoxName]!.isEmpty ||
+          lastPlayedPlaylist == null) {
         return Container();
       } else {
+        int? lastPosition = prefs.getInt(Constants.LASTPOSITIONKEY);
+        log("last pos $lastPosition");
         int lastIndex = prefs.getInt(Constants.lastPlayedIndex)!;
         return FutureBuilder(
             future: musicPlayerController.searchSongs(),
@@ -70,11 +76,17 @@ class FloatingMiniPlayer extends StatelessWidget {
                   trailing: IconButton(
                       onPressed: () {
                         !musicPlayerController.audioPlayer.playing
-                            ? musicPlayerController.playSong(
-                                songmodel: lastPlayed,
-                                index: lastIndex,
-                                listofSongs: playlist,
-                                lastPlaylist: lastPlayedPlaylist)
+                            ? lastPosition != null
+                                ? musicPlayerController.playLastSong(
+                                    songmodel: lastPlayed,
+                                    index: lastIndex,
+                                    listofSongs: playlist,
+                                    lastPlaylist: lastPlayedPlaylist)
+                                : musicPlayerController.playSong(
+                                    songmodel: lastPlayed,
+                                    index: lastIndex,
+                                    listofSongs: playlist,
+                                    lastPlaylist: lastPlayedPlaylist)
                             : musicPlayerController.toggleSong();
                       },
                       icon: Icon(musicPlayerController.audioPlayer.playing
@@ -88,7 +100,8 @@ class FloatingMiniPlayer extends StatelessWidget {
                               index: lastIndex,
                               songModel: lastPlayed,
                               listofSongs: playlist,
-                              playlistName: lastPlayedPlaylist),
+                              playlistName: lastPlayedPlaylist,
+                              lastPos: Duration(milliseconds: lastPosition ?? 0)),
                         ));
                   },
                 ),

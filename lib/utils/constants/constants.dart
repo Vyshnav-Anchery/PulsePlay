@@ -131,6 +131,7 @@ class Constants {
 
 // Shared Pref
   static String USERNAMEKEY = 'username';
+  static String LASTPOSITIONKEY = 'position';
 
   // Firebase
   static String FIREBASENAMEKEY = 'name';

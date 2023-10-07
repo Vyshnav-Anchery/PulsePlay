@@ -52,6 +52,28 @@ class MusicPlayerController extends ChangeNotifier {
     }
   }
 
+  playLastSong(
+      {required SongModel songmodel,
+      required int index,
+      required List<SongModel> listofSongs,
+      required String lastPlaylist,
+      Duration? position}) {
+    try {
+      audioPlayer.setAudioSource(createPlaylist(listofSongs),
+          initialIndex: index);
+      if (position != null) {
+        audioPlayer.seek(position);
+      }
+      notifyListeners();
+      playSongg(songmodel, index, lastPlaylist);
+    } on Exception {
+      scaffoldMessengerKey.currentState!
+          .showSnackBar(const SnackBar(content: Text('Error Playing')));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   toggleSong() async {
     try {
       audioPlayer.playing ? await audioPlayer.pause() : audioPlayer.play();
@@ -109,7 +131,7 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   audioimageQuery() {
-    // audioquery.queryArtwork(currentlyPlaying!.id, ArtworkType.AUDIO);
+    audioquery.queryArtwork(currentlyPlaying!.id, ArtworkType.AUDIO);
   }
 
   ConcatenatingAudioSource createPlaylist(List<SongModel> songs) {

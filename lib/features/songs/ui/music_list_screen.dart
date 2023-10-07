@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/musicplayer_controller.dart';
@@ -87,8 +86,6 @@ class _MusicScreenState extends State<MusicScreen> {
   }
 
   void checkpermission() async {
-    await Permission.storage.request();
-    await Permission.audio.request();
     var favoritesDb = favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
     var recentsDb = recentsBox.get(FirebaseAuth.instance.currentUser!.uid);
     var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid);

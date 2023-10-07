@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:music_player/features/nowPlaying/widgets/song_controll_buttons.dart';
 import 'package:music_player/features/nowPlaying/widgets/song_cover.dart';
@@ -13,15 +12,16 @@ class NowPlaying extends StatefulWidget {
   final SongModel songModel;
   final int? index;
   final String playlistName;
-
   final bool? play;
+  final Duration? lastPos;
   const NowPlaying(
       {super.key,
       required this.songModel,
       this.index,
       required this.listofSongs,
       required this.playlistName,
-      this.play});
+      this.play,
+      this.lastPos});
 
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -36,11 +36,20 @@ class _NowPlayingState extends State<NowPlaying> {
     provider = Provider.of<MusicPlayerController>(context, listen: false);
     songInd = widget.index ?? provider.currentlyPlayingIndex;
     if (play) {
-      provider.playSong(
-          songmodel: widget.songModel,
-          index: songInd,
-          listofSongs: widget.listofSongs,
-          lastPlaylist: widget.playlistName);
+      if (widget.lastPos != null) {
+        provider.playLastSong(
+            songmodel: widget.songModel,
+            index: songInd,
+            listofSongs: widget.listofSongs,
+            lastPlaylist: widget.playlistName,
+            position: widget.lastPos);
+      } else {
+        provider.playSong(
+            songmodel: widget.songModel,
+            index: songInd,
+            listofSongs: widget.listofSongs,
+            lastPlaylist: widget.playlistName);
+      }
     }
     super.initState();
   }
@@ -67,7 +76,7 @@ class _NowPlayingState extends State<NowPlaying> {
                 return Container();
               } else {
                 provider.currentlyPlayingIndex = streamSnapshot.data!;
-                
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
