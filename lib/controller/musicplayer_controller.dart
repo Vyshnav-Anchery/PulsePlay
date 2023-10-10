@@ -64,7 +64,6 @@ class MusicPlayerController extends ChangeNotifier {
       if (position != null) {
         audioPlayer.seek(position);
       }
-      notifyListeners();
       playSongg(songmodel, index, lastPlaylist);
     } on Exception {
       scaffoldMessengerKey.currentState!
@@ -130,10 +129,6 @@ class MusicPlayerController extends ChangeNotifier {
     }
   }
 
-  audioimageQuery() {
-    audioquery.queryArtwork(currentlyPlaying!.id, ArtworkType.AUDIO);
-  }
-
   ConcatenatingAudioSource createPlaylist(List<SongModel> songs) {
     currentPlaylist.clear();
     currentPlaylist = [...songs];
@@ -144,28 +139,10 @@ class MusicPlayerController extends ChangeNotifier {
               id: song.id.toString(),
               title: song.title,
               artist: song.artist,
-              artUri: Uri.parse(song.uri!))));
+              artUri: Uri.parse("assets/images/withbg.png"))));
     }
     currentQueue = ConcatenatingAudioSource(children: sources);
     return ConcatenatingAudioSource(children: sources);
-  }
-
-  Future<List<SongModel>> playlistToSongModel(List<String> songUri) async {
-    List<SongModel> songModel = [];
-    List<SongModel> allSongs = await audioquery.querySongs(
-      sortType: null,
-      orderType: OrderType.ASC_OR_SMALLER,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
-    );
-    List<String> songUrisorted = songUri.toList();
-    for (SongModel song in allSongs) {
-      // Check if the song's URI exists in the songUri list
-      if (songUrisorted.contains(song.uri)) {
-        songModel.add(song); // Add the matching song to the list
-      }
-    }
-    return songModel;
   }
 
   playSongg(SongModel song, int index, String lastPlaylist) {

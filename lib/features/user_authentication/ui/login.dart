@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/features/user_authentication/ui/forgot_password.dart';
 import 'package:music_player/features/user_authentication/widgets/login_textfield.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/authentication_controller.dart';
@@ -51,7 +52,6 @@ class LoginScreen extends StatelessWidget {
                               }
                               final emailRegex = RegExp(
                                   r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
-
                               if (!emailRegex.hasMatch(value)) {
                                 return 'Please enter a valid email address';
                               }
@@ -89,7 +89,23 @@ class LoginScreen extends StatelessWidget {
                               }
                             },
                             child: Constants.loginText),
-                        const SIgnUpTextButton(),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen(),
+                              )),
+                          child: const Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                                color: Colors.white,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.white),
+                          ),
+                        ),
+                        const SignUpTextButton(),
                         const SizedBox(height: 50)
                       ],
                     ),

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../utils/constants/constants.dart';
 import '../ui/signup.dart';
 
-class SIgnUpTextButton extends StatelessWidget {
-  const SIgnUpTextButton({
+class SignUpTextButton extends StatelessWidget {
+  const SignUpTextButton({
     super.key,
   });
 
@@ -17,26 +17,23 @@ class SIgnUpTextButton extends StatelessWidget {
         TextButton(
             style: ButtonStyle(
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.zero), // Remove padding
+                  EdgeInsets.zero),
               backgroundColor:
                   MaterialStateProperty.all<Color?>(Colors.transparent),
-              overlayColor: MaterialStateProperty.all<Color?>(
-                  Colors.transparent), // Remove overlay color on press
-              alignment: Alignment.centerLeft, // Align text to the left
-              tapTargetSize: MaterialTapTargetSize
-                  .shrinkWrap, // Remove extra tap target size
+              overlayColor:
+                  MaterialStateProperty.all<Color?>(Colors.transparent),
+              alignment: Alignment.centerLeft,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(
-                color: Colors
-                    .red, // Set the text color to blue or your desired link color
-                decoration: TextDecoration
-                    .underline, // Add underline decoration to mimic a link
+                color: Colors.red,
+                decoration: TextDecoration.underline,
               )),
             ),
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignUpScreen(),
+                    builder: (context) => const SignUpScreen(),
                   ));
             },
             child: const Text(

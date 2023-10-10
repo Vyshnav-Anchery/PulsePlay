@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pulse Play',
         theme: Constants.appTheme,
-        home: SplashScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

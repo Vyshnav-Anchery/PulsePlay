@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/controller/authentication_controller.dart';
 import 'package:music_player/features/home/ui/home.dart';
 import 'package:music_player/utils/constants/constants.dart';
 
@@ -27,7 +28,16 @@ class Authentication {
                 Constants.FIREBASEIMAGEKEY: ''
               }));
       if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-        FirebaseAuth.instance.currentUser!.sendEmailVerification();
+        if (AuthenticationController.canSentVerification) {
+          final user = FirebaseAuth.instance.currentUser!;
+          await user.sendEmailVerification();
+          AuthenticationController.canSentVerification = false;
+          await Future.delayed(const Duration(seconds: 60));
+          AuthenticationController.canSentVerification = true;
+        } else {
+          scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+              content: Text("Please wait before sendig mail again")));
+        }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -37,9 +47,6 @@ class Authentication {
         scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
             content: Text("The account already exists for that email")));
       }
-    } catch (e) {
-      scaffoldMessengerKey.currentState!
-          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
@@ -74,8 +81,6 @@ class Authentication {
       } else if (e.code == 'user-disabled') {
         scaffoldMessengerKey.currentState!.showSnackBar(
             const SnackBar(content: Text("The email has been disabled")));
-      } else {
-        log(e.toString());
       }
     }
   }

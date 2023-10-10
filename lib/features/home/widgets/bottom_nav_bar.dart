@@ -9,6 +9,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      height: MediaQuery.sizeOf(context).width / 5,
       destinations: const [
         NavigationDestination(icon: Icon(Icons.music_note), label: "Songs"),
         NavigationDestination(icon: Icon(Icons.favorite), label: "Favorites"),

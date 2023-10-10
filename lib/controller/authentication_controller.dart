@@ -12,7 +12,7 @@ import '../utils/authentication/google_authenticaiton.dart';
 
 class AuthenticationController extends ChangeNotifier {
   bool isEmailVerified = false;
-  bool canSentVerification = true;
+  static bool canSentVerification = true;
   String? uName;
   String? uImage;
   bool isPassValidated = false;
@@ -21,7 +21,7 @@ class AuthenticationController extends ChangeNotifier {
   bool isConfirmPassObscure = true;
 
   emailSignUp(String emailAddress, String password, String userName,
-      BuildContext context) {
+      BuildContext context) async {
     isPassObscure = true;
     isConfirmPassObscure = true;
     Authentication.createAccountWithEmail(
@@ -29,6 +29,13 @@ class AuthenticationController extends ChangeNotifier {
         password: password,
         userName: userName,
         context: context);
+  }
+
+  resetPassword(String email, BuildContext context) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then(
+        (value) => scaffoldMessengerKey.currentState!.showSnackBar(
+            const SnackBar(content: Text("Password reset mail sent."))));
+    Navigator.pop(context);
   }
 
   setPasswordValidated() {
@@ -122,7 +129,7 @@ class AuthenticationController extends ChangeNotifier {
               const SnackBar(content: Text("Email already verified!")));
         }
         canSentVerification = false;
-        await Future.delayed(const Duration(seconds: 10));
+        await Future.delayed(const Duration(seconds: 60));
         canSentVerification = true;
       } else {
         scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
@@ -130,9 +137,10 @@ class AuthenticationController extends ChangeNotifier {
       }
       notifyListeners();
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
-      scaffoldMessengerKey.currentState!
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      if (e.code == 'too-many-requests') {
+        scaffoldMessengerKey.currentState!.showSnackBar(const SnackBar(
+            content: Text("Too many requests.Please try again later")));
+      }
     }
   }
 

@@ -6,11 +6,8 @@ class Constants {
           begin: Alignment.centerLeft,
           end: Alignment.bottomRight,
           colors: [
-            // Color.fromARGB(255, 58, 56, 56),
             Color.fromARGB(255, 7, 10, 39),
             Color.fromARGB(217, 7, 10, 39),
-            // Color.fromARGB(198, 0, 0, 0),
-            // Color.fromARGB(255, 30, 30, 30)
           ]),
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),
@@ -50,7 +47,6 @@ class Constants {
   static Text loginText = const Text(
     "Login",
     style: TextStyle(color: Colors.white),
-    // style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1))
   );
 
   static TextStyle loginTextStyle =

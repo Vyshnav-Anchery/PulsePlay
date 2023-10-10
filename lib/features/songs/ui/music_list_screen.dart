@@ -43,14 +43,15 @@ class _MusicScreenState extends State<MusicScreen> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text("no music found"),
+                  return Center(
+                    child: Text(
+                      "No music found",
+                      style: Constants.musicListTextStyle,
+                    ),
                   );
                 } else {
                   MusicPlayerController.allSongs = [...snapshot.data!];
                   return SizedBox(
-                    height: MediaQuery.sizeOf(context).height -
-                        MediaQuery.sizeOf(context).width * (1 / 2.35),
                     child: ListView.separated(
                       separatorBuilder: (context, index) =>
                           const Divider(color: Colors.transparent),

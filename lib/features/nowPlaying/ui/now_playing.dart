@@ -4,6 +4,7 @@ import 'package:music_player/features/nowPlaying/widgets/song_cover.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+
 import '../../../controller/musicplayer_controller.dart';
 import '../widgets/progressbar.dart';
 
@@ -68,7 +69,8 @@ class _NowPlayingState extends State<NowPlaying> {
       body: Container(
         decoration: BoxDecoration(gradient: Constants.linearGradient),
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        height: MediaQuery.sizeOf(context).height,
+        padding: EdgeInsets.all(MediaQuery.sizeOf(context).height / 50.5),
         child: StreamBuilder(
             stream: provider.audioPlayer.currentIndexStream,
             builder: (context, streamSnapshot) {
@@ -76,51 +78,61 @@ class _NowPlayingState extends State<NowPlaying> {
                 return Container();
               } else {
                 provider.currentlyPlayingIndex = streamSnapshot.data!;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(height: 30),
-                    Center(
-                        child: Column(
-                      children: [
-                        MusicCover(provider: provider),
-                        const SizedBox(height: 30),
-                        Text(
-                          provider.currentlyPlaying!.title,
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                              color: Colors.white),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          provider.currentlyPlaying!.artist! == "<unknown>"
-                              ? "Unknown Artist"
-                              : provider.currentlyPlaying!.artist!,
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.white),
-                        ),
-                        const SizedBox(height: 20),
-                        const PlayingProgressBar(),
-                        const SizedBox(height: 20),
-                        SongControllwidgets(
-                          index: songInd,
-                          songModel: songList,
-                        )
-                      ],
-                    )),
-                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          )),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height / 60.5),
+                      Center(
+                          child: Column(
+                        children: [
+                          MusicCover(provider: provider),
+                          SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 60.5),
+                          Text(
+                            provider.currentlyPlaying!.title,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 25.6,
+                                color: Colors.white),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 60.5),
+                          Text(
+                            provider.currentlyPlaying!.artist! == "<unknown>"
+                                ? "Unknown Artist"
+                                : provider.currentlyPlaying!.artist!,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.sizeOf(context).height / 36.5,
+                                color: Colors.white),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 60.5),
+                          const PlayingProgressBar(),
+                          SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 60.5),
+                          SongControllwidgets(
+                            index: songInd,
+                            songModel: songList,
+                          )
+                        ],
+                      )),
+                    ],
+                  ),
                 );
               }
             }),

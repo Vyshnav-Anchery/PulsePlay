@@ -51,8 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void deactivate() {
     prefs.setInt(Constants.LASTPOSITIONKEY,
         musicPlayerController.audioPlayer.position.inMilliseconds);
-
-    // TODO: implement deactivate
     super.deactivate();
   }
 

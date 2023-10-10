@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:provider/provider.dart';
 
+GlobalKey<FormState> playlistFormKey = GlobalKey<FormState>();
+
 class PlaylistCreateButton extends StatelessWidget {
   const PlaylistCreateButton({
     super.key,
@@ -20,30 +22,33 @@ class PlaylistCreateButton extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               title: const Text("Create Playlist"),
-              content: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  if (value.contains(' ')) {
-                    return 'Password must not contain spaces';
-                  }
-                  return null;
-                },
-                inputFormatters: const [
-                  // FilteringTextInputFormatter.allow(RegExp(r'a-zA-z'))
-                ],
-                keyboardType: TextInputType.text,
-                controller: playlistEditingController,
-                decoration: const InputDecoration(
-                    label: Text("Playlist Name"), border: OutlineInputBorder()),
+              content: Form(
+                key: playlistFormKey,
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter  playlist name';
+                    }
+                    if (value.contains(' ')) {
+                      return 'Playlist name must not contain spaces';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  controller: playlistEditingController,
+                  decoration: const InputDecoration(
+                      label: Text("Playlist Name"),
+                      border: OutlineInputBorder()),
+                ),
               ),
               actions: [
                 TextButton(
                     onPressed: () {
-                      provider.createNewPlaylist(
-                          playlistname: playlistEditingController.text,
-                          context: context);
+                      if (playlistFormKey.currentState!.validate()) {
+                        provider.createNewPlaylist(
+                            playlistname: playlistEditingController.text,
+                            context: context);
+                      }
                     },
                     child: const Text("Create")),
                 TextButton(

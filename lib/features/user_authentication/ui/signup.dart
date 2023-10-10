@@ -7,7 +7,7 @@ import '../../../utils/constants/constants.dart';
 import '../widgets/login_textfield.dart';
 
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({super.key});
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();

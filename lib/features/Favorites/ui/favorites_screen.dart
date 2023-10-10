@@ -21,7 +21,7 @@ class FavoriteScreen extends StatelessWidget {
     if (favorites.isEmpty) {
       return Center(
         child: Text(
-          "no favorites found",
+          "No favorites found",
           style: Constants.musicListTextStyle,
         ),
       );
