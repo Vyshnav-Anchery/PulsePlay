@@ -15,12 +15,13 @@ import 'database/playlistdatabase.dart';
 import 'controller/musicplayer_controller.dart';
 import 'database/songmodel_adapter.dart';
 import 'firebase_options.dart';
+import 'utils/permission variables/permission_variables.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Permission.storage.request();
-  await Permission.audio.request();
+  storagePermission = await Permission.storage.request();
+  audioPermission = await Permission.audio.request();
 
   await Hive.initFlutter();
 
