@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/database/playlistdatabase.dart';
+// import 'package:music_player/database/playlistdatabase.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/musicplayer_controller.dart';
+import '../../../model/playlistdatabase.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/common widgets/song_listtile.dart';
 import '../widgets/mini_player.dart';

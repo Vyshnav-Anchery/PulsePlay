@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/user_authentication/widgets/verification_alert.dart';
+import 'package:music_player/view/user_authentication/widgets/verification_alert.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/authentication_controller.dart';

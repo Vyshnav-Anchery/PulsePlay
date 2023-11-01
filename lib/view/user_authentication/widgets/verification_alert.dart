@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/features/user_authentication/ui/login.dart';
+import 'package:music_player/view/user_authentication/ui/login.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controller/authentication_controller.dart';

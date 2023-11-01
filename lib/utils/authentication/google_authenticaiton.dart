@@ -3,11 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/authentication_controller.dart';
-import 'package:music_player/features/home/ui/home.dart';
+import 'package:music_player/view/home/ui/home.dart';
 import 'package:music_player/utils/constants/constants.dart';
-
 import '../../main.dart';
-
 class Authentication {
   static createAccountWithEmail(
       {required String emailAddress,

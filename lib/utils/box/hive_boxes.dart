@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../database/playlistdatabase.dart';
+// import '../../database/playlistdatabase.dart';
+import '../../model/playlistdatabase.dart';
 
 late Box<PlaylistDatabase> playlistBox;
 

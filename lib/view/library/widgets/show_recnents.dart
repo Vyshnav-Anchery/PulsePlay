@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../../../database/playlistdatabase.dart';
+// import '../../../database/playlistdatabase.dart';
+import '../../../model/playlistdatabase.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
 import '../../nowPlaying/ui/now_playing.dart';

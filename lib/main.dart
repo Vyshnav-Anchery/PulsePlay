@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:music_player/features/splashscreen/splashscreen.dart';
+import 'package:music_player/view/splashscreen/splashscreen.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/controller/bottom_nav_controller.dart';
@@ -11,10 +11,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/authentication_controller.dart';
-import 'database/playlistdatabase.dart';
+// import 'database/playlistdatabase.dart';
 import 'controller/musicplayer_controller.dart';
-import 'database/songmodel_adapter.dart';
+// import 'database/songmodel_adapter.dart';
 import 'firebase_options.dart';
+import 'model/playlistdatabase.dart';
+import 'model/songmodel_adapter.dart';
 import 'utils/permission variables/permission_variables.dart';
 
 void main() async {

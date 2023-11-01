@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
-import 'package:music_player/features/songs/widgets/playlist_bottomsheet.dart';
+import 'package:music_player/view/songs/widgets/playlist_bottomsheet.dart';
 import 'package:music_player/utils/common%20widgets/song_details.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../constants/constants.dart';

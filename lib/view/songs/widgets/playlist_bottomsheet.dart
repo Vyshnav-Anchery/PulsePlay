@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
-import 'package:music_player/features/library/widgets/playlist_create_button.dart';
+import 'package:music_player/view/library/widgets/playlist_create_button.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/box/hive_boxes.dart';

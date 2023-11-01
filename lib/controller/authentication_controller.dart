@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/features/user_authentication/ui/login.dart';
+import 'package:music_player/view/user_authentication/ui/login.dart';
 import 'package:music_player/main.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
@@ -115,7 +115,17 @@ class AuthenticationController extends ChangeNotifier {
     FirebaseFirestore.instance
         .collection(Constants.FIREBASECOLLECTIONKEY)
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .delete();
+        .delete()
+        .then((value) {
+      FirebaseAuth.instance.currentUser!.delete().then((value) {
+        scaffoldMessengerKey.currentState!.removeCurrentSnackBar();
+        return Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ));
+      });
+    });
   }
 
   sendVerificationMail() async {

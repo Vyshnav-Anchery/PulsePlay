@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/features/user_authentication/ui/forgot_password.dart';
-import 'package:music_player/features/user_authentication/widgets/login_textfield.dart';
+import 'package:music_player/view/user_authentication/ui/forgot_password.dart';
+import 'package:music_player/view/user_authentication/widgets/login_textfield.dart';
 import 'package:provider/provider.dart';
 import '../../../controller/authentication_controller.dart';
 import '../../../utils/constants/constants.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:music_player/features/nowPlaying/widgets/sleep_timer_alert.dart';
+import 'package:music_player/view/nowPlaying/widgets/sleep_timer_alert.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 

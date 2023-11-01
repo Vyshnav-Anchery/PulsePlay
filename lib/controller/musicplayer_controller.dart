@@ -7,8 +7,9 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../database/playlistdatabase.dart';
+// import '../database/playlistdatabase.dart';
 import '../main.dart';
+import '../model/playlistdatabase.dart';
 import '../utils/constants/constants.dart';
 
 class MusicPlayerController extends ChangeNotifier {
