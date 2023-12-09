@@ -17,8 +17,7 @@ class PlaylistDatabaseAdapter extends TypeAdapter<PlaylistDatabase> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PlaylistDatabase(
-      songs: (fields[0] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<SongModel>())),
+      songs: (fields[0] as List).cast<SongModel>(),
     );
   }
 

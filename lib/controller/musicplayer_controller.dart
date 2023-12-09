@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-// import '../database/playlistdatabase.dart';
 import '../main.dart';
 import '../model/playlistdatabase.dart';
 import '../utils/constants/constants.dart';
+import '../view/nowPlaying/ui/now_playing.dart';
 
 class MusicPlayerController extends ChangeNotifier {
   final OnAudioQuery audioquery = OnAudioQuery();
@@ -35,6 +34,21 @@ class MusicPlayerController extends ChangeNotifier {
   static List<SongModel> allSongs = [];
 
   List<SongModel> currentPlaylist = [];
+
+  navigateToNowPlaying(BuildContext context, SongModel songModel, int index,
+      List<SongModel> listofSongs, String playlistName) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NowPlaying(
+            songModel: songModel,
+            index: index,
+            listofSongs: listofSongs,
+            playlistName: playlistName,
+          ),
+        ));
+    notifyListeners();
+  }
 
   playSong(
       {required SongModel songmodel,
@@ -66,6 +80,7 @@ class MusicPlayerController extends ChangeNotifier {
         audioPlayer.seek(position);
       }
       playSongg(songmodel, index, lastPlaylist);
+      notifyListeners();
     } on Exception {
       scaffoldMessengerKey.currentState!
           .showSnackBar(const SnackBar(content: Text('Error Playing')));
@@ -210,15 +225,11 @@ class MusicPlayerController extends ChangeNotifier {
 
   createNewPlaylist(
       {required String playlistname, required BuildContext context}) {
-    var hivePlaylistbox =
-        playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    Map<String, List<SongModel>> playlistDb = hivePlaylistbox.songs;
-    if (!playlistDb.containsKey(playlistname)) {
-      playlistDb.addAll({playlistname: []});
+    if (!playlistBox.containsKey(playlistname)) {
+      playlistBox.put(playlistname, PlaylistDatabase(songs: []));
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
           SnackBar(content: Text("$playlistname playlist created")));
-      hivePlaylistbox.save();
     } else {
       Navigator.pop(context);
       scaffoldMessengerKey.currentState!.showSnackBar(
@@ -231,8 +242,8 @@ class MusicPlayerController extends ChangeNotifier {
       {required String playlistName,
       required BuildContext context,
       required SongModel song}) {
-    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    List<SongModel> playlist = playlistDb.songs[playlistName]!;
+    var playlistDb = playlistBox.get(playlistName)!;
+    List<SongModel> playlist = playlistDb.songs;
     bool songExists = isInPlaylist(playlistName, song);
     if (songExists) {
       Navigator.pop(context);
@@ -247,8 +258,8 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   bool isInPlaylist(String playlistName, SongModel song) {
-    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    List<SongModel> playlist = playlistDb.songs[playlistName]!;
+    var playlistDb = playlistBox.get(playlistName)!;
+    List<SongModel> playlist = playlistDb.songs;
     for (SongModel data in playlist) {
       if (data.id == song.id) {
         return true;
@@ -258,15 +269,14 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   addToFavorite(SongModel song, BuildContext context) {
-    var favoriteDatabase =
-        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid);
+    var favoriteDatabase = favoriteBox.get(Constants.favoritesBoxName);
     bool songExists = isFavorite(song);
     if (songExists) {
       scaffoldMessengerKey.currentState!.showSnackBar(
           const SnackBar(content: Text("Song already in Favorites")));
     } else {
       // Add the new song to the list
-      favoriteDatabase!.songs[Constants.favoritesBoxName]!.add(song);
+      favoriteDatabase!.songs.add(song);
       favoriteDatabase.save();
       scaffoldMessengerKey.currentState!
           .showSnackBar(const SnackBar(content: Text("Added to Favorites")));
@@ -275,10 +285,8 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   bool isFavorite(SongModel song) {
-    var favoriteDatabase =
-        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    List<SongModel> favorites =
-        favoriteDatabase.songs[Constants.favoritesBoxName]!;
+    var favoriteDatabase = favoriteBox.get(Constants.favoritesBoxName)!;
+    List<SongModel> favorites = favoriteDatabase.songs;
     for (SongModel data in favorites) {
       if (data.id == song.id) {
         return true;
@@ -290,9 +298,8 @@ class MusicPlayerController extends ChangeNotifier {
 
   addToRecents(SongModel song) {
     PlaylistDatabase recentsDatabase =
-        recentsBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    List<SongModel> recentList =
-        recentsDatabase.songs[Constants.recentsBoxName]!;
+        recentsBox.get(Constants.recentsBoxName)!;
+    List<SongModel> recentList = recentsDatabase.songs;
     // Find the index of the song based on a custom equality check (e.g., using the 'id' property)
     int index = -1;
     for (int i = 0; i < recentList.length; i++) {
@@ -312,9 +319,9 @@ class MusicPlayerController extends ChangeNotifier {
 
   removeFromFavorite(SongModel song) {
     PlaylistDatabase favoriteDatabase =
-        favoriteBox.get(FirebaseAuth.instance.currentUser!.uid)!;
+        favoriteBox.get(Constants.favoritesBoxName)!;
     if (isFavorite(song)) {
-      favoriteDatabase.songs[Constants.favoritesBoxName]!.remove(song);
+      favoriteDatabase.songs.remove(song);
       log("removed");
     }
     favoriteDatabase.save();
@@ -322,17 +329,14 @@ class MusicPlayerController extends ChangeNotifier {
   }
 
   removeFromPlaylist(SongModel song, String playlistName) {
-    PlaylistDatabase playlistDb =
-        playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    playlistDb.songs[playlistName]!.remove(song);
+    PlaylistDatabase playlistDb = playlistBox.get(playlistName)!;
+    playlistDb.songs.remove(song);
     playlistDb.save();
     notifyListeners();
   }
 
   deletePlaylist(String playlistKey) {
-    var playlistDb = playlistBox.get(FirebaseAuth.instance.currentUser!.uid);
-    playlistDb!.songs.remove(playlistKey);
-    playlistDb.save();
+    playlistBox.delete(playlistKey);
   }
 
   toggleLibrary() {

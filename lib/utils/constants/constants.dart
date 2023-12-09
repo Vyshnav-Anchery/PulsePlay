@@ -15,6 +15,7 @@ class Constants {
       ));
 
   static ThemeData appTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.transparent,
     bottomSheetTheme: const BottomSheetThemeData(
       constraints: BoxConstraints(
         maxHeight: 300,

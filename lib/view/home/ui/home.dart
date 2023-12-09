@@ -1,19 +1,14 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
 import 'package:music_player/view/favorites/ui/favorites_screen.dart';
 import 'package:music_player/view/home/widgets/bottom_nav_bar.dart';
 import 'package:music_player/view/songs/ui/music_list_screen.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import '../../../controller/authentication_controller.dart';
 import '../../../controller/bottom_nav_controller.dart';
 import '../../../utils/constants/constants.dart';
 import '../../library/ui/library_screen.dart';
-import '../../user screen/ui/user_screen.dart';
+import '../widgets/mini_player.dart';
 import '../widgets/searchdelegate.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,17 +20,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late BottomNavController provider;
-  late AuthenticationController authenticationController;
   late MusicPlayerController musicPlayerController;
   @override
   void initState() {
     musicPlayerController =
         Provider.of<MusicPlayerController>(context, listen: false);
-    authenticationController =
-        Provider.of<AuthenticationController>(context, listen: false);
-    Permission.accessMediaLocation.request();
-    Permission.audio.request();
-    log("verified ${FirebaseAuth.instance.currentUser!.emailVerified}");
     provider = Provider.of<BottomNavController>(context, listen: false);
     super.initState();
   }
@@ -58,13 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
     const MusicScreen(),
     const FavoriteScreen(),
     const LibraryScreen(),
-    const UserScreen()
   ];
   final titles = [
     "Songs",
     "Favorites",
     "Library",
-    "",
   ];
   @override
   Widget build(BuildContext context) {
@@ -102,9 +89,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Constants.musicListTextStyle,
                 ),
               ),
-        body: Container(
-            decoration: BoxDecoration(gradient: Constants.linearGradient),
-            child: screens[provider.bottomNavIndex]),
+              persistentFooterAlignment: AlignmentDirectional.center,
+        persistentFooterButtons: const [FloatingMiniPlayer()],
+        body: Stack(
+          children: [
+            Container(
+                decoration: BoxDecoration(gradient: Constants.linearGradient),
+                child: screens[provider.bottomNavIndex]),
+            // const Positioned(
+            //   bottom: 0,
+            //   left: 10,
+            //   right: 10,
+            //   child: FloatingMiniPlayer(),
+            // ),
+          ],
+        ),
         bottomNavigationBar: BottomNavBar(provider: provider),
       );
     });

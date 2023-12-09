@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -15,9 +14,8 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     MusicPlayerController provider =
         Provider.of<MusicPlayerController>(context);
-    List<SongModel> favorites = favoriteBox
-        .get(FirebaseAuth.instance.currentUser!.uid)!
-        .songs[Constants.favoritesBoxName]!;
+    List<SongModel> favorites =
+        favoriteBox.get(Constants.favoritesBoxName)!.songs;
     if (favorites.isEmpty) {
       return Center(
         child: Text(

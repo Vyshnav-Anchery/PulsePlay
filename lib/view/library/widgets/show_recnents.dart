@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-// import '../../../database/playlistdatabase.dart';
 import '../../../model/playlistdatabase.dart';
 import '../../../utils/box/hive_boxes.dart';
 import '../../../utils/constants/constants.dart';
@@ -13,8 +11,8 @@ class RecentlyPlayedSongs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PlaylistDatabase recentsDatabase =
-        recentsBox.get(FirebaseAuth.instance.currentUser!.uid)!;
-    List<SongModel> recents = recentsDatabase.songs[Constants.recentsBoxName]!;
+        recentsBox.get(Constants.recentsBoxName)!;
+    List<SongModel> recents = recentsDatabase.songs;
     if (recents.isEmpty) {
       return Center(
         child: Text(

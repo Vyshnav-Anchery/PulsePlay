@@ -12,44 +12,48 @@ class SongDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String duration = Duration(milliseconds: song.duration!).toString();
+    String sub = duration.substring(0, duration.length - 7);
+    String subString = sub.substring(3);
     return SizedBox(
-      height: MediaQuery.sizeOf(context).width * (1 / 1.3),
+      // height: MediaQuery.sizeOf(context).height / 2.2,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ListTile(
             titleTextStyle: Constants.songDetailTextStyle,
-            leading: const Text('Name :'),
+            title: const Text('Name :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            title:
-                Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis,textAlign: TextAlign.end),
+            subtitle:
+                Text(song.title, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
             titleTextStyle: Constants.songDetailTextStyle,
-            leading: const Text('Artist :'),
+            title: const Text('Artist :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            title: Text(song.artist!,
-                maxLines: 1, overflow: TextOverflow.ellipsis,textAlign: TextAlign.end),
+            subtitle: Text(song.artist!,
+                maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
             titleTextStyle: Constants.songDetailTextStyle,
-            leading: const Text('Duration :'),
+            title: const Text('Duration :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            title: Text(Duration(milliseconds: song.duration!).toString(),textAlign: TextAlign.end),
+            subtitle: Text("$subString min"),
           ),
           ListTile(
             titleTextStyle: Constants.songDetailTextStyle,
-            leading: const Text('File Extension :'),
+            title: const Text('File Extension :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            title: Text(song.fileExtension,
-                maxLines: 1, overflow: TextOverflow.ellipsis,textAlign: TextAlign.end),
+            subtitle: Text(song.fileExtension,
+                maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
           ListTile(
             titleTextStyle: Constants.songDetailTextStyle,
-            leading: const Text('Album :'),
+            title: const Text('Album :'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            title:
-                Text(song.album!, maxLines: 1, overflow: TextOverflow.ellipsis,textAlign: TextAlign.end),
+            subtitle:
+                Text(song.album!, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),

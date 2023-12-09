@@ -22,48 +22,43 @@ class MusicLIstPopUpMenu extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  controller.addToFavorite(song, context);
-                },
-                child: const Text("Add to favorite")),
+            onTap: () {
+              Navigator.pop(context);
+              controller.addToFavorite(song, context);
+            },
+            child: const Text("Add to favorite"),
           ),
           PopupMenuItem(
-            child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return PlaylistBottomSheet(song: song);
-                    },
-                  );
+            onTap: () {
+              Navigator.pop(context);
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return PlaylistBottomSheet(song: song);
                 },
-                child: const Text("Add to playlist")),
+              );
+            },
+            child: const Text("Add to playlist"),
           ),
           PopupMenuItem(
-            child: TextButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Details'),
-                      content: SongDetails(song: song),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Ok'))
-                      ],
-                    ),
-                  );
-                },
-                child: const Text("Details")),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Details'),
+                  content: SongDetails(song: song),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Ok'))
+                  ],
+                ),
+              );
+            },
+            child: const Text("Details"),
           ),
         ];
       },
     );
   }
 }
-
-

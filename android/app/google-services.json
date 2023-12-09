@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:853626359012:android:9872b709bf02d2f312f0f1",
         "android_client_info": {
-          "package_name": "com.example.music_player"
+          "package_name": "com.selfstack.music_player"
         }
       },
       "oauth_client": [

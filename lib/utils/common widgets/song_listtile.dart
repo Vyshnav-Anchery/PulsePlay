@@ -52,16 +52,8 @@ class SongListTile extends StatelessWidget {
         song: songmodel,
       ),
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NowPlaying(
-                songModel: songmodel,
-                index: index,
-                listofSongs: listofSongs,
-                playlistName: playlistName,
-              ),
-            ));
+        songListController.navigateToNowPlaying(
+            context, songmodel, index, listofSongs, playlistName);
       },
     );
   }

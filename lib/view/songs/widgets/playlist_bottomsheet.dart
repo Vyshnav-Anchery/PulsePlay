@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/controller/musicplayer_controller.dart';
@@ -31,17 +30,15 @@ class PlaylistBottomSheet extends StatelessWidget {
                   ),
                 );
               } else {
-                var playlistDb =
-                    playlistBox.get(FirebaseAuth.instance.currentUser!.uid)!;
                 return ListView.separated(
-                  itemCount: playlistDb.songs.length,
+                  itemCount: playlistBox.keys.length,
                   separatorBuilder: (context, index) => const Divider(
                     color: Colors.transparent,
                   ),
                   itemBuilder: (context, index) {
-                    List<String> playlistKeyList =
-                        playlistDb.songs.keys.toList();
+                    List playlistKeyList = playlistBox.keys.toList();
                     String playlistKey = playlistKeyList[index];
+                    var playlistDb = playlistBox.get(playlistKey)!;
                     return Card(
                         color: Colors.blueGrey.shade900,
                         child: ListTile(
@@ -58,7 +55,7 @@ class PlaylistBottomSheet extends StatelessWidget {
                             style: Constants.musicListTextStyle,
                           ),
                           subtitle: Text(
-                            "${playlistDb.songs[playlistKey]!.length} Songs",
+                            "${playlistDb.songs.length} Songs",
                             style: Constants.musicListTextStyle,
                           ),
                           trailing: Icon(

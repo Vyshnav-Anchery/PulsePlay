@@ -6,7 +6,7 @@ part 'playlistdatabase.g.dart';
 @HiveType(typeId: 1)
 class PlaylistDatabase extends HiveObject {
   @HiveField(0)
-  Map<String,List<SongModel>> songs;
+  List<SongModel> songs;
 
   PlaylistDatabase({required this.songs});
 }

@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -7,23 +6,14 @@ import 'package:music_player/utils/box/hive_boxes.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/controller/bottom_nav_controller.dart';
 import 'package:music_player/utils/sharedpref/prefvariable.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'controller/authentication_controller.dart';
-// import 'database/playlistdatabase.dart';
 import 'controller/musicplayer_controller.dart';
-// import 'database/songmodel_adapter.dart';
-import 'firebase_options.dart';
 import 'model/playlistdatabase.dart';
 import 'model/songmodel_adapter.dart';
-import 'utils/permission variables/permission_variables.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  storagePermission = await Permission.storage.request();
-  audioPermission = await Permission.audio.request();
 
   await Hive.initFlutter();
 
@@ -39,8 +29,6 @@ void main() async {
   await Hive.openBox<PlaylistDatabase>(Constants.recentsBoxName);
   recentsBox = Hive.box<PlaylistDatabase>(Constants.recentsBoxName);
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   prefs = await SharedPreferences.getInstance();
 
   await JustAudioBackground.init(
@@ -53,9 +41,6 @@ void main() async {
     providers: [
       ChangeNotifierProvider<BottomNavController>(
         create: (context) => BottomNavController(),
-      ),
-      ChangeNotifierProvider<AuthenticationController>(
-        create: (context) => AuthenticationController(),
       ),
       ChangeNotifierProvider<MusicPlayerController>(
         create: (context) => MusicPlayerController(),
@@ -70,7 +55,6 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return SafeArea(
