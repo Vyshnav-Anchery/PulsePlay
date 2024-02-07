@@ -16,6 +16,7 @@ class PlaylistBottomSheet extends StatelessWidget {
     MusicPlayerController musicPlayerController =
         Provider.of<MusicPlayerController>(context);
     return Container(
+      padding: const EdgeInsets.all(10),
       decoration: Constants.bottomSheetDecoration,
       child: Stack(
         children: [

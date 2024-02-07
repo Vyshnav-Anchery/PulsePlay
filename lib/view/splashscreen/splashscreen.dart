@@ -1,7 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:music_player/utils/constants/constants.dart';
 import 'package:music_player/utils/permission%20variables/permission_variables.dart';
@@ -36,8 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigate() {
     Timer(const Duration(seconds: 2), ()  {
-      // print("jey");
-      // log("message");
       requestPermission();
     });
   }

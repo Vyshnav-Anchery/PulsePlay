@@ -23,14 +23,12 @@ class MusicLIstPopUpMenu extends StatelessWidget {
         return [
           PopupMenuItem(
             onTap: () {
-              Navigator.pop(context);
               controller.addToFavorite(song, context);
             },
             child: const Text("Add to favorite"),
           ),
           PopupMenuItem(
             onTap: () {
-              Navigator.pop(context);
               showModalBottomSheet(
                 context: context,
                 builder: (context) {
@@ -45,12 +43,14 @@ class MusicLIstPopUpMenu extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Details'),
+                  title: const Text('Song Details'),
                   content: SongDetails(song: song),
+                  // contentPadding: const EdgeInsets.all(10),
+                  actionsAlignment: MainAxisAlignment.center,
                   actions: [
                     TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Ok'))
+                        child: const Text('Go Back'))
                   ],
                 ),
               );

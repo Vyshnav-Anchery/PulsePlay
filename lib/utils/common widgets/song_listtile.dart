@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 import '../../controller/musicplayer_controller.dart';
-import '../../view/nowPlaying/ui/now_playing.dart';
 import 'popupmenu_items.dart';
 import '../constants/constants.dart';
 import 'listtile_song_image.dart';
